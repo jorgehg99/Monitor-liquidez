@@ -253,10 +253,40 @@ def card(r, extra=""):
 <div class="row"><span class="val">{fnum(v, dec)}</span><span class="unit">{esc(r.get("unit"))}</span><span class="chg {ccls(d1)}">{arrow}{fchg(d1, k) if d1 is not None else ""}</span></div>
 {core}{extra}<div class="spark">{sp}</div></summary>
 <div class="detail"><div class="stats">{stats_html}</div>
-<div class="box"><div class="cap">Histórico 3 años · {basis}; el último punto es el dato más reciente.</div>{big}{legend([(s[0], s[1]) for s in sers]) if len(sers) > 1 else ""}</div>
+<div class="box"><div class="bh"><div class="cap">Histórico 3 años · {basis}; el último punto es el dato más reciente.</div>{zoom_btn(r.get("name"), [r["id"]] + ([r["core_id"]] if r.get("core_id") in BY else []), pool_for(r), r.get("group") == "policy")}</div>{big}{legend([(s[0], s[1]) for s in sers]) if len(sers) > 1 else ""}</div>
 {read}<div class="meta">{meta}</div></div></details>'''
 
 BANKP = {"ecb_dfr": "BCE", "fed_upper": "Fed", "boe_bank_rate": "BoE"}
+
+def has_hist(i):
+    return i in BY and len(HIST.get(i, {})) > 1
+
+def pool_for(r):
+    g, i = r.get("group"), r["id"]
+    if g in ("infl", "infl_core"):
+        ids = [x["id"] for x in U if x.get("group") in ("infl", "infl_core")]
+    elif g in ("rate", "mm", "policy"):
+        ids = [x["id"] for x in U if x.get("group") in ("rate", "mm", "policy")]
+    elif g in ("oas", "credit", "cds_idx"):
+        ids = [x["id"] for x in U if x.get("group") in ("oas", "credit", "cds_idx") and x.get("unit") == r.get("unit")]
+    elif g == "reg":
+        k = i.rsplit("_", 1)[0]
+        ids = [x["id"] for x in U if x["id"].rsplit("_", 1)[0] == k]
+    elif g in ("y10", "spread"):
+        ids = [x["id"] for x in U if x.get("group") == g]
+    else:
+        ids = [x["id"] for x in U if x.get("group") == g]
+    return [x for x in ids if has_hist(x)]
+
+def zoom_btn(title, sel, pool, step=False):
+    sel = [x for x in sel if has_hist(x)]
+    pool = [x for x in dict.fromkeys(sel + pool) if has_hist(x)]
+    if not sel:
+        return ""
+    cs = [BY[x].get("country") or "" for x in pool]
+    lb = "c" if all(cs) and len(set(cs)) == len(cs) else "n"
+    spec = json.dumps({"t": title, "s": sel, "p": pool, "st": bool(step), "lb": lb}, ensure_ascii=False)
+    return f'<button type="button" class="zoom" data-zoom="{esc(spec)}">⤢ Ampliar y comparar</button>'
 
 def probs(r):
     rows = sorted([p for p in PR if p.get("bank") == BANKP.get(r["id"])], key=lambda p: str(p.get("meeting")))[:2]
@@ -311,7 +341,7 @@ def chg_cell(r, key):
     c = s.get(key)
     return (fchg(c, s["kind"]), ccls(c))
 
-def multi(ids, title, sub, anchor, label=lambda r: r.get("country") or r.get("name"), step=False, dec=2):
+def multi(ids, title, sub, anchor, label=lambda r: r.get("country") or r.get("name"), step=False, dec=2, pool=None):
     sers = []
     for i in ids:
         r = BY.get(i)
@@ -322,7 +352,9 @@ def multi(ids, title, sub, anchor, label=lambda r: r.get("country") or r.get("na
     if not sers:
         return ""
     svg = line_svg(sers, w=760, h=280, dec=dec, step=step, end_labels=len(sers) <= 8)
-    return f'<div class="box" id="{anchor}"><h3>{esc(title)}</h3><p class="cap">{esc(sub)}</p>{svg}{legend([(s[0], s[1]) for s in sers])}</div>'
+    sel = [i for i in ids if BY.get(i) and series(i)][:8]
+    zb = zoom_btn(title, sel, (pool or []) + ids, step)
+    return f'<div class="box" id="{anchor}"><div class="bh"><h3>{esc(title)}</h3>{zb}</div><p class="cap">{esc(sub)}</p>{svg}{legend([(s[0], s[1]) for s in sers])}</div>'
 
 # ------------------------------------------------------------------ noticias
 def news_items(items, show_rank=True):
@@ -384,16 +416,16 @@ for c, o in sorted(sov.items(), key=lambda x: x[1]["order"]):
 M.append('<section id="cds-sov"><div class="sh"><h2>CDS soberanos</h2><p>1, 3 y 5 años, USD, pb. N/D: plazo sin cotización en fuentes abiertas.</p></div>' + table(["País", "1A", "3A", "5A", "Δ 5A día", "Fecha", "Rating"], srows) + "</section>")
 oas = grp("oas")
 M.append('<section id="rating"><div class="sh"><h2>Crédito corporativo por rating</h2><p>OAS ICE BofA, EE. UU., en pb. Los CDS por rating a 6M, 1A, 3A y 5A no se publican en abierto.</p></div><div class="two">'
-         + multi([r["id"] for r in oas], "Diferencial por rating · 3 años", "Cierre de cada mes, pb.", "ch-rating", label=lambda r: r.get("short"), dec=0)
+         + multi([r["id"] for r in oas], "Diferencial por rating · 3 años", "Cierre de cada mes, pb.", "ch-rating", label=lambda r: r.get("short"), dec=0, pool=[x["id"] for x in U if x.get("group") in ("oas", "credit") and x.get("unit") == "pb"])
          + '<div class="box">' + table(["Rating", "OAS (pb)", "Δ día", "Δ mes", "Δ 12 m", "Fecha"], [[(r["name"], ""), vcell(r), chg_cell(r, "d1"), chg_cell(r, "m1"), chg_cell(r, "y1"), (fdate(r.get("date")), "")] for r in oas]) + "</div></div></section>")
 for g, t, s in (("cds_bank", "CDS bancos", "Senior a 5 años, pb."), ("cds_og", "CDS oil & gas", "Senior a 5 años, pb.")):
     M.append(f'<section id="{g}"><div class="sh"><h2>{t}</h2><p>{s}</p></div>' + table(["Entidad", "CDS 5A (pb)", "Δ día", "Fecha", "Fuente"], [[(r["name"], ""), vcell(r), chg_cell(r, "d1"), (fdate(r.get("date")), ""), (r.get("source", ""), "src")] for r in grp(g)]) + "</section>")
 M.append('<section id="y10"><div class="sh"><h2>Bonos a 10 años · 3 años</h2><p>Media mensual; el último punto es el cierre diario más reciente.</p></div><div class="two">'
-         + multi(["y10_de", "y10_es", "y10_it", "y10_fr", "y10_pt", "y10_nl", "y10_uk", "y10_us"], "Europa y EE. UU.", "% de rentabilidad.", "ch-y10-eu")
-         + multi(["y10_mx", "y10_co", "y10_cl", "y10_pe", "y10_pl"], "Latinoamérica y Polonia", "% de rentabilidad.", "ch-y10-lat") + "</div></section>")
+         + multi(["y10_de", "y10_es", "y10_it", "y10_fr", "y10_pt", "y10_nl", "y10_uk", "y10_us"], "Europa y EE. UU.", "% de rentabilidad.", "ch-y10-eu", pool=[x["id"] for x in U if x.get("group") == "y10"])
+         + multi(["y10_mx", "y10_co", "y10_cl", "y10_pe", "y10_pl"], "Latinoamérica y Polonia", "% de rentabilidad.", "ch-y10-lat", pool=[x["id"] for x in U if x.get("group") == "y10"]) + "</div></section>")
 M.append('<section id="tipos-oficiales"><div class="sh"><h2>Evolución de tipos oficiales · 3 años</h2><p>Tipo vigente al cierre de cada mes.</p></div><div class="two">'
-         + multi(["ecb_dfr", "fed_upper", "boe_bank_rate"], "BCE, Fed y Banco de Inglaterra", "BCE: facilidad de depósito; Fed: techo del rango.", "ch-g3", label=lambda r: r.get("short"), step=True)
-         + multi(["selic", "banrep", "banxico", "bcrp", "bcch", "nbp"], "Latinoamérica y Polonia", "Argentina (BCRA) no tiene tipo oficial desde julio de 2025.", "ch-lat", label=lambda r: r.get("short"), step=True) + "</div>")
+         + multi(["ecb_dfr", "fed_upper", "boe_bank_rate"], "BCE, Fed y Banco de Inglaterra", "BCE: facilidad de depósito; Fed: techo del rango.", "ch-g3", label=lambda r: r.get("short"), step=True, pool=[x["id"] for x in U if x.get("group") == "policy"])
+         + multi(["selic", "banrep", "banxico", "bcrp", "bcch", "nbp"], "Latinoamérica y Polonia", "Argentina (BCRA) no tiene tipo oficial desde julio de 2025.", "ch-lat", label=lambda r: r.get("short"), step=True, pool=[x["id"] for x in U if x.get("group") == "policy"]) + "</div>")
 evrows = [[(fdate(e.get("date")), ""), (e.get("bank"), ""), (e.get("decision"), "txt")] for e in sorted(EV, key=lambda e: str(e.get("date")), reverse=True)[:60]]
 M.append('<details class="more"><summary>Ver las últimas 60 decisiones</summary>' + table(["Fecha", "Banco", "Decisión"], evrows) + "</details></section>")
 irows = []
@@ -409,11 +441,11 @@ for r in sorted([r for r in U if r.get("group") in ("infl",) and str(r.get("id",
                   cell(num(cr.get("value")) if cr else None), cell(cs.get(back(cm, 1)) if cr else None), cell(cs.get(back(cm, 12)) if cr else None), cell(avg(cs) if cr else None, 2)])
 M.append('<section id="inflacion"><div class="sh"><h2>Inflación por país</h2><p>Último dato frente al mes anterior, a hace 12 meses y a la media de 2025, en % interanual.</p></div>'
          + table(["País", "Mes", "IPC", "Mes ant.", "Hace 12 m", "Media 2025", "Subyac.", "Mes ant.", "Hace 12 m", "Media 2025"], irows)
-         + '<div class="two">' + multi(["cpi_ea", "cpi_es", "cpi_pt", "cpi_fr", "cpi_nl", "cpi_de", "cpi_uk", "cpi_pl"], "IPC general · Europa", "% interanual.", "ch-infl-eu", dec=1)
-         + multi(["cpi_us", "cpi_mx", "cpi_br", "cpi_cl", "cpi_co", "cpi_pe"], "IPC general · América", "% interanual. Argentina (33,4 %) fuera de escala: ver tabla.", "ch-infl-am", dec=1) + "</div></section>")
+         + '<div class="two">' + multi(["cpi_ea", "cpi_es", "cpi_pt", "cpi_fr", "cpi_nl", "cpi_de", "cpi_uk", "cpi_pl"], "IPC general · Europa", "% interanual.", "ch-infl-eu", dec=1, pool=[x["id"] for x in U if x.get("group") in ("infl", "infl_core")])
+         + multi(["cpi_us", "cpi_mx", "cpi_br", "cpi_cl", "cpi_co", "cpi_pe"], "IPC general · América", "% interanual. Argentina (33,4 %) fuera de escala: ver tabla.", "ch-infl-am", dec=1, pool=[x["id"] for x in U if x.get("group") in ("infl", "infl_core")]) + "</div></section>")
 br = BY.get("brent")
 if br:
-    M.append('<section id="brent-3a"><div class="sh"><h2>Barril de Brent · 3 años</h2><p>Futuro ICE de primer vencimiento, USD por barril, cierre de cada mes.</p></div><div class="box">' + line_svg([("Brent", PAL[0], series("brent"))], w=760, h=280, unit="USD/bbl") + "</div></section>")
+    M.append('<section id="brent-3a"><div class="sh"><h2>Barril de Brent · 3 años</h2><p>Futuro ICE de primer vencimiento, USD por barril, cierre de cada mes.</p></div><div class="box"><div class="bh"><h3>Brent</h3>' + zoom_btn("Brent", ["brent"], [x["id"] for x in U if x.get("group") == "cmdty"]) + '</div>' + line_svg([("Brent", PAL[0], series("brent"))], w=760, h=280, unit="USD/bbl") + "</div></section>")
 markets = "".join(M)
 
 curvas = grid(["estr", "euribor_1w", "euribor_1m", "euribor_3m", "euribor_6m", "euribor_12m"], "EUR · €STR y Euribor", "Toca cada plazo para ver su histórico.", "curva-eur") + grid(["sofr", "term_sofr_1m", "term_sofr_3m", "term_sofr_6m", "term_sofr_12m"], "USD · SOFR y Term SOFR", "Term SOFR de CME; histórico abierto desde octubre de 2025.", "curva-usd") + grid(["ecb_mro", "ecb_mlf", "fed_lower", "effr", "sofr_avg_30d", "sofr_avg_90d"], "Otros tipos de mercado monetario", "BCE, Fed y medias SOFR.", "curva-otros")
@@ -422,7 +454,7 @@ curvas = grid(["estr", "euribor_1w", "euribor_1m", "euribor_3m", "euribor_6m", "
 R = []
 for code, cname, bank in (("pt", "Portugal", "Banco de Portugal"), ("fr", "Francia", "Banque de France"), ("nl", "Países Bajos", "De Nederlandsche Bank")):
     ids = [f"cpi_{code}", f"y10_{code}", f"spread_{code}_de_10y", f"gdp_{code}", f"unemp_{code}", f"loan_rate_nfc_{code}", f"dep_rate_{code}", f"nfc_deposits_{code}"]
-    cards = "".join(card(BY[i]) for i in ids if i in BY and num(BY[i].get("value")) is not None)
+    cards = "".join(card(BY[i]).replace('id="c-', 'id="r-', 1) for i in ids if i in BY and num(BY[i].get("value")) is not None)
     notes = [b for b in BNOTES if b.get("country") == cname]
     nhtml = "".join(f'<li><b>{esc(fdate(b.get("date")))}</b> {esc(b.get("text_es"))} ' + (f'<a href="{esc(b["url"])}" target="_blank" rel="noopener">{esc(b.get("source") or "Fuente")} ↗</a>' if str(b.get("url", "")).startswith("http") else "") + "</li>" for b in notes)
     rn = [x for x in RNEWS if x.get("country") == cname]
@@ -491,18 +523,122 @@ ul.notes{margin:4px 0 0;padding-left:18px;font-size:13px;line-height:1.5}ul.note
 footer{margin-top:28px;font-size:11px;color:var(--faint);border-top:1px solid var(--line);padding-top:10px;line-height:1.6}
 """
 
-page = f"""<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+# datos para el gráfico ampliado
+DZ = {}
+for r in U:
+    s = HIST.get(r["id"], {})
+    if len(s) > 1:
+        DZ[r["id"]] = {"n": r.get("name"), "c": r.get("country") or "", "sh": r.get("short") or "", "u": r.get("unit") or "", "d": min(int(r.get("decimals") or 2), 3),
+                       "p": [[k, round(v, 4)] for k, (v, _) in sorted(s.items())]}
+DZJSON = json.dumps(DZ, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+
+ZCSS = """
+nav button{flex:0 0 auto;font:inherit;background:transparent;color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:11px 10px;border:0;border-bottom:2px solid transparent;cursor:pointer}
+nav button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--accent)}
+nav button:focus-visible,.zoom:focus-visible,.zm button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.js .page{display:none}.js .page.on{display:block}
+.endtab{margin:26px 0 8px;padding:14px;border:1px dashed var(--line2);border-radius:4px;text-align:center;color:var(--muted);font-size:12px}
+.bh{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap}.bh .cap{margin:0}
+.zoom{font:inherit;font-size:12px;color:var(--fg);background:var(--panel2);border:1px solid var(--line2);border-radius:4px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.no-js .zoom{display:none}
+.zm{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;gap:6px;padding:max(10px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+.zm[hidden]{display:none}
+.zm-h{display:flex;justify-content:space-between;align-items:center;gap:8px}.zm-h b{font-size:14px}
+.zm button.x{font:inherit;font-size:13px;color:var(--fg);background:var(--panel2);border:1px solid var(--line2);border-radius:4px;padding:7px 12px}
+.zm-ctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.seg{display:flex;border:1px solid var(--line2);border-radius:4px;overflow:hidden}.seg button{font:inherit;font-family:var(--mono);font-size:12px;background:transparent;color:var(--muted);border:0;border-right:1px solid var(--line2);padding:6px 12px}
+.seg button:last-child{border-right:0}.seg button[aria-pressed=true]{background:var(--panel2);color:var(--fg)}
+.zm-c{flex:1 1 auto;min-height:240px;position:relative;touch-action:none;background:var(--panel);border:1px solid var(--line);border-radius:4px}
+.zm-c svg{position:absolute;inset:0;width:100%;height:100%}
+.zm-r{min-height:40px;max-height:20vh;overflow-y:auto;font-family:var(--mono);font-size:12px;display:flex;flex-wrap:wrap;gap:2px 14px;align-items:center}.zm-r i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+.zm-r .k{color:var(--muted);width:100%}
+.zm-chips{max-height:24vh;overflow-y:auto;display:flex;flex-wrap:wrap;gap:6px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.chip{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--muted);border:1px solid var(--line2);border-radius:16px;padding:6px 11px;cursor:pointer}
+.chip[aria-pressed=true]{color:var(--fg);background:var(--panel2);border-color:var(--fg)}.chip i{width:9px;height:9px;border-radius:50%;background:var(--line2)}
+.zm-hint{margin:0;font-size:11px;color:var(--faint)}
+@media (orientation:landscape) and (max-height:500px){.zm-chips{max-height:18vh}.zm-hint{display:none}.zm-r{max-height:12vh}.zm-c{min-height:150px}}
+"""
+
+ZJS = r"""
+(function(){
+document.documentElement.className = document.documentElement.className.replace('no-js','') + ' js';
+var PAL=['#3987e5','#d95926','#199e70','#c98500','#d55181','#008300','#9085e9','#e66767'];
+var MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+var D=JSON.parse(document.getElementById('dz').textContent);
+function fm(m){return MES[+m.slice(5,7)-1]+'-'+m.slice(2,4);}
+function fn(v,d){if(v===null||v===undefined||isNaN(v))return '—';return v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function back(m,k){var y=+m.slice(0,4),mo=+m.slice(5,7),t=y*12+mo-1-k;var mm=(t%12)+1;return Math.floor(t/12)+'-'+(mm<10?'0':'')+mm;}
+function lbl(id){var x=D[id];if(!x)return id;return (S.spec&&S.spec.lb==='c'&&x.c)?x.c:x.n;}
+/* pestañas */
+var tabs=[].slice.call(document.querySelectorAll('nav [data-tab]'));
+function show(id,scroll){tabs.forEach(function(b){var on=b.getAttribute('data-tab')===id;b.setAttribute('aria-selected',on?'true':'false');document.getElementById(id===b.getAttribute('data-tab')?id:b.getAttribute('data-tab')).className='page'+(on?' on':'');});
+ try{history.replaceState(null,'','#'+id);}catch(e){} if(scroll)window.scrollTo(0,0);}
+tabs.forEach(function(b){b.addEventListener('click',function(){show(b.getAttribute('data-tab'),true);});});
+var h=location.hash.slice(1);show(tabs.some(function(b){return b.getAttribute('data-tab')===h;})?h:'pulso',false);
+/* gráfico ampliado */
+var zm=document.getElementById('zm'),host=document.getElementById('zm-c'),chips=document.getElementById('zm-chips'),ro=document.getElementById('zm-r'),note=document.getElementById('zm-n');
+var S={spec:null,sel:[],col:{},range:36,last:null};
+function colorFor(id){if(S.col[id])return S.col[id];var used={};S.sel.forEach(function(x){if(S.col[x])used[S.col[x]]=1;});for(var i=0;i<PAL.length;i++){if(!used[PAL[i]]){S.col[id]=PAL[i];return PAL[i];}}return PAL[0];}
+function open(spec){S.spec=spec;S.sel=spec.s.slice(0,8);S.col={};S.sel.forEach(colorFor);document.getElementById('zm-t').textContent=spec.t;zm.hidden=false;document.body.style.overflow='hidden';drawChips();draw();}
+function close(){zm.hidden=true;document.body.style.overflow='';}
+document.getElementById('zm-x').addEventListener('click',close);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!zm.hidden)close();});
+[].slice.call(document.querySelectorAll('#zm-rg button')).forEach(function(b){b.addEventListener('click',function(){S.range=+b.getAttribute('data-r');[].slice.call(document.querySelectorAll('#zm-rg button')).forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});draw();});});
+function drawChips(){chips.innerHTML='';S.spec.p.forEach(function(id){if(!D[id])return;var b=document.createElement('button');b.type='button';b.className='chip';var on=S.sel.indexOf(id)>=0;b.setAttribute('aria-pressed',on?'true':'false');var i=document.createElement('i');if(on)i.style.background=colorFor(id);b.appendChild(i);b.appendChild(document.createTextNode(lbl(id)));
+ b.addEventListener('click',function(){var k=S.sel.indexOf(id);if(k>=0){if(S.sel.length===1)return;S.sel.splice(k,1);delete S.col[id];}else{if(S.sel.length>=8){note.textContent='Máximo 8 series a la vez: quita alguna para añadir otra.';return;}S.sel.push(id);colorFor(id);}drawChips();draw();});chips.appendChild(b);});}
+function draw(){var sel=S.sel.filter(function(id){return D[id];});if(!sel.length){host.innerHTML='';return;}
+ var lastM='';sel.forEach(function(id){var p=D[id].p;if(p.length&&p[p.length-1][0]>lastM)lastM=p[p.length-1][0];});var cut=back(lastM,S.range);
+ var units={};sel.forEach(function(id){units[D[id].u]=1;});var rebase=Object.keys(units).length>1;
+ note.textContent=rebase?'Unidades distintas: se muestran como índice base 100 al inicio del periodo.':'';
+ var ser=sel.map(function(id){var pts=D[id].p.filter(function(q){return q[0]>=cut;});if(rebase&&pts.length){var b0=pts[0][1];pts=pts.map(function(q){return [q[0],b0?q[1]/b0*100:null,q[1]];});}else{pts=pts.map(function(q){return [q[0],q[1],q[1]];});}return {id:id,c:S.col[id],p:pts.filter(function(q){return q[1]!==null;})};});
+ var ms={};ser.forEach(function(s){s.p.forEach(function(q){ms[q[0]]=1;});});var months=Object.keys(ms).sort();if(months.length<2){host.innerHTML='<p style="padding:12px;color:#8798ad">Sin histórico suficiente.</p>';return;}
+ var lo=Infinity,hi=-Infinity;ser.forEach(function(s){s.p.forEach(function(q){if(q[1]<lo)lo=q[1];if(q[1]>hi)hi=q[1];});});if(lo===hi){lo-=1;hi+=1;}
+ var W=host.clientWidth,H=host.clientHeight;var raw=(hi-lo)/5,mag=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10)),st=[1,2,2.5,5,10].map(function(m){return m*mag;}).filter(function(x){return x>=raw;})[0]||raw;
+ var a=Math.floor(lo/st)*st,b=Math.ceil(hi/st)*st,ticks=[];for(var t=a;t<=b+st/2;t+=st)ticks.push(+t.toFixed(10));
+ var dec=rebase?0:Math.min(D[sel[0]].d,2);var L=12+Math.max.apply(null,ticks.map(function(x){return fn(x,dec).length;}))*7.2,R=14,T=12,B=26;
+ var X=function(m){return L+(W-L-R)*months.indexOf(m)/(months.length-1);},Y=function(v){return T+(H-T-B)*(1-(v-ticks[0])/((ticks[ticks.length-1]-ticks[0])||1));};
+ var o='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">';
+ ticks.forEach(function(x){var y=Y(x);o+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" stroke="#1c2939"/><text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end" font-size="11" fill="#8798ad" font-family="ui-monospace,Menlo,monospace">'+fn(x,dec)+'</text>';});
+ var stp=Math.max(1,Math.ceil(months.length/Math.max(2,Math.floor((W-L-R)/62))));months.forEach(function(m,i){if(i%stp===0)o+='<text x="'+X(m)+'" y="'+(H-8)+'" text-anchor="'+(X(m)>W-R-26?'end':(X(m)<L+26?'start':'middle'))+'" font-size="11" fill="#8798ad" font-family="ui-monospace,Menlo,monospace">'+fm(m)+'</text>';});
+ ser.forEach(function(s){if(!s.p.length)return;var d='';s.p.forEach(function(q,i){var x=X(q[0]).toFixed(1),y=Y(q[1]).toFixed(1);d+=(i?(S.spec.st&&!rebase?'H'+x+'V'+y:'L'+x+','+y):'M'+x+','+y);});var lq=s.p[s.p.length-1];
+  o+='<path d="'+d+'" fill="none" stroke="'+s.c+'" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="'+X(lq[0])+'" cy="'+Y(lq[1])+'" r="4" fill="'+s.c+'"/>';});
+ o+='<line id="zm-rule" x1="0" x2="0" y1="'+T+'" y2="'+(H-B)+'" stroke="#8798ad" stroke-dasharray="3 3" opacity="0"/></svg>';host.innerHTML=o;
+ S.last={months:months,ser:ser,X:X,L:L,R:R,W:W,rebase:rebase};readout(months[months.length-1]);}
+function readout(m){var z=S.last;if(!z)return;var rule=document.getElementById('zm-rule');if(rule){var x=z.X(m);rule.setAttribute('x1',x);rule.setAttribute('x2',x);rule.setAttribute('opacity','1');}
+ var h='<span class="k">'+fm(m)+(z.rebase?' · índice base 100 (valor original)':'')+'</span>';z.ser.forEach(function(s){var q=null;for(var i=0;i<s.p.length;i++)if(s.p[i][0]===m)q=s.p[i];var d=D[s.id].d;
+ h+='<span><i style="background:'+s.c+'"></i>'+lbl(s.id).replace(/[<>&]/g,'')+': '+(q?(z.rebase?fn(q[1],1)+' ('+fn(q[2],d)+')':fn(q[1],d)+' '+D[s.id].u):'—')+'</span>';});ro.innerHTML=h;}
+function pick(e){var z=S.last;if(!z)return;var r=host.getBoundingClientRect();var x=(e.touches?e.touches[0].clientX:e.clientX)-r.left;var f=(x-z.L)/(z.W-z.L-z.R);var i=Math.round(f*(z.months.length-1));i=Math.max(0,Math.min(z.months.length-1,i));readout(z.months[i]);if(e.cancelable)e.preventDefault();}
+host.addEventListener('touchstart',pick,{passive:false});host.addEventListener('touchmove',pick,{passive:false});host.addEventListener('mousemove',pick);
+window.addEventListener('resize',function(){if(!zm.hidden)draw();});
+[].slice.call(document.querySelectorAll('[data-zoom]')).forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();open(JSON.parse(b.getAttribute('data-zoom')));});});
+})();
+"""
+
+TABS = [("pulso", "Pulso"), ("markets", "Markets information"), ("regional", "Portugal · Francia · Holanda"), ("curvas", "Curvas"), ("noticias", "Top 10 noticias")]
+TITLES = {"pulso": "Pulso de mercado", "markets": "Markets information", "regional": "Portugal · Francia · Holanda", "curvas": "Curvas monetarias", "noticias": "Top 10 noticias"}
+BODY = {"pulso": pulso, "markets": markets, "regional": regional, "curvas": curvas, "noticias": noticias}
+navh = "".join(f'<button type="button" role="tab" data-tab="{k}" aria-selected="false">{esc(v)}</button>' for k, v in TABS)
+pages = "".join(f'<div class="page on" id="{k}" role="tabpanel"><h1>{esc(TITLES[k])}</h1>{BODY[k]}<div class="endtab">Fin de «{esc(TITLES[k])}». Cambia de pestaña arriba para seguir.</div></div>' for k, _ in TABS)
+ZM = """<div id="zm" class="zm" hidden role="dialog" aria-modal="true" aria-labelledby="zm-t">
+<div class="zm-h"><b id="zm-t"></b><button type="button" class="x" id="zm-x">Cerrar ✕</button></div>
+<div class="zm-ctl"><div class="seg" id="zm-rg"><button type="button" data-r="12" aria-pressed="false">1A</button><button type="button" data-r="24" aria-pressed="false">2A</button><button type="button" data-r="36" aria-pressed="true">3A</button></div><span id="zm-n"></span></div>
+<div class="zm-c" id="zm-c"></div>
+<div class="zm-r" id="zm-r"></div>
+<p class="zm-hint">Toca o desliza el dedo sobre el gráfico para ver los valores de cada fecha. Gira el móvil para verlo más grande.</p>
+<div class="zm-chips" id="zm-chips"></div>
+</div>"""
+
+page = f"""<!doctype html><html lang="es" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Monitor de liquidez y mercados</title><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b1119">
-<style>{CSS}</style></head><body>
+<style>{CSS}{ZCSS}</style></head><body>
 <header><h1>Monitor de liquidez y mercados</h1><div class="asof">Datos a <b>{esc(asof)}</b> · generado {esc(built)} (hora de Madrid)</div></header>
 <div class="tape">{"".join(tape)}</div>
-<nav><a href="#pulso">Pulso</a><a href="#markets">Markets information</a><a href="#regional">Portugal · Francia · Holanda</a><a href="#curvas">Curvas</a><a href="#noticias">Top 10 noticias</a></nav>
-<div class="page" id="pulso"><h1>Pulso de mercado</h1>{pulso}</div>
-<div class="page" id="markets"><h1>Markets information</h1>{markets}</div>
-<div class="page" id="regional"><h1>Portugal · Francia · Holanda</h1>{regional}</div>
-<div class="page" id="curvas"><h1>Curvas monetarias</h1>{curvas}</div>
-<div class="page" id="noticias"><h1>Top 10 noticias</h1>{noticias}</div>
+<nav role="tablist" aria-label="Pestañas">{navh}</nav>
+{pages}
 <footer>Datos de fuentes públicas (bancos centrales, administradores de índices, institutos estadísticos y, donde no hay fuente oficial abierta, agregadores que se indican en cada indicador). Se actualiza los días laborables a las 7:45, 12:58 y 17:45 (Madrid). Lecturas y resúmenes de noticias redactados por Claude; no constituyen recomendación de inversión. Los CDS por emisor y las curvas por rating requieren datos con licencia (S&amp;P Global/Markit, LSEG, Bloomberg).</footer>
+{ZM}
+<script type="application/json" id="dz">{DZJSON}</script>
+<script>{ZJS}</script>
 </body></html>"""
 
 (OUT / "index.html").write_text(page)
