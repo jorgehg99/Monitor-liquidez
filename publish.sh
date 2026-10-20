@@ -16,6 +16,15 @@ npx --yes staticrypt@3.5.4 "$TMP/index.html" -p "$STATICRYPT_PASSWORD" --short -
   --template-remember "Recordarme 30 días" --template-error "Contraseña incorrecta" \
   --template-toggle-show "Mostrar contraseña" --template-toggle-hide "Ocultar contraseña" \
   --template-color-primary "#2f6fb0" --template-color-secondary "#0b1119" >/dev/null
-cp "$TMP/enc/index.html" "$HERE/index.html"
+python3 -I - "$TMP/enc/index.html" "$HERE/index.html" <<'PY'
+import sys
+src, dst = sys.argv[1], sys.argv[2]
+h = open(src, encoding="utf-8").read()
+tags = ('<link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="apple-touch-icon.png">'
+        '<meta name="apple-mobile-web-app-title" content="Monitor"><meta name="apple-mobile-web-app-capable" content="yes">'
+        '<meta name="theme-color" content="#0b1119">')
+h = h.replace("<head>", "<head>" + tags, 1)
+open(dst, "w", encoding="utf-8").write(h)
+PY
 rm -rf "$TMP"
 echo "index.html cifrado: $(wc -c < "$HERE/index.html") bytes"
