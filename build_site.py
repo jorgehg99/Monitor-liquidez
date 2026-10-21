@@ -6,11 +6,19 @@ La carpeta de datos contiene: ultimo.json, historico.json, eventos.json, probabi
 noticias.json, noticias_meta.json y, si existen, noticias_regionales.json y notas_bc.json.
 Todo se dibuja en el servidor (SVG en línea) y se despliega con <details>: funciona sin JavaScript.
 """
-import json, sys, html, pathlib, datetime, math
+import json, sys, html, pathlib, datetime, math, hashlib
 
-DATA = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "data")
-OUT = pathlib.Path(sys.argv[2] if len(sys.argv) > 2 else "out")
-OUT.mkdir(parents=True, exist_ok=True)
+# Modos: build (por defecto) · --check (indicadores diarios atrasados) · --signals (señales para el análisis)
+ARGS = sys.argv[1:]
+MODE = ARGS.pop(0) if ARGS and ARGS[0] in ("--check", "--signals") else "build"
+DATA = pathlib.Path(ARGS[0] if ARGS else "data")
+OUT = pathlib.Path(ARGS[1] if len(ARGS) > 1 else "out")
+if MODE == "build":
+    OUT.mkdir(parents=True, exist_ok=True)
+
+# Formulario de Google que recibe los «Me interesa» (vacío = se guardan en el móvil hasta conectarlo)
+FEEDBACK_FORM = ""
+FEEDBACK_ENTRY = ""
 
 def load(name, default):
     p = DATA / name
@@ -32,7 +40,13 @@ AGENDA = load("agenda.json", {"events": []})
 AGENDA = AGENDA.get("events", []) if isinstance(AGENDA, dict) else AGENDA
 WATCH = load("watchlist.json", {"items": []})
 WATCH_URL = "https://docs.google.com/document/d/1W7OAssXSAwfdTeHtucsFwRjDHANj00QoOKrDtBFQqrs/edit"
+ANALISIS = load("analisis.json", {})
+ANALISIS = ANALISIS[0] if isinstance(ANALISIS, list) and ANALISIS else (ANALISIS if isinstance(ANALISIS, dict) else {})
+PREFS = load("preferencias.json", {})
+PREFS = PREFS[0] if isinstance(PREFS, list) and PREFS else (PREFS if isinstance(PREFS, dict) else {})
 
+# Los CDS por emisor y por país no tienen fuente abierta suficiente: fuera de la web.
+U = [r for r in U if not str(r.get("group", "")).startswith("cds")]
 BY = {r["id"]: r for r in U}
 HIST = {}
 for h in H:
@@ -124,6 +138,88 @@ def stats(r):
         out["lo"] = min(vals) if vals else None
     return out
 
+# ------------------------------------------------------------------ frescura de los datos
+try:
+    from zoneinfo import ZoneInfo
+    NOW = datetime.datetime.now(ZoneInfo("Europe/Madrid"))
+except Exception:
+    NOW = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=2)))
+NOW = NOW.replace(tzinfo=None)
+TODAY = NOW.date()
+HOL = {
+    "EU": {"2026-01-01", "2026-04-03", "2026-04-06", "2026-05-01", "2026-12-25", "2026-12-26", "2027-01-01", "2027-03-26", "2027-03-29", "2027-05-01", "2027-12-25", "2027-12-26"},
+    "US": {"2026-01-01", "2026-01-19", "2026-02-16", "2026-04-03", "2026-05-25", "2026-06-19", "2026-07-03", "2026-09-07", "2026-10-12", "2026-11-11", "2026-11-26", "2026-12-25",
+           "2027-01-01", "2027-01-18", "2027-02-15", "2027-03-26", "2027-05-31", "2027-06-18", "2027-07-05", "2027-09-06", "2027-10-11", "2027-11-11", "2027-11-25", "2027-12-24"},
+    "UK": {"2026-01-01", "2026-04-03", "2026-04-06", "2026-05-04", "2026-05-25", "2026-08-31", "2026-12-25", "2026-12-28", "2027-01-01", "2027-03-26", "2027-03-29", "2027-05-03", "2027-05-31", "2027-08-30", "2027-12-27", "2027-12-28"},
+}
+
+def is_bd(d, cal):
+    return d.weekday() < 5 and d.isoformat() not in HOL[cal]
+
+def prev_bd(d, cal):
+    d -= datetime.timedelta(days=1)
+    while not is_bd(d, cal):
+        d -= datetime.timedelta(days=1)
+    return d
+
+# (prefijos de id, calendario, días hábiles de desfase entre fecha del dato y publicación, hora de Madrid a la que suele estar publicado)
+FRESH_RULES = [
+    (("estr", "euribor_estr_3m"), "EU", 1, (8, 15), "el BCE lo publica a las 8:00 del día hábil siguiente"),
+    (("sonia",), "UK", 1, (10, 15), "el Banco de Inglaterra lo publica a las 10:00 del día hábil siguiente"),
+    (("sofr", "sofr_avg_", "tgcr", "bgcr"), "US", 1, (14, 15), "la Fed de Nueva York lo publica a las 14:00 del día hábil siguiente"),
+    (("effr", "obfr"), "US", 1, (15, 15), "la Fed de Nueva York lo publica a las 15:00 del día hábil siguiente"),
+    (("euribor_",), "EU", 0, (11, 15), "EMMI lo publica a las 11:00"),
+    (("term_sofr_",), "US", 0, (13, 0), "CME lo publica hacia las 12:00"),
+    (("y10_de", "y10_es", "y10_fr", "y10_pt", "y10_it", "y10_nl", "y10_uk", "y10_pl", "spread_", "eurusd", "gbpeur", "gbpusd", "ttf"), "EU", 0, (18, 15), "cierre de la sesión europea"),
+    (("brent", "wti", "henry_hub", "copper", "wheat", "corn", "gold"), "US", 0, (21, 0), "liquidación de futuros"),
+    (("y10_us", "y10_mx", "y10_br", "y10_co", "y10_cl", "y10_pe", "usdbrl", "usdmxn", "usdars", "usdclp"), "US", 0, (23, 0), "cierre de la sesión americana"),
+    (("rrp_us", "srf_fed"), "US", 0, (20, 0), "operaciones de la Fed de Nueva York de la tarde"),
+    (("oas_", "breakeven_10y_us", "tbill_us_"), "US", 1, (23, 0), "FRED lo publica al día hábil siguiente"),
+]
+
+def expected_date(r):
+    """Fecha del último dato que ya debería estar publicado ahora, o None si no aplica (mensual, oficial, subastas…)."""
+    i = r.get("id", "")
+    if r.get("value") is None or len(str(r.get("date") or "")) != 10 or i in ("brent_spot", "cp_spread_us", "excess_liq_ecb"):
+        return None
+    if i in ("tga_us", "reserves_us", "fed_assets"):  # miércoles, publicado el jueves a las 22:30
+        d = TODAY
+        while True:
+            if d.weekday() == 2 and NOW >= datetime.datetime.combine(d + datetime.timedelta(days=1), datetime.time(22, 30)):
+                return d
+            d -= datetime.timedelta(days=1)
+    if i in ("dfr_recourse_ecb", "mro_ecb", "ltro_ecb"):  # viernes, publicado el martes a las 15:00
+        d = TODAY
+        while True:
+            if d.weekday() == 4 and NOW >= datetime.datetime.combine(d + datetime.timedelta(days=4), datetime.time(15, 0)):
+                return d
+            d -= datetime.timedelta(days=1)
+    for pref, cal, lag, (hh, mm), _ in FRESH_RULES:
+        if any(i == p or (p.endswith("_") and i.startswith(p)) or i.startswith(p + "_") for p in pref):
+            pub = TODAY if (is_bd(TODAY, cal) and NOW.time() >= datetime.time(hh, mm)) else prev_bd(TODAY, cal)
+            for _ in range(lag):
+                pub = prev_bd(pub, cal)
+            return pub
+    return None
+
+def freshness(r):
+    exp = expected_date(r)
+    if exp is None:
+        return None
+    d = str(r.get("date") or "")
+    ok = len(d) == 10 and d >= exp.isoformat()
+    return {"ok": ok, "expected": exp.isoformat(), "date": d}
+
+FRESH = {r["id"]: freshness(r) for r in U if r.get("group") != "policy"}
+FRESH = {k: v for k, v in FRESH.items() if v}
+STALE = [(BY[k], v) for k, v in FRESH.items() if not v["ok"]]
+
+if MODE == "--check":
+    print(json.dumps({"now_madrid": NOW.strftime("%Y-%m-%d %H:%M"), "daily_rows": len(FRESH), "up_to_date": len(FRESH) - len(STALE),
+                      "stale": [{"id": r["id"], "name": r.get("name"), "date": v["date"], "expected": v["expected"], "source": r.get("source"), "source_url": r.get("source_url")} for r, v in STALE]},
+                     ensure_ascii=False, indent=1))
+    sys.exit(0)
+
 # ------------------------------------------------------------------ SVG
 def nice_ticks(lo, hi, n=5):
     if hi == lo:
@@ -212,6 +308,14 @@ def legend(items):
     return '<div class="legend">' + "".join(f'<span><i style="background:{c}"></i>{esc(n)}</span>' for n, c in items) + "</div>"
 
 # ------------------------------------------------------------------ cromos
+def fresh_dot(r):
+    f = FRESH.get(r["id"])
+    if not f:
+        return ""
+    if f["ok"]:
+        return '<i class="fr ok" title="Último dato publicado" aria-label="Último dato publicado"></i>'
+    return f'<i class="fr late" title="Pendiente: ya debería estar el dato del {esc(fdate(f["expected"]))}" aria-label="Pendiente de actualizar"></i>'
+
 def card(r, extra=""):
     st = stats(r)
     dec = int(r.get("decimals") or 2)
@@ -253,7 +357,7 @@ def card(r, extra=""):
         read = f'<div class="read"><h4>Lectura para liquidez y cash management</h4><p>{esc(r["comment"])}</p><small>Análisis generado por Claude con los datos de esta página; no es una recomendación.</small></div>'
     basis = {"monthly-average": "Media mensual", "y/y": "Tasa interanual de cada mes"}.get(r.get("basis"), "Cierre de cada mes")
     return f'''<details class="card" id="c-{esc(r["id"])}" data-id="{esc(r["id"])}"><summary>
-<div class="top"><span class="code">{esc(r.get("short") or r["id"])}</span><span class="date">{esc(fdate(r.get("date")))}<button type="button" class="star" data-fav="{esc(r["id"])}" aria-pressed="false" aria-label="Añadir a Mi vista">☆</button></span></div>
+<div class="top"><span class="code">{esc(r.get("short") or r["id"])}</span><span class="date">{fresh_dot(r)}{esc(fdate(r.get("date")))}<button type="button" class="star" data-fav="{esc(r["id"])}" aria-pressed="false" aria-label="Añadir a Mi vista">☆</button></span></div>
 <div class="name">{esc(r.get("name"))}</div>
 <div class="row"><span class="val">{fnum(v, dec)}</span><span class="unit">{esc(r.get("unit"))}</span><span class="chg {ccls(d1)}">{arrow}{fchg(d1, k) if d1 is not None else ""}</span></div>
 {core}{extra}<div class="spark">{sp}</div></summary>
@@ -273,7 +377,7 @@ def pool_for(r):
     elif g in ("rate", "mm", "policy"):
         ids = [x["id"] for x in U if x.get("group") in ("rate", "mm", "policy")]
     elif g in ("oas", "credit", "cds_idx"):
-        ids = [x["id"] for x in U if x.get("group") in ("oas", "credit", "cds_idx") and x.get("unit") == r.get("unit")]
+        ids = [x["id"] for x in U if x.get("group") in ("oas", "credit") and x.get("unit") == r.get("unit")]
     elif g == "reg":
         k = i.rsplit("_", 1)[0]
         ids = [x["id"] for x in U if x["id"].rsplit("_", 1)[0] == k]
@@ -362,15 +466,29 @@ def multi(ids, title, sub, anchor, label=lambda r: r.get("country") or r.get("na
     return f'<div class="box" id="{anchor}"><div class="bh"><h3>{esc(title)}</h3>{zb}</div><p class="cap">{esc(sub)}</p>{svg}{legend([(s[0], s[1]) for s in sers])}</div>'
 
 # ------------------------------------------------------------------ noticias
-def news_items(items, show_rank=True):
+def ents(x):
+    e = x.get("entities")
+    return ", ".join(str(v) for v in e) if isinstance(e, (list, tuple)) else str(e or "")
+
+def nid(x):
+    return "n" + hashlib.sha1(str(x.get("url") or x.get("headline") or "").encode()).hexdigest()[:8]
+
+def like_btn(x, kind):
+    payload = "|".join(str(p).replace("|", "/").replace("\n", " ") for p in (nid(x), kind, x.get("country") or "", x.get("sector") or "", ents(x)[:60], str(x.get("headline") or "")[:140]))
+    return f'<button type="button" class="like" data-like="{esc(payload)}" data-nid="{nid(x)}" aria-pressed="false">👍 Me interesa</button>'
+
+def news_items(items, show_rank=True, kind="top10"):
     out = []
     for n, x in enumerate(items):
         link = ""
         if str(x.get("url", "")).startswith("http"):
             link = f'<a href="{esc(x["url"])}" target="_blank" rel="noopener">{esc(x.get("source") or "Fuente")} ↗</a>'
         rank = f'<div class="rk">{int(x.get("rank") or n + 1):02d}</div>' if show_rank else ""
-        out.append(f'''<article class="nw">{rank}<div><div class="nt"><span class="tag">{esc(x.get("sector"))}</span> {esc(x.get("entities") or "")} · {esc(fdate(x.get("published")))}</div>
-<h3>{esc(x.get("headline"))}</h3><p>{esc(x.get("summary"))}</p><p class="imp">Implicación: {esc(x.get("implication"))}</p>{link}</div></article>''')
+        act = f'<p class="act"><b>Qué hacer / vigilar:</b> {esc(x.get("action"))}</p>' if x.get("action") else ""
+        cat = f'<span class="tag">{esc(x.get("category"))}</span> ' if x.get("category") else ""
+        sec = "" if (x.get("category") and str(x.get("sector") or "").lower()[:5] == str(x.get("category")).lower()[:5]) else f'<span class="tag">{esc(x.get("sector"))}</span> '
+        out.append(f'''<article class="nw" id="{nid(x)}">{rank}<div class="nb"><div class="nt">{cat}{sec}{esc(ents(x))} · {esc(fdate(x.get("published")))}</div>
+<h3>{esc(x.get("headline"))}</h3><p>{esc(x.get("summary"))}</p><p class="imp">Implicación: {esc(x.get("implication"))}</p>{act}<div class="nf">{link}{like_btn(x, kind)}</div></div></article>''')
     return "".join(out) or '<p class="empty">Sin noticias seleccionadas.</p>'
 
 def by_sector(items):
@@ -459,39 +577,37 @@ def resumen_box():
     return (f'<section id="hoy"><div class="sh"><h2>Hoy en 30 segundos</h2><p>Nota de {esc(fdate(str(RESUMEN.get("as_of", ""))[:10]))} {esc(str(RESUMEN.get("as_of", ""))[11:16])} · escrita por Claude con los datos de esta página.</p></div>'
             f'<div class="hoy"><ul>{li}</ul></div></section>')
 
-P = [resumen_box(), stress_box(), movers_box()]
-P.append(grid(["estr", "sofr", "fed_upper", "iorb", "sonia"], "Tipos overnight", "Variación frente al dato anterior. Toca un cromo para ver 3 años de histórico y la lectura de liquidez.", "tipos"))
-P.append(grid(["ecb_dfr", "fed_upper", "boe_bank_rate"], "Bancos centrales", "Tipo oficial y probabilidades de mercado para las dos próximas reuniones.", "bc", extra=probs))
-P.append(grid(["y10_de", "y10_es", "spread_es_de_10y", "y10_pt", "y10_fr", "spread_fr_de_10y", "y10_it", "spread_it_de_10y", "y10_nl", "y10_uk", "y10_pl", "y10_us", "y10_mx", "y10_br", "y10_co", "y10_cl", "y10_pe"], "Bonos soberanos 10 años", "Rentabilidad y primas de riesgo frente a Alemania.", "bonos"))
-P.append(grid(["eurusd", "gbpeur", "gbpusd", "usdbrl", "usdmxn", "usdars", "usdclp"], "Divisas", "Variación diaria en %.", "fx"))
-P.append(grid(["brent", "wti", "ttf", "henry_hub", "copper", "wheat", "corn", "fao_food", "gold"], "Materias primas ligadas a la inflación", "Energía, metales y alimentos.", "commodities"))
-P.append(grid(["letra_es_3m", "letra_es_6m", "letra_es_12m", "btf_fr_3m", "btf_fr_12m", "bubill_de_6m", "bubill_de_12m", "tbill_us_3m", "tbill_us_6m", "tbill_us_1y"], "Alternativas al depósito a corto plazo", "Letras del Tesoro, BTF, Bubills y T-bills: lo que un tesorero compara con remunerar la caja en banco.", "letras"))
-P.append(grid(["excess_liq_ecb", "dfr_recourse_ecb", "eurep_ecb", "euribor_estr_3m", "srf_fed", "tga_us", "rrp_us", "reserves_us", "fed_assets", "cp_spread_us"], "Liquidez del sistema", "Exceso de liquidez y facilidades del BCE, repo de la Fed, cuenta del Tesoro de EE. UU. y reservas bancarias.", "liquidez"))
-P.append(grid(["itraxx_main_5y", "itraxx_xover_5y", "oas_us_ig", "oas_us_hy", "oas_eur_hy", "oas_em", "breakeven_10y_us"], "Crédito", "Índices CDS y diferenciales corporativos.", "credito"))
-P.append(grid(["cpi_ea", "cpi_es", "cpi_pt", "cpi_fr", "cpi_nl", "cpi_de", "cpi_uk", "cpi_pl"], "Inflación en Europa", "IPC general y subyacente, tasa interanual; variación frente al mes anterior en pp.", "infl-eu"))
-P.append(grid(["cpi_us", "cpi_mx", "cpi_br", "cpi_ar", "cpi_cl", "cpi_co", "cpi_pe"], "Inflación en América", "IPC general y subyacente, tasa interanual.", "infl-am"))
-pulso = "".join(P)
+def status_box():
+    if not FRESH:
+        return ""
+    n, ok = len(FRESH), len(FRESH) - len(STALE)
+    cls = "ok" if not STALE else ("warn" if len(STALE) <= max(3, n // 10) else "bad")
+    rows = "".join(f'<li>{esc(r.get("name"))}: dato del {esc(fdate(v["date"]))}; ya debería estar el del {esc(fdate(v["expected"]))}.</li>' for r, v in sorted(STALE, key=lambda x: x[0].get("name") or ""))
+    more = f'<details class="more"><summary>Ver los {len(STALE)} pendientes</summary><ul class="notes">{rows}</ul></details>' if STALE else ""
+    return (f'<section id="estado"><div class="sh"><h2>Estado de los datos</h2><p>Indicadores diarios con el último dato que su fuente ya ha publicado a las {NOW.strftime("%H:%M")} (hora de Madrid). '
+            'El €STR, el SONIA y el SOFR de un día se publican al día hábil siguiente.</p></div>'
+            f'<div class="st {cls}"><b>{ok}/{n}</b> al día <span class="lg"><i class="fr ok"></i> último dato publicado · <i class="fr late"></i> pendiente</span></div>{more}</section>')
+
+SP_PULSO = [
+    ("resumen", "Resumen", resumen_box() + status_box() + stress_box() + movers_box()),
+    ("tipos", "Tipos y BC", grid(["estr", "sofr", "fed_upper", "iorb", "sonia"], "Tipos overnight", "Variación frente al dato anterior. Toca un cromo para ver 3 años de histórico y la lectura de liquidez.", "tipos")
+     + grid(["ecb_dfr", "fed_upper", "boe_bank_rate"], "Bancos centrales", "Tipo oficial y probabilidades de mercado para las dos próximas reuniones.", "bc", extra=probs)),
+    ("bonos", "Bonos", grid(["y10_de", "y10_es", "spread_es_de_10y", "y10_pt", "spread_pt_de_10y", "y10_fr", "spread_fr_de_10y", "y10_nl", "spread_nl_de_10y", "y10_it", "spread_it_de_10y", "y10_uk", "y10_pl", "y10_us", "y10_mx", "y10_br", "y10_co", "y10_cl", "y10_pe"], "Bonos soberanos 10 años", "Rentabilidad y primas de riesgo frente a Alemania.", "bonos")),
+    ("fxmp", "Divisas y materias primas", grid(["eurusd", "gbpeur", "gbpusd", "usdbrl", "usdmxn", "usdars", "usdclp"], "Divisas", "Variación diaria en %.", "fx")
+     + grid(["brent", "wti", "ttf", "henry_hub", "copper", "wheat", "corn", "fao_food", "gold"], "Materias primas ligadas a la inflación", "Energía, metales y alimentos.", "commodities")),
+    ("letras", "Alternativas al depósito", grid(["letra_es_3m", "letra_es_6m", "letra_es_9m", "letra_es_12m", "btf_fr_3m", "btf_fr_12m", "bubill_de_6m", "bubill_de_12m", "tbill_us_3m", "tbill_us_6m", "tbill_us_1y"], "Alternativas al depósito a corto plazo", "Letras del Tesoro y T-bills: lo que un tesorero compara con remunerar la caja en banco.", "letras")),
+    ("liquidez", "Liquidez del sistema", grid(["excess_liq_ecb", "dfr_recourse_ecb", "mro_ecb", "ltro_ecb", "eurep_ecb", "euribor_estr_3m", "srf_fed", "tga_us", "rrp_us", "reserves_us", "fed_assets", "cp_spread_us"], "Liquidez del sistema", "Exceso de liquidez y facilidades del BCE, repo de la Fed, cuenta del Tesoro de EE. UU. y reservas bancarias.", "liquidez")),
+    ("credito", "Crédito", grid(["oas_us_ig", "oas_us_hy", "oas_eur_hy", "oas_em", "breakeven_10y_us"], "Crédito", "Diferenciales corporativos (OAS ICE BofA) e inflación implícita.", "credito")),
+    ("inflacion", "Inflación", grid(["cpi_ea", "cpi_es", "cpi_pt", "cpi_fr", "cpi_nl", "cpi_de", "cpi_uk", "cpi_pl"], "Inflación en Europa", "IPC general y subyacente, tasa interanual; variación frente al mes anterior en pp.", "infl-eu")
+     + grid(["cpi_us", "cpi_mx", "cpi_br", "cpi_ar", "cpi_cl", "cpi_co", "cpi_pe"], "Inflación en América", "IPC general y subyacente, tasa interanual.", "infl-am")),
+]
 
 # Markets information
 M = []
-M.append('<section id="cds"><div class="sh"><h2>Índices CDS</h2><p>iTraxx Europe y CDX a 5 años, en pb.</p></div>' + table(["Índice", "Nivel (pb)", "Δ día", "Fecha", "Fuente"], [[(r["name"], ""), vcell(r), chg_cell(r, "d1"), (fdate(r.get("date")), ""), (r.get("source", ""), "src")] for r in grp("cds_idx")]) + "</section>")
-sov = {}
-for r in grp("cds_sov"):
-    o = sov.setdefault(r.get("country"), {"order": float(r.get("order") or 0), "rating": r.get("rating", ""), "1Y": None, "3Y": None, "5Y": None, "date": "", "d5": None})
-    o[r.get("tenor")] = num(r.get("value"))
-    if r.get("tenor") == "5Y":
-        o["date"] = r.get("date")
-        o["d5"] = stats(r)["d1"] if num(r.get("value")) is not None else None
-srows = []
-for c, o in sorted(sov.items(), key=lambda x: x[1]["order"]):
-    srows.append([(c, "")] + [((fnum(o[t], 1) if o[t] is not None else "N/D"), "" if o[t] is not None else "na") for t in ("1Y", "3Y", "5Y")] + [(fchg(o["d5"], "pb"), ccls(o["d5"])), (fdate(o["date"]), ""), (o["rating"], "")])
-M.append('<section id="cds-sov"><div class="sh"><h2>CDS soberanos</h2><p>1, 3 y 5 años, USD, pb. N/D: plazo sin cotización en fuentes abiertas.</p></div>' + table(["País", "1A", "3A", "5A", "Δ 5A día", "Fecha", "Rating"], srows) + "</section>")
 oas = grp("oas")
-M.append('<section id="rating"><div class="sh"><h2>Crédito corporativo por rating</h2><p>OAS ICE BofA, EE. UU., en pb. Los CDS por rating a 6M, 1A, 3A y 5A no se publican en abierto.</p></div><div class="two">'
+M.append('<section id="rating"><div class="sh"><h2>Crédito corporativo por rating</h2><p>OAS ICE BofA, EE. UU., en pb.</p></div><div class="two">'
          + multi([r["id"] for r in oas], "Diferencial por rating · 3 años", "Cierre de cada mes, pb.", "ch-rating", label=lambda r: r.get("short"), dec=0, pool=[x["id"] for x in U if x.get("group") in ("oas", "credit") and x.get("unit") == "pb"])
          + '<div class="box">' + table(["Rating", "OAS (pb)", "Δ día", "Δ mes", "Δ 12 m", "Fecha"], [[(r["name"], ""), vcell(r), chg_cell(r, "d1"), chg_cell(r, "m1"), chg_cell(r, "y1"), (fdate(r.get("date")), "")] for r in oas]) + "</div></div></section>")
-for g, t, s in (("cds_bank", "CDS bancos", "Senior a 5 años, pb."), ("cds_og", "CDS oil & gas", "Senior a 5 años, pb.")):
-    M.append(f'<section id="{g}"><div class="sh"><h2>{t}</h2><p>{s}</p></div>' + table(["Entidad", "CDS 5A (pb)", "Δ día", "Fecha", "Fuente"], [[(r["name"], ""), vcell(r), chg_cell(r, "d1"), (fdate(r.get("date")), ""), (r.get("source", ""), "src")] for r in grp(g)]) + "</section>")
 M.append('<section id="y10"><div class="sh"><h2>Bonos a 10 años · 3 años</h2><p>Media mensual; el último punto es el cierre diario más reciente.</p></div><div class="two">'
          + multi(["y10_de", "y10_es", "y10_it", "y10_fr", "y10_pt", "y10_nl", "y10_uk", "y10_us"], "Europa y EE. UU.", "% de rentabilidad.", "ch-y10-eu", pool=[x["id"] for x in U if x.get("group") == "y10"])
          + multi(["y10_mx", "y10_co", "y10_cl", "y10_pe", "y10_pl"], "Latinoamérica y Polonia", "% de rentabilidad.", "ch-y10-lat", pool=[x["id"] for x in U if x.get("group") == "y10"]) + "</div></section>")
@@ -518,7 +634,7 @@ M.append('<section id="inflacion"><div class="sh"><h2>Inflación por país</h2><
 br = BY.get("brent")
 if br:
     M.append('<section id="brent-3a"><div class="sh"><h2>Barril de Brent · 3 años</h2><p>Futuro ICE de primer vencimiento, USD por barril, cierre de cada mes.</p></div><div class="box"><div class="bh"><h3>Brent</h3>' + zoom_btn("Brent", ["brent"], [x["id"] for x in U if x.get("group") == "cmdty"]) + '</div>' + line_svg([("Brent", PAL[0], series("brent"))], w=760, h=280, unit="USD/bbl") + "</div></section>")
-markets = "".join(M)
+SP_MARKETS = [("rating", "Crédito por rating", M[0]), ("y10", "Bonos 10A", M[1]), ("oficiales", "Tipos oficiales", M[2] + M[3]), ("inflacion", "Inflación", M[4])] + ([("brent", "Brent", M[5])] if len(M) > 5 else [])
 
 def agenda_page():
     ev = sorted(AGENDA, key=lambda e: (str(e.get("date")), str(e.get("time") or "99")))
@@ -574,29 +690,302 @@ def watch_page():
     return head + f'<div class="wgrid">{"".join(cards)}</div></section>'
 
 agenda = agenda_page()
-watch = watch_page()
 mivista = '<section id="mv-s"><div class="sh"><h2>Mi vista</h2><p>Toca la estrella ☆ de cualquier cromo para traerlo aquí. Se guarda en este móvil.</p></div><div class="grid" id="mv-grid"></div><p class="empty" id="mv-empty">Aún no has marcado ningún cromo.</p></section>'
 
-curvas = grid(["estr", "euribor_1w", "euribor_1m", "euribor_3m", "euribor_6m", "euribor_12m"], "EUR · €STR y Euribor", "Toca cada plazo para ver su histórico.", "curva-eur") + grid(["sofr", "term_sofr_1m", "term_sofr_3m", "term_sofr_6m", "term_sofr_12m"], "USD · SOFR y Term SOFR", "Term SOFR de CME; histórico abierto desde octubre de 2025.", "curva-usd") + grid(["ecb_mro", "ecb_mlf", "fed_lower", "effr", "sofr_avg_30d", "sofr_avg_90d"], "Otros tipos de mercado monetario", "BCE, Fed y medias SOFR.", "curva-otros")
+SP_CURVAS = [
+    ("eur", "EUR", grid(["estr", "euribor_1w", "euribor_1m", "euribor_3m", "euribor_6m", "euribor_12m"], "EUR · €STR y Euribor", "Toca cada plazo para ver su histórico.", "curva-eur")),
+    ("usd", "USD", grid(["sofr", "term_sofr_1m", "term_sofr_3m", "term_sofr_6m", "term_sofr_12m"], "USD · SOFR y Term SOFR", "Term SOFR de CME; histórico abierto desde octubre de 2025.", "curva-usd")),
+    ("otros", "Otros tipos", grid(["ecb_mro", "ecb_mlf", "fed_lower", "effr", "sofr_avg_30d", "sofr_avg_90d"], "Otros tipos de mercado monetario", "BCE, Fed y medias SOFR.", "curva-otros")),
+]
 
-# Portugal, Francia, Holanda
-R = []
-for code, cname, bank in (("es", "España", "Banco de España"), ("pt", "Portugal", "Banco de Portugal"), ("fr", "Francia", "Banque de France"), ("nl", "Países Bajos", "De Nederlandsche Bank")):
+COUNTRIES = (("es", "España", "Banco de España"), ("pt", "Portugal", "Banco de Portugal"), ("fr", "Francia", "Banque de France"), ("nl", "Países Bajos", "De Nederlandsche Bank"))
+SP_REGIONAL = []
+for code, cname, bank in COUNTRIES:
     ids = [f"cpi_{code}", f"y10_{code}", f"spread_{code}_de_10y", f"gdp_{code}", f"unemp_{code}", f"loan_rate_nfc_{code}", f"dep_rate_{code}", f"dep_rate_nfc_{code}", f"dep_rate_hh_{code}", f"nfc_deposits_{code}", f"letra_{code}_3m", f"letra_{code}_12m"]
     cards = "".join(card(BY[i]).replace('id="c-', 'id="r-', 1) for i in ids if i in BY and num(BY[i].get("value")) is not None)
     notes = [b for b in BNOTES if b.get("country") == cname]
     nhtml = "".join(f'<li><b>{esc(fdate(b.get("date")))}</b> {esc(b.get("text_es"))} ' + (f'<a href="{esc(b["url"])}" target="_blank" rel="noopener">{esc(b.get("source") or "Fuente")} ↗</a>' if str(b.get("url", "")).startswith("http") else "") + "</li>" for b in notes)
-    rn = [x for x in RNEWS if x.get("country") == cname]
-    R.append(f'<section id="reg-{code}"><div class="sh"><h2>{cname}</h2><p>Indicadores de macro, inflación y liquidez · {bank} · noticias de liquidez y cash de sus principales compañías.</p></div>'
-             + (f'<div class="grid">{cards}</div>' if cards else "")
-             + (f'<div class="box"><h3>{bank}</h3><ul class="notes">{nhtml}</ul></div>' if nhtml else "")
-             + f'<div class="news">{news_items(rn, show_rank=False)}</div></section>')
-regional = "".join(R)
+    SP_REGIONAL.append((code, cname, f'<section id="reg-{code}"><div class="sh"><h2>{cname}</h2><p>Macro, inflación, tipos bancarios y liquidez · notas de {bank}, del Tesoro y del presupuesto. Las noticias de bancos y empresas están en Watchlist → Radar.</p></div>'
+                        + (f'<div class="grid">{cards}</div>' if cards else "")
+                        + (f'<div class="box"><h3>{bank}, Tesoro y presupuesto</h3><ul class="notes">{nhtml}</ul></div>' if nhtml else "") + "</section>"))
 
-secs = by_sector(NEWS)
-chips = " · ".join(f'<a href="#ns-{i}">{esc(s)} ({len(v)})</a>' for i, (s, v) in enumerate(secs.items()))
-noticias = (f'<section id="top10"><div class="sh"><h2>Top 10 del día para la mesa de liquidez</h2><p>Selección a {esc(fdate(str(NMETA.get("as_of", ""))[:10]))} · resúmenes propios con enlace a la fuente.</p></div><p class="chips">{chips}</p>'
-            + "".join(f'<h3 class="sec" id="ns-{i}">{esc(s)}</h3><div class="news">{news_items(v)}</div>' for i, (s, v) in enumerate(secs.items())) + "</section>")
+def radar(code, cname):
+    rn = [x for x in RNEWS if x.get("country") == cname]
+    return (f'<section id="radar-{code}"><div class="sh"><h2>Radar de liquidez · {cname}</h2><p>Bancos, supervisor y grandes empresas del índice: solo lo que mueve caja, financiación o liquidez, con lo que haría un analista de cash management. Marca 👍 lo que te interese y afinaré la selección.</p></div>'
+            f'<div class="news">{news_items(rn, show_rank=False, kind="radar")}</div></section>')
+
+def prefs_page():
+    head = ('<section id="prefs"><div class="sh"><h2>Lo que aprendo de tus 👍</h2><p>Cada «Me interesa» del Top 10, del Radar y de las ideas me dice qué te sirve. Lo leo en cada actualización y prioriza lo que selecciono.</p></div>')
+    body = []
+    if PREFS.get("summary_es"):
+        body.append(f'<div class="hoy"><p>{esc(PREFS["summary_es"])}</p><small>{esc(PREFS.get("n_votes") or 0)} marcas · actualizado {esc(fdate(str(PREFS.get("as_of", ""))[:10]))}</small></div>')
+    for key, lab in (("sectors", "Sectores"), ("countries", "Países"), ("entities", "Empresas y organismos"), ("topics", "Temas")):
+        vals = PREFS.get(key) or []
+        if vals:
+            body.append(f'<div class="pfr"><span>{lab}</span><div>' + "".join(f'<span class="tag">{esc(v)}</span>' for v in vals[:10]) + "</div></div>")
+    if not body:
+        body.append('<p class="empty">Todavía no he recibido marcas. Pulsa «👍 Me interesa» en las noticias que te sirvan.</p>')
+    body.append('<div class="box"><h3>Marcadas en este móvil</h3><ul class="notes" id="likes-local"></ul><p class="cap" id="fb-state"></p></div>')
+    return head + "".join(body) + "</section>"
+
+SP_WATCH = [("valores", "Mis valores", watch_page())] + [(f"radar-{c}", f"Radar {n}", radar(c, n)) for c, n, _ in COUNTRIES] + [("prefs", "Tus preferencias", prefs_page())]
+
+SP_NOTICIAS = [("top10", "Top 10", f'<section id="top10"><div class="sh"><h2>Top 10 del día para la mesa de liquidez</h2><p>Selección a {esc(fdate(str(NMETA.get("as_of", ""))[:10]))} · cualquier sector, siempre que tenga implicaciones directas para liquidez y cash management. Resúmenes propios con enlace a la fuente.</p></div>'
+                f'<div class="news">{news_items(sorted(NEWS, key=lambda x: int(x.get("rank") or 99)))}</div></section>')]
+
+# ------------------------------------------------------------------ análisis
+CTRY = [("es", "España"), ("pt", "Portugal"), ("fr", "Francia"), ("nl", "Países Bajos")]
+DEP = {"es": "dep_rate_nfc_es", "pt": "dep_rate_pt", "fr": "dep_rate_fr", "nl": "dep_rate_nl"}
+
+def latest(i):
+    r = BY.get(i)
+    return num(r.get("value")) if r else None
+
+def mval(i, m):
+    return HIST.get(i, {}).get(m, (None,))[0]
+
+def pct_of(v, vals):
+    vals = [x for x in vals if x is not None]
+    if v is None or len(vals) < 12:
+        return None
+    return round(100 * sum(1 for x in vals if x <= v) / len(vals))
+
+def dep_gap(code):
+    i = DEP[code]
+    r = BY.get(i)
+    if not r or latest(i) is None:
+        return None, None, None
+    m = str(r.get("date"))[:7]
+    e = mval("euribor_3m", m)
+    if e is None:
+        return None, None, m
+    g = round((latest(i) - e) * 100)
+    m12 = back(m, 12)
+    d12, e12 = mval(i, m12), mval("euribor_3m", m12)
+    g12 = round((d12 - e12) * 100) if d12 is not None and e12 is not None else None
+    return g, g12, m
+
+def margin(code):
+    li, di = f"loan_rate_nfc_{code}", DEP[code]
+    if latest(li) is None or latest(di) is None:
+        return None, None
+    m = str(BY[li].get("date"))[:7]
+    d = mval(di, m)
+    return (round((latest(li) - (d if d is not None else latest(di))) * 100), m)
+
+SIG_ROWS = []
+def sig_row(label, unit, hint, cells):
+    SIG_ROWS.append({"label": label, "unit": unit, "hint": hint, "cells": cells})
+
+def cell(v, d=0, sub="", lvl=""):
+    return {"v": v, "d": d, "sub": sub, "lvl": lvl}
+
+def lvl_of(p):
+    return "" if p is None else ("hi" if p >= 85 else ("mid" if p >= 60 else "lo"))
+
+cs = {}
+for code, _ in CTRY:
+    i = f"spread_{code}_de_10y"
+    r = BY.get(i)
+    if r and latest(i) is not None:
+        st_ = stats(r)
+        p = pct_rank(i)
+        cs[code] = cell(latest(i), 0, f'{fchg(st_.get("m1"), "pb")} en el mes · p{p}' if p is not None else fchg(st_.get("m1"), "pb"), lvl_of(p))
+sig_row("Prima 10A vs Bund", "pb", "Percentil de 3 años: rojo = máximos del periodo.", cs)
+cs = {}
+for code, _ in CTRY:
+    i = f"y10_{code}"
+    if latest(i) is not None:
+        cs[code] = cell(latest(i), 2, fchg(stats(BY[i]).get("m1"), "pb") + " en el mes")
+sig_row("Bono 10 años", "%", "", cs)
+cs = {}
+ea = latest("cpi_ea")
+for code, _ in CTRY:
+    i = f"cpi_{code}"
+    if latest(i) is not None:
+        dif = round(latest(i) - ea, 1) if ea is not None else None
+        cs[code] = cell(latest(i), 1, (f'{fnum(dif, 1)} pp vs zona euro' if dif is not None else "") + f' · {fdate(BY[i].get("date"))}', "hi" if dif is not None and dif >= 1 else "")
+sig_row("Inflación (IPC)", "% a/a", "Rojo: más de 1 pp por encima de la zona euro.", cs)
+cs = {}
+for code, _ in CTRY:
+    i = DEP[code]
+    if latest(i) is not None:
+        cs[code] = cell(latest(i), 2, fdate(BY[i].get("date")) + (" · empresas" if code == "es" else " · total"))
+sig_row("Depósito a plazo nuevo", "%", "Tipo medio de las nuevas imposiciones (estadística del banco central nacional).", cs)
+cs = {}
+for code, _ in CTRY:
+    g, g12, m = dep_gap(code)
+    if g is not None:
+        cs[code] = cell(g, 0, f'hace 12 m: {fnum(g12, 0)} pb' if g12 is not None else fdate(m), "hi" if g <= -50 else ("mid" if g <= -25 else ""))
+sig_row("Depósito − Euribor 3M", "pb", "Cuánto paga el banco por debajo del mercado. Muy negativo = incentivo del tesorero a irse a Letras o fondos monetarios.", cs)
+cs = {}
+for code, _ in CTRY:
+    i = f"loan_rate_nfc_{code}"
+    if latest(i) is not None:
+        mg, m = margin(code)
+        cs[code] = cell(latest(i), 2, (f"margen sobre depósito {fnum(mg, 0)} pb" if mg is not None else "") + f' · {fdate(BY[i].get("date"))}')
+sig_row("Préstamo nuevo a empresas", "%", "", cs)
+cs = {}
+for code, _ in CTRY:
+    for i, lab in ((f"unemp_{code}", "paro"),):
+        if latest(i) is not None:
+            g = latest(f"gdp_{code}")
+            cs[code] = cell(latest(i), 1, (f"PIB {fnum(g, 1)} % a/a" if g is not None else "") + f' · {fdate(BY[i].get("date"))}')
+sig_row("Paro", "%", "", cs)
+
+# curva y colocación de la caja
+def hist_spread(a, b, mult=100):
+    ks = sorted(set(HIST.get(a, {})) & set(HIST.get(b, {})))
+    return [(k, (HIST[a][k][0] - HIST[b][k][0]) * mult) for k in ks]
+
+FLAGS = []
+def flag(level, text, ids):
+    FLAGS.append({"level": level, "text": text, "ids": ids})
+
+for code, cname in CTRY:
+    i = f"spread_{code}_de_10y"
+    p = pct_rank(i)
+    r = BY.get(i)
+    if r and p is not None and p >= 90:
+        flag("alta", f"Prima de {cname} en el percentil {p} de 3 años: {fnum(latest(i), 0)} pb ({fchg(stats(r).get('m1'), 'pb')} en el mes).", [i])
+    if r and stats(r).get("d1") is not None and abs(stats(r)["d1"]) >= 5:
+        flag("media", f"Salto diario de la prima de {cname}: {fchg(stats(r)['d1'], 'pb')} hasta {fnum(latest(i), 0)} pb.", [i])
+slope_now = (latest("euribor_12m") - latest("euribor_3m")) * 100 if latest("euribor_12m") is not None and latest("euribor_3m") is not None else None
+slope_p = pct_of(slope_now, [v for _, v in hist_spread("euribor_12m", "euribor_3m")][-37:])
+if slope_now is not None:
+    flag("media" if (slope_p or 0) >= 80 else "baja", f"Curva euro: el Euribor 12M paga {fnum(slope_now, 0)} pb más que el 3M (percentil {slope_p} de 3 años). El mercado ya descuenta subidas del BCE.", ["euribor_12m", "euribor_3m"])
+if latest("letra_es_3m") is not None and latest("estr") is not None:
+    pk = round((latest("letra_es_3m") - latest("estr")) * 100)
+    flag("media" if pk >= 15 else "baja", f"La Letra a 3 meses ({fnum(latest('letra_es_3m'), 3)} %, subasta del {fdate(BY['letra_es_3m'].get('date'))}) paga {fnum(pk, 0)} pb sobre el €STR.", ["letra_es_3m", "estr"])
+for code, cname in CTRY:
+    g, g12, m = dep_gap(code)
+    if g is not None and g <= -40:
+        flag("media", f"{cname}: los depósitos a plazo nuevos pagan {fnum(-g, 0)} pb menos que el Euribor 3M ({fdate(m)}){'; hace un año la brecha era de ' + fnum(-g12, 0) + ' pb' if g12 is not None else ''}.", [DEP[code], "euribor_3m"])
+p = pct_rank("euribor_estr_3m")
+if p is not None and p >= 75:
+    flag("media", f"Euribor 3M − €STR en {fnum(latest('euribor_estr_3m'), 1)} pb (percentil {p}): el mercado cobra más por prestar a bancos a plazo.", ["euribor_estr_3m"])
+for code, cname in CTRY:
+    i = f"cpi_{code}"
+    if latest(i) is not None and ea is not None and latest(i) - ea >= 1:
+        flag("baja", f"Inflación de {cname} en el {fnum(latest(i), 1)} %, {fnum(latest(i) - ea, 1)} pp por encima de la zona euro.", [i, "cpi_ea"])
+nxt = sorted([p_ for p_ in PR if p_.get("bank") == "BCE"], key=lambda x: str(x.get("meeting")))
+for p_ in nxt[:2]:
+    h = num(p_.get("hike"))
+    if h is not None and h >= 0.6:
+        flag("alta", f"El mercado da un {fnum(h * 100, 0)} % a una subida del BCE el {fdate(p_.get('meeting'))}.", ["ecb_dfr"])
+if latest("rrp_us") is not None and latest("rrp_us") < 5:
+    flag("media", f"Repo inverso de la Fed en {fnum(latest('rrp_us'), 2)} mm USD: sin colchón de liquidez en dólares para los cierres de mes.", ["rrp_us", "srf_fed"])
+
+LADDER_EUR = [("O/N", "estr", None), ("1S", "euribor_1w", None), ("1M", "euribor_1m", None), ("3M", "euribor_3m", "letra_es_3m"), ("6M", "euribor_6m", "letra_es_6m"), ("9M", None, "letra_es_9m"), ("12M", "euribor_12m", "letra_es_12m")]
+LADDER_USD = [("O/N", "sofr", None), ("1M", "term_sofr_1m", None), ("3M", "term_sofr_3m", "tbill_us_3m"), ("6M", "term_sofr_6m", "tbill_us_6m"), ("12M", "term_sofr_12m", "tbill_us_1y")]
+
+def tenor_svg(rows, names, hline=None, hlab=""):
+    W, Hh, L, R, T, B = 720, 230, 44, 16, 14, 28
+    vals = [v for row in rows for v in row[1:] if v is not None] + ([hline] if hline is not None else [])
+    if not vals:
+        return ""
+    ticks = nice_ticks(min(vals), max(vals))
+    lo, hi = ticks[0], ticks[-1]
+    X = lambda k: L + (W - L - R) * k / max(1, len(rows) - 1)
+    Y = lambda v: T + (Hh - T - B) * (1 - (v - lo) / ((hi - lo) or 1))
+    o = [f'<svg class="chart" viewBox="0 0 {W} {Hh}" role="img" aria-label="Rentabilidad por plazo">']
+    for t in ticks:
+        o.append(f'<line class="gl" x1="{L}" x2="{W - R}" y1="{Y(t):.1f}" y2="{Y(t):.1f}"/><text class="tk" x="{L - 6}" y="{Y(t) + 4:.1f}" text-anchor="end">{fnum(t, 2)}</text>')
+    for k, row in enumerate(rows):
+        o.append(f'<text class="tk" x="{X(k):.1f}" y="{Hh - 8}" text-anchor="middle">{esc(row[0])}</text>')
+    if hline is not None:
+        o.append(f'<line x1="{L}" x2="{W - R}" y1="{Y(hline):.1f}" y2="{Y(hline):.1f}" stroke="{PAL[3]}" stroke-dasharray="5 4" stroke-width="1.6"/><text class="el" x="{W - R}" y="{Y(hline) - 5:.1f}" text-anchor="end">{esc(hlab)}</text>')
+    for j, nm in enumerate(names):
+        pts = [(X(k), Y(row[j + 1])) for k, row in enumerate(rows) if row[j + 1] is not None]
+        if not pts:
+            continue
+        d = "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts)
+        o.append(f'<path d="{d}" fill="none" stroke="{PAL[j]}" stroke-width="2.4" stroke-linejoin="round"/>' + "".join(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.6" fill="{PAL[j]}"/>' for x, y in pts))
+    o.append("</svg>")
+    return "".join(o)
+
+def ladder(rows_def, names, title, sub, hline=None, hlab="", dep_ref=None):
+    rows = [(t, latest(a) if a else None, latest(b) if b else None) for t, a, b in rows_def]
+    trs = []
+    for (t, a, b), (_, va, vb) in zip(rows_def, rows):
+        dd = round((vb - va) * 100) if va is not None and vb is not None else None
+        dr = round(((vb if vb is not None else va) - dep_ref) * 100) if dep_ref is not None and (va is not None or vb is not None) else None
+        trs.append([(t, ""), (fnum(va, 3) if va is not None else "—", "" if va is not None else "na"), (fnum(vb, 3) if vb is not None else "—", "" if vb is not None else "na"),
+                    (fchg(dd, "pb") if dd is not None else "—", ccls(dd)), (fchg(dr, "pb") if dr is not None else "—", ccls(dr))])
+    head = ["Plazo", names[0].split(" / ")[-1], names[1], "Diferencia", "vs depósito" if dep_ref is not None else "—"]
+    return (f'<div class="box"><h3>{esc(title)}</h3><p class="cap">{esc(sub)}</p>{tenor_svg(rows, names, hline, hlab)}{legend([(names[0], PAL[0]), (names[1], PAL[1])])}</div>'
+            + table(head, trs))
+
+dep_es = latest("dep_rate_nfc_es")
+ladder_html = ('<section id="colocar"><div class="sh"><h2>Dónde colocar la caja hoy</h2><p>Rentabilidad por plazo de las alternativas más líquidas, con el último dato publicado de cada una. Las Letras se toman de la última subasta de cada plazo.</p></div>'
+               + ladder(LADDER_EUR, ["€STR / Euribor", "Letra del Tesoro"], "Euros", "€STR, Euribor y Letras del Tesoro españolas (%). La línea discontinua es el tipo medio de los depósitos a plazo nuevos de empresas en España.",
+                        dep_es, f"Depósito empresas ES {fnum(dep_es, 2)} %" if dep_es is not None else "", dep_es)
+               + ladder(LADDER_USD, ["SOFR / Term SOFR", "T-bill"], "Dólares", "SOFR, Term SOFR de CME y T-bills de EE. UU. (%).") + "</section>")
+
+def sig_table():
+    th = "<th>Indicador</th>" + "".join(f"<th>{n}</th>" for _, n in CTRY)
+    body = []
+    for row in SIG_ROWS:
+        tds = []
+        for code, _ in CTRY:
+            c = row["cells"].get(code)
+            if not c:
+                tds.append('<td class="na">—</td>')
+                continue
+            tds.append(f'<td class="sg {c["lvl"]}"><b>{fnum(c["v"], c["d"])}</b><small>{esc(c["sub"])}</small></td>')
+        hint = f'<small>{esc(row["hint"])}</small>' if row["hint"] else ""
+        body.append(f'<tr><td class="sl">{esc(row["label"])} <span class="unit">{esc(row["unit"])}</span>{hint}</td>{"".join(tds)}</tr>')
+    return f'<div class="tw"><table class="sigt"><thead><tr>{th}</tr></thead><tbody>{"".join(body)}</tbody></table></div>'
+
+def flags_html():
+    if not FLAGS:
+        return '<p class="empty">Sin alertas automáticas.</p>'
+    order = {"alta": 0, "media": 1, "baja": 2}
+    out = []
+    for f in sorted(FLAGS, key=lambda f: order.get(f["level"], 3)):
+        links = "".join(f'<a class="go" href="#c-{esc(i)}" data-goto="{esc(i)}">{esc(BY[i].get("short") or i)}</a>' for i in f["ids"] if i in BY)
+        out.append(f'<li class="fl {f["level"]}"><span class="lv">{esc(f["level"])}</span> {esc(f["text"])} {links}</li>')
+    return '<ul class="flags">' + "".join(out) + "</ul>"
+
+signals_html = ('<section id="senales"><div class="sh"><h2>Señales por país</h2><p>Comparativa de España, Portugal, Francia y Países Bajos calculada con los datos de esta web: primas, inflación y lo que pagan y cobran sus bancos.</p></div>' + sig_table() + "</section>"
+                + '<section id="alertas"><div class="sh"><h2>Alertas automáticas</h2><p>Reglas fijas sobre percentiles de 3 años, saltos diarios y brechas de tipos. Toca un código para ir al cromo.</p></div>' + flags_html() + "</section>")
+
+KIND = {"Oportunidad": "op", "Riesgo": "rk", "Vigilar": "wt"}
+def ideas_html():
+    ideas = ANALISIS.get("ideas") or []
+    head = (f'<section id="ideas"><div class="sh"><h2>Ideas para la mesa de cash management</h2><p>Análisis de Claude a {esc(fdate(str(ANALISIS.get("as_of", ""))[:10]))} {esc(str(ANALISIS.get("as_of", ""))[11:16])} con los datos y noticias de esta web, '
+            'con foco en España, Portugal, Francia y Países Bajos. Son ideas de análisis, no recomendaciones de inversión ni posiciones del banco.</p></div>')
+    if not ideas:
+        return head + '<p class="empty">El análisis se genera en la próxima actualización.</p></section>'
+    pat = ANALISIS.get("patterns") or []
+    pat_html = ('<div class="box pat"><h3>Patrones que veo</h3><ul class="notes">' + "".join(f"<li>{esc(x)}</li>" for x in pat) + "</ul></div>") if pat else ""
+    cards = []
+    for n, x in enumerate(ideas):
+        k = KIND.get(x.get("kind"), "wt")
+        ev = "".join(f"<li>{esc(e)}</li>" for e in (x.get("evidence") or []))
+        links = "".join(f'<a class="go" href="#c-{esc(i)}" data-goto="{esc(i)}">{esc(BY[i].get("short") or i)}</a>' for i in (x.get("ids") or []) if i in BY)
+        fake = {"url": "idea:" + str(x.get("title")), "headline": x.get("title"), "country": ", ".join(x.get("countries") or []), "sector": x.get("kind"), "entities": ""}
+        cards.append(f'<article class="idea {k}" id="{nid(fake)}"><div class="ih"><span class="kd">{esc(x.get("kind"))}</span><span>{esc(" · ".join(x.get("countries") or []))}</span>'
+                     f'<span>Horizonte: {esc(x.get("horizon") or "—")}</span><span>Confianza {esc(x.get("confidence") or "—")}</span></div>'
+                     f'<h3>{esc(x.get("title"))}</h3><p>{esc(x.get("thesis"))}</p>'
+                     + (f'<ul class="iev">{ev}</ul>' if ev else "")
+                     + f'<p class="act"><b>Qué haría:</b> {esc(x.get("action"))}</p>'
+                     + (f'<p class="trg"><b>Cambiaría de opinión si:</b> {esc(x.get("invalidation"))}</p>' if x.get("invalidation") else "")
+                     + f'<div class="nf"><span class="ilinks">{links}</span>{like_btn(fake, "idea")}</div></article>')
+    return head + pat_html + '<div class="ideas">' + "".join(cards) + "</div></section>"
+
+SP_ANALISIS = [("ideas", "Ideas", ideas_html()), ("senales", "Señales por país", signals_html), ("colocar", "Dónde colocar la caja", ladder_html)]
+
+if MODE == "--signals":
+    out = {"now_madrid": NOW.strftime("%Y-%m-%d %H:%M"), "flags": FLAGS,
+           "by_country": [{"indicator": r["label"], "unit": r["unit"], **{n: (c["v"], c["sub"]) for code, n in CTRY for c in [r["cells"].get(code)] if c}} for r in SIG_ROWS],
+           "ladder_eur": [(t, a, latest(a) if a else None, b, latest(b) if b else None) for t, a, b in LADDER_EUR],
+           "ladder_usd": [(t, a, latest(a) if a else None, b, latest(b) if b else None) for t, a, b in LADDER_USD],
+           "euribor_12m_minus_3m_pb": slope_now, "slope_percentile_3y": slope_p,
+           "stale_daily_rows": [r["id"] for r, _ in STALE]}
+    print(json.dumps(out, ensure_ascii=False, indent=1))
+    sys.exit(0)
+
 
 CSS = """
 :root{--grid:#1c2939;--bg:#0b1119;--panel:#111a26;--panel2:#162231;--line:#233246;--line2:#2e4159;--fg:#dbe4ee;--muted:#8798ad;--faint:#5d6f86;--accent:#7cc4ff;--up:#3ddc97;--down:#ff7a7a;--warn:#f5c26b;
@@ -610,11 +999,12 @@ header h1{margin:0;font-size:15px;letter-spacing:.08em;text-transform:uppercase}
 header .asof{font-family:var(--mono);font-size:11px;color:var(--muted)}header .asof b{color:var(--accent);font-weight:500}
 .tape{display:flex;overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--panel);-webkit-overflow-scrolling:touch}
 .tape span{flex:0 0 auto;padding:7px 12px;border-right:1px solid var(--line);font-family:var(--mono);font-size:12px;white-space:nowrap}.tape b{color:var(--muted);font-weight:500}.tape em{font-style:normal}
-nav{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin:10px 0 4px;-webkit-overflow-scrolling:touch;padding-top:env(safe-area-inset-top)}
+.navs{position:sticky;top:0;z-index:5;background:var(--bg);margin:10px 0 4px;padding-top:env(safe-area-inset-top)}
+nav{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch;scrollbar-width:none}
 nav a{flex:0 0 auto;color:var(--muted);text-decoration:none;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:10px 10px;border-bottom:2px solid transparent}
 nav a:hover,nav a:focus{color:var(--fg);border-bottom-color:var(--accent)}
-.page{scroll-margin-top:48px}.page>h1{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg);margin:22px 0 4px;padding-top:10px;border-top:2px solid var(--line2)}
-section{margin:14px 0 18px;scroll-margin-top:52px}
+.page{scroll-margin-top:96px}.page>h1{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg);margin:22px 0 4px;padding-top:10px;border-top:2px solid var(--line2)}
+section{margin:14px 0 18px;scroll-margin-top:100px}
 .sh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:5px;margin-bottom:8px}
 .sh h2{margin:0;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}.sh p{margin:0;font-size:11px;color:var(--muted);max-width:70ch}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:6px}
@@ -709,6 +1099,36 @@ nav button:focus-visible,.zoom:focus-visible,.zm button:focus-visible{outline:2p
 .wh{display:flex;justify-content:space-between;align-items:center;gap:8px}.wh h3{margin:0;font-size:15px}.wnote{margin:0;font-size:12px;color:var(--muted)}
 .wm{font-family:var(--mono);font-size:13px}.wm b{font-size:18px;font-weight:500}.wm em{font-style:normal}.wn{color:var(--muted);font-family:var(--sans);font-size:12px}.wd{font-size:11px;color:var(--faint);font-family:var(--sans)}
 .ws{margin:0;font-size:13px;line-height:1.5}.wnx{margin:0;font-size:12px;color:var(--warn)}.wnews{margin:0;padding-left:16px;font-size:12.5px;line-height:1.5}.wnews li{margin-bottom:5px}.wnews .imp{color:var(--warn)}
+header h1 .by{white-space:nowrap;font-size:11px;letter-spacing:.06em;text-transform:none;color:var(--accent);font-weight:500;margin-left:4px}
+.subnav{display:flex;gap:6px;overflow-x:auto;padding:7px 0 8px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.subnav[hidden]{display:none}.subnav::-webkit-scrollbar,nav::-webkit-scrollbar{display:none}
+.subnav button{flex:0 0 auto;font:inherit;font-size:12.5px;color:var(--muted);background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:5px 12px;cursor:pointer;white-space:nowrap}
+.subnav button[aria-selected=true]{color:var(--bg);background:var(--accent);border-color:var(--accent)}
+.js .sp{display:none}.js .sp.on{display:block}
+.nextsub{font:inherit;font-size:13px;color:var(--fg);background:var(--panel2);border:1px solid var(--line2);border-radius:4px;padding:8px 12px;margin-left:6px;cursor:pointer}
+.fr{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}.fr.ok{background:var(--up)}.fr.late{background:var(--warn)}
+.st{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--up);border-radius:4px;padding:9px 12px;font-size:13px;display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.st.warn{border-left-color:var(--warn)}.st.bad{border-left-color:var(--down)}.st b{font-family:var(--mono);font-size:17px}.st .lg{font-size:11px;color:var(--muted)}
+.nb{min-width:0;flex:1}.nw .act{background:var(--panel2);border-left:2px solid var(--accent);padding:6px 9px;margin:6px 0;color:var(--fg)}.nw .act b{color:var(--accent);font-weight:600}
+.nf{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.like{font:inherit;font-size:12.5px;color:var(--fg);background:transparent;border:1px solid var(--line2);border-radius:14px;padding:5px 11px;cursor:pointer;white-space:nowrap}
+.like[aria-pressed=true]{background:var(--accent);color:var(--bg);border-color:var(--accent)}.no-js .like{display:none}
+.toast{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;background:var(--fg);color:var(--bg);font-size:13px;padding:9px 14px;border-radius:6px;max-width:90vw;box-shadow:0 4px 18px rgba(0,0,0,.35)}
+.ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:8px}
+.idea{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--warn);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.idea.op{border-top-color:var(--up)}.idea.rk{border-top-color:var(--down)}
+.ih{display:flex;flex-wrap:wrap;gap:4px 10px;font-family:var(--mono);font-size:10.5px;color:var(--muted)}.ih .kd{text-transform:uppercase;letter-spacing:.06em;color:var(--fg);font-weight:600}
+.idea h3{margin:0;font-size:15px;line-height:1.35}.idea p{margin:0;font-size:13px;line-height:1.5}.iev{margin:0;padding-left:16px;font-size:12.5px;line-height:1.5;color:var(--muted)}
+.idea .act{background:var(--panel2);border-left:2px solid var(--accent);padding:6px 9px}.idea .act b{color:var(--accent)}.trg{color:var(--muted)}
+.go{display:inline-block;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--line2);border-radius:3px;padding:1px 6px;margin:2px 4px 2px 0;text-decoration:none}
+.pat{margin-bottom:8px}
+.sigt td.sl{white-space:normal;min-width:9rem;max-width:14rem;font-size:12.5px}.sigt td.sl small{display:block;color:var(--faint);font-size:10.5px;line-height:1.35;margin-top:2px}
+.sigt td.sg{white-space:normal;vertical-align:top;min-width:6.4rem}.sigt td.sg b{display:block;font-size:14px;font-weight:500}.sigt td.sg small{display:block;color:var(--muted);font-size:10px;line-height:1.3;font-family:var(--sans);max-width:9rem;margin-left:auto}
+.sigt td.sg.hi{box-shadow:inset 3px 0 0 var(--down)}.sigt td.sg.mid{box-shadow:inset 3px 0 0 var(--warn)}.sigt td.sg.lo{box-shadow:inset 3px 0 0 var(--up)}
+ul.flags{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}.fl{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:4px;padding:8px 10px;font-size:13px;line-height:1.5}
+.fl.alta{border-left-color:var(--down)}.fl.media{border-left-color:var(--warn)}.fl .lv{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.pfr{display:grid;grid-template-columns:7rem 1fr;gap:8px;align-items:start;margin:8px 0;font-size:12px;color:var(--muted)}.pfr .tag{display:inline-block;margin:0 4px 4px 0;font-size:11px}
+.hoy p{margin:0;font-size:14px;line-height:1.55}.hoy small{font-size:11px;color:var(--faint)}
 @media (orientation:landscape) and (max-height:500px){.zm-chips{max-height:18vh}.zm-hint{display:none}.zm-r{max-height:12vh}.zm-c{min-height:150px}}
 """
 
@@ -722,23 +1142,54 @@ function fm(m){return MES[+m.slice(5,7)-1]+'-'+m.slice(2,4);}
 function fn(v,d){if(v===null||v===undefined||isNaN(v))return '—';return v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});}
 function back(m,k){var y=+m.slice(0,4),mo=+m.slice(5,7),t=y*12+mo-1-k;var mm=(t%12)+1;return Math.floor(t/12)+'-'+(mm<10?'0':'')+mm;}
 function lbl(id){var x=D[id];if(!x)return id;return (S.spec&&S.spec.lb==='c'&&x.c)?x.c:x.n;}
-/* pestañas */
+/* pestañas y secciones */
 var tabs=[].slice.call(document.querySelectorAll('nav [data-tab]'));
-function show(id,scroll){tabs.forEach(function(b){var on=b.getAttribute('data-tab')===id;b.setAttribute('aria-selected',on?'true':'false');document.getElementById(id===b.getAttribute('data-tab')?id:b.getAttribute('data-tab')).className='page'+(on?' on':'');});
- try{history.replaceState(null,'','#'+id);}catch(e){} if(scroll)window.scrollTo(0,0);}
+var sn=document.getElementById('subnav');var cur={tab:null,sub:{}};
+function subsOf(id){return [].slice.call(document.getElementById(id).children).filter(function(x){return /(^| )sp( |$)/.test(x.className);});}
+function showSub(id,key,scroll){var ss=subsOf(id);if(!ss.length)return;var k=(key&&ss.some(function(x){return x.getAttribute('data-sub')===key;}))?key:ss[0].getAttribute('data-sub');
+ ss.forEach(function(x){x.className='sp'+(x.getAttribute('data-sub')===k?' on':'');});cur.sub[id]=k;
+ [].slice.call(sn.children).forEach(function(b){b.setAttribute('aria-selected',b.getAttribute('data-sub')===k?'true':'false');});
+ var on=sn.querySelector('[aria-selected=true]');if(on){try{sn.scrollLeft=on.offsetLeft-(sn.clientWidth-on.clientWidth)/2;}catch(e){}}
+ try{history.replaceState(null,'','#'+id+(ss.length>1?'/'+k:''));}catch(e){} if(scroll)window.scrollTo(0,0);}
+function buildSub(id){var ss=subsOf(id);sn.innerHTML='';sn.hidden=ss.length<2;if(ss.length<2)return;
+ ss.forEach(function(x){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.setAttribute('data-sub',x.getAttribute('data-sub'));b.textContent=x.getAttribute('data-label');b.addEventListener('click',function(){showSub(id,x.getAttribute('data-sub'),true);});sn.appendChild(b);});}
+function show(id,scroll,sub){tabs.forEach(function(b){var t=b.getAttribute('data-tab'),on=t===id;b.setAttribute('aria-selected',on?'true':'false');document.getElementById(t).className='page'+(on?' on':'');});
+ cur.tab=id;buildSub(id);showSub(id,sub||cur.sub[id],false);var nv=document.querySelector('nav');var tb=document.querySelector('nav [data-tab="'+id+'"]');
+ if(tb&&nv&&(tb.offsetLeft<nv.scrollLeft||tb.offsetLeft+tb.clientWidth>nv.scrollLeft+nv.clientWidth)){nv.scrollLeft=tb.offsetLeft-12;}
+ if(scroll)window.scrollTo(0,0);}
 tabs.forEach(function(b){b.addEventListener('click',function(){show(b.getAttribute('data-tab'),true);});});
-var h=location.hash.slice(1);show(tabs.some(function(b){return b.getAttribute('data-tab')===h;})?h:'pulso',false);
+[].slice.call(document.querySelectorAll('[data-next]')).forEach(function(b){b.addEventListener('click',function(){showSub(cur.tab,b.getAttribute('data-next'),true);});});
+function fromHash(sc){var hh=location.hash.slice(1).split('/');show(tabs.some(function(b){return b.getAttribute('data-tab')===hh[0];})?hh[0]:'pulso',sc,hh[1]);}
+fromHash(false);window.addEventListener('hashchange',function(){fromHash(true);});
 /* tema */
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
 var thb=document.getElementById('theme');function setTheme(m){if(m==='light')document.documentElement.setAttribute('data-theme','light');else document.documentElement.removeAttribute('data-theme');thb.textContent=m==='light'?'☾ Noche':'☀︎ Día';ls('mlv-theme',m);}
 setTheme(ls('mlv-theme')==='light'?'light':'dark');thb.addEventListener('click',function(){setTheme(document.documentElement.getAttribute('data-theme')==='light'?'dark':'light');if(!zm.hidden)draw();});
+/* «Me interesa»: se guarda en el móvil y se envía al formulario de feedback */
+var FB={u:%FBU%,e:%FBE%};
+function lget(k,d){try{return JSON.parse(ls(k)||d);}catch(e){return JSON.parse(d);}}
+var toast=document.getElementById('toast'),tt;
+function say(t){toast.textContent=t;toast.hidden=false;clearTimeout(tt);tt=setTimeout(function(){toast.hidden=true;},2400);}
+function queue(v){var q=lget('mlv-fbq','[]');q.push(v);ls('mlv-fbq',JSON.stringify(q));}
+function post(v){if(!FB.u||!window.fetch){queue(v);return;}try{var fd=new URLSearchParams();fd.append(FB.e,v);fetch(FB.u,{method:'POST',mode:'no-cors',body:fd}).catch(function(){queue(v);});}catch(e){queue(v);}}
+function flush(){if(!FB.u||navigator.onLine===false)return;var q=lget('mlv-fbq','[]');if(!q.length)return;ls('mlv-fbq','[]');q.forEach(post);}
+function renderLikes(){var L=lget('mlv-likes','{}');[].slice.call(document.querySelectorAll('[data-like]')).forEach(function(b){var on=!!L[b.getAttribute('data-nid')];b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?'✓ Te interesa':'👍 Me interesa';});
+ var ul=document.getElementById('likes-local');if(ul){ul.innerHTML='';Object.keys(L).sort(function(a,b){return (L[b].t||0)-(L[a].t||0);}).slice(0,30).forEach(function(k){var li=document.createElement('li');li.textContent=L[k].h;ul.appendChild(li);});
+  if(!ul.children.length){var li=document.createElement('li');li.textContent='Aún no has marcado nada en este móvil.';ul.appendChild(li);}}
+ var st=document.getElementById('fb-state');if(st){var q=lget('mlv-fbq','[]');st.textContent=FB.u?(q.length?q.length+' marcas pendientes de enviar.':'Tus marcas me llegan al momento.'):('Tus marcas se guardan en este móvil y me llegarán en cuanto conectemos el formulario de feedback ('+q.length+' en cola).');}}
+document.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('[data-like]'):null;if(!b)return;e.preventDefault();var id=b.getAttribute('data-nid'),p=b.getAttribute('data-like'),L=lget('mlv-likes','{}'),on=!L[id];
+ if(on){L[id]={h:p.split('|')[5]||id,t:Date.now()};}else{delete L[id];}ls('mlv-likes',JSON.stringify(L));post((on?'+':'-')+'|'+p+'|'+new Date().toISOString());renderLikes();say(on?'Anotado: te interesa. Lo tendré en cuenta.':'Marca quitada.');});
+renderLikes();flush();
+/* recarga automática al volver a la página */
+var t0=Date.now();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&Date.now()-t0>15*60*1000){location.reload();}});
 /* Mi vista */
 function favs(){try{return JSON.parse(ls('mlv-fav')||'[]');}catch(e){return [];}}
 function renderFav(){var f=favs(),g=document.getElementById('mv-grid');g.innerHTML='';f.forEach(function(id){var c=document.querySelector('.page:not(#mivista) details[data-id="'+id+'"]');if(!c)return;var k=c.cloneNode(true);k.removeAttribute('id');k.open=false;g.appendChild(k);});
  document.getElementById('mv-empty').hidden=g.children.length>0;[].slice.call(document.querySelectorAll('[data-fav]')).forEach(function(b){var on=f.indexOf(b.getAttribute('data-fav'))>=0;b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?'★':'☆';});bindZoom(g);}
 document.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('[data-fav]'):null;if(!b)return;e.preventDefault();e.stopPropagation();var id=b.getAttribute('data-fav'),f=favs(),i=f.indexOf(id);if(i>=0)f.splice(i,1);else f.push(id);ls('mlv-fav',JSON.stringify(f));renderFav();},true);
-/* ir a un cromo desde "lo que más se ha movido" */
-[].slice.call(document.querySelectorAll('[data-goto]')).forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var c=document.querySelector('#pulso details[data-id="'+a.getAttribute('data-goto')+'"]')||document.querySelector('details[data-id="'+a.getAttribute('data-goto')+'"]');if(!c)return;var pg=c.closest('.page');if(pg)show(pg.id,false);c.open=true;c.scrollIntoView({block:'start'});window.scrollBy(0,-56);});});
+/* ir a un cromo desde movers, alertas e ideas */
+[].slice.call(document.querySelectorAll('[data-goto]')).forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var g=a.getAttribute('data-goto');var c=document.querySelector('#pulso details[data-id="'+g+'"]')||document.querySelector('.page:not(#mivista) details[data-id="'+g+'"]');if(!c)return;
+ var pg=c.closest('.page'),sp=c.closest('.sp');if(pg)show(pg.id,false,sp?sp.getAttribute('data-sub'):null);c.open=true;c.scrollIntoView({block:'start'});window.scrollBy(0,-96);});});
 /* filtros de agenda */
 [].slice.call(document.querySelectorAll('#ag-f .chip')).forEach(function(b){b.addEventListener('click',function(){var f=b.getAttribute('data-f');[].slice.call(document.querySelectorAll('#ag-f .chip')).forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
  [].slice.call(document.querySelectorAll('.ev')).forEach(function(ev){ev.hidden=!(f===''||(f==='alta'?ev.getAttribute('data-r')==='alta':ev.getAttribute('data-t')===f));});});});
@@ -782,11 +1233,25 @@ bindZoom(document);renderFav();
 })();
 """
 
-TABS = [("pulso", "Pulso"), ("mivista", "Mi vista"), ("markets", "Markets information"), ("regional", "Europa"), ("curvas", "Curvas"), ("agenda", "Agenda"), ("watchlist", "Watchlist"), ("noticias", "Top 10 noticias")]
-TITLES = {"pulso": "Pulso de mercado", "mivista": "Mi vista", "markets": "Markets information", "regional": "Europa · España, Portugal, Francia y Países Bajos", "curvas": "Curvas monetarias", "agenda": "Agenda", "watchlist": "Watchlist", "noticias": "Top 10 noticias"}
-BODY = {"pulso": pulso, "mivista": mivista, "markets": markets, "regional": regional, "curvas": curvas, "agenda": agenda, "watchlist": watch, "noticias": noticias}
+TABS = [("pulso", "Pulso"), ("analisis", "Análisis"), ("mivista", "Mi vista"), ("markets", "Markets information"), ("regional", "Europa"), ("curvas", "Curvas"), ("agenda", "Agenda"), ("watchlist", "Watchlist"), ("noticias", "Top 10 noticias")]
+TITLES = {"pulso": "Pulso de mercado", "analisis": "Análisis y oportunidades", "mivista": "Mi vista", "markets": "Markets information", "regional": "Europa · España, Portugal, Francia y Países Bajos", "curvas": "Curvas monetarias", "agenda": "Agenda", "watchlist": "Watchlist y radar de liquidez", "noticias": "Top 10 noticias"}
+BODY = {"pulso": SP_PULSO, "analisis": SP_ANALISIS, "mivista": [("mivista", "Mi vista", mivista)], "markets": SP_MARKETS, "regional": SP_REGIONAL, "curvas": SP_CURVAS,
+        "agenda": [("agenda", "Agenda", agenda)], "watchlist": SP_WATCH, "noticias": SP_NOTICIAS}
+
+def render_page(k):
+    subs = [(key, lab, h) for key, lab, h in BODY[k] if h]
+    out = []
+    for n, (key, lab, h) in enumerate(subs):
+        if n + 1 < len(subs):
+            nxt = subs[n + 1]
+            end = f'<div class="endtab">Fin de «{esc(lab)}». <button type="button" class="nextsub" data-next="{esc(nxt[0])}">Siguiente: {esc(nxt[1])} →</button></div>'
+        else:
+            end = f'<div class="endtab">Fin de «{esc(TITLES[k])}». Cambia de pestaña arriba para seguir.</div>'
+        out.append(f'<div class="sp on" data-sub="{esc(key)}" data-label="{esc(lab)}">{h}{end}</div>')
+    return f'<div class="page on" id="{k}" role="tabpanel"><h1>{esc(TITLES[k])}</h1>{"".join(out)}</div>'
+
 navh = "".join(f'<button type="button" role="tab" data-tab="{k}" aria-selected="false">{esc(v)}</button>' for k, v in TABS)
-pages = "".join(f'<div class="page on" id="{k}" role="tabpanel"><h1>{esc(TITLES[k])}</h1>{BODY[k]}<div class="endtab">Fin de «{esc(TITLES[k])}». Cambia de pestaña arriba para seguir.</div></div>' for k, _ in TABS)
+pages = "".join(render_page(k) for k, _ in TABS)
 ZM = """<div id="zm" class="zm" hidden role="dialog" aria-modal="true" aria-labelledby="zm-t">
 <div class="zm-h"><b id="zm-t"></b><button type="button" class="x" id="zm-x">Cerrar ✕</button></div>
 <div class="zm-ctl"><div class="seg" id="zm-rg"><button type="button" data-r="12" aria-pressed="false">1A</button><button type="button" data-r="24" aria-pressed="false">2A</button><button type="button" data-r="36" aria-pressed="true">3A</button></div><span id="zm-n"></span></div>
@@ -797,16 +1262,16 @@ ZM = """<div id="zm" class="zm" hidden role="dialog" aria-modal="true" aria-labe
 </div>"""
 
 page = f"""<!doctype html><html lang="es" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Monitor de liquidez y mercados</title><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b1119">
+<title>Monitor de liquidez y mercados by R-ro</title><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b1119">
 <style>{CSS}{ZCSS}</style></head><body>
-<header><h1>Monitor de liquidez y mercados</h1><div class="asof">Datos a <b>{esc(asof)}</b> · generado {esc(built)} (hora de Madrid) <button type="button" id="theme" class="thm" aria-label="Cambiar a modo día">☀︎ Día</button></div></header>
+<header><h1>Monitor de liquidez y mercados <span class="by">by R‑ro</span></h1><div class="asof">Datos a <b>{esc(asof)}</b> · generado {esc(built)} (hora de Madrid) <button type="button" id="theme" class="thm" aria-label="Cambiar a modo día">☀︎ Día</button></div></header>
 <div class="tape">{"".join(tape)}</div>
-<nav role="tablist" aria-label="Pestañas">{navh}</nav>
+<div class="navs"><nav role="tablist" aria-label="Pestañas">{navh}</nav><div class="subnav" id="subnav" role="tablist" aria-label="Secciones"></div></div><div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 {pages}
-<footer>Datos de fuentes públicas (bancos centrales, administradores de índices, institutos estadísticos y, donde no hay fuente oficial abierta, agregadores que se indican en cada indicador). Se actualiza los días laborables a las 7:45, 12:58 y 17:45 (Madrid). Lecturas y resúmenes de noticias redactados por Claude; no constituyen recomendación de inversión. Los CDS por emisor y las curvas por rating requieren datos con licencia (S&amp;P Global/Markit, LSEG, Bloomberg).</footer>
+<footer>Datos de fuentes públicas (bancos centrales, administradores de índices, institutos estadísticos y, donde no hay fuente oficial abierta, agregadores que se indican en cada indicador). Se actualiza los días laborables a las 8:20, 11:20, 15:20, 18:20 y 22:20 (Madrid), justo después de que se publiquen el €STR, el Euribor, el SOFR y los cierres de mercado; la página se recarga sola si llevas más de 15 minutos sin abrirla. Lecturas, análisis y resúmenes de noticias redactados por Claude; no constituyen recomendación de inversión. Los CDS por emisor y por país requieren datos con licencia y no se muestran.</footer>
 {ZM}
 <script type="application/json" id="dz">{DZJSON}</script>
-<script>{ZJS}</script>
+<script>{ZJS.replace('%FBU%', json.dumps(FEEDBACK_FORM)).replace('%FBE%', json.dumps(FEEDBACK_ENTRY))}</script>
 </body></html>"""
 
 (OUT / "index.html").write_text(page)

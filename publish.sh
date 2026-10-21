@@ -10,7 +10,7 @@ TMP="$(mktemp -d)"
 python3 -I "$HERE/build_site.py" "$DATA" "$TMP"
 npx --yes staticrypt@3.5.4 "$TMP/index.html" -p "$STATICRYPT_PASSWORD" --short --remember 30 \
   --salt c638070ce5ca880e8485b0ff97fcde8c --config false -d "$TMP/enc" \
-  --template-title "Monitor de liquidez y mercados" \
+  --template-title "Monitor de liquidez y mercados by R‑ro" \
   --template-instructions "Introduce la contraseña para ver el monitor." \
   --template-button "Entrar" --template-placeholder "Contraseña" \
   --template-remember "Recordarme 30 días" --template-error "Contraseña incorrecta" \
