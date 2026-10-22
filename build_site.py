@@ -44,6 +44,8 @@ ANALISIS = load("analisis.json", {})
 ANALISIS = ANALISIS[0] if isinstance(ANALISIS, list) and ANALISIS else (ANALISIS if isinstance(ANALISIS, dict) else {})
 PREFS = load("preferencias.json", {})
 PREFS = PREFS[0] if isinstance(PREFS, list) and PREFS else (PREFS if isinstance(PREFS, dict) else {})
+SEG = load("seguimiento.json", {})
+SEG = SEG[0] if isinstance(SEG, list) and SEG else (SEG if isinstance(SEG, dict) else {})
 
 # Los CDS por emisor y por país no tienen fuente abierta suficiente: fuera de la web.
 U = [r for r in U if not str(r.get("group", "")).startswith("cds")]
@@ -487,7 +489,9 @@ def news_items(items, show_rank=True, kind="top10"):
         act = f'<p class="act"><b>Qué hacer / vigilar:</b> {esc(x.get("action"))}</p>' if x.get("action") else ""
         cat = f'<span class="tag">{esc(x.get("category"))}</span> ' if x.get("category") else ""
         sec = "" if (x.get("category") and str(x.get("sector") or "").lower()[:5] == str(x.get("category")).lower()[:5]) else f'<span class="tag">{esc(x.get("sector"))}</span> '
-        out.append(f'''<article class="nw" id="{nid(x)}">{rank}<div class="nb"><div class="nt">{cat}{sec}{esc(ents(x))} · {esc(fdate(x.get("published")))}</div>
+        card_json = json.dumps({"k": "Top 10" if kind == "top10" else ("Radar · " + str(x.get("country") or "")), "t": " · ".join(v for v in (str(x.get("category") or ""), str(x.get("sector") or ""), ents(x)) if v),
+                                "d": fdate(x.get("published")), "h": x.get("headline"), "s": x.get("summary"), "i": x.get("implication"), "a": x.get("action"), "src": x.get("source"), "u": x.get("url")}, ensure_ascii=False)
+        out.append(f'''<article class="nw rdbl" id="{nid(x)}" data-n="{esc(card_json)}" tabindex="0">{rank}<div class="nb"><div class="nt">{cat}{sec}{esc(ents(x))} · {esc(fdate(x.get("published")))}</div>
 <h3>{esc(x.get("headline"))}</h3><p>{esc(x.get("summary"))}</p><p class="imp">Implicación: {esc(x.get("implication"))}</p>{act}<div class="nf">{link}{like_btn(x, kind)}</div></div></article>''')
     return "".join(out) or '<p class="empty">Sin noticias seleccionadas.</p>'
 
@@ -578,6 +582,12 @@ def resumen_box():
     return (f'<section id="hoy"><div class="sh"><h2>Hoy en 30 segundos</h2><p>Nota de {esc(fdate(str(RESUMEN.get("as_of", ""))[:10]))} {esc(str(RESUMEN.get("as_of", ""))[11:16])} · escrita por Claude con los datos de esta página.</p></div>'
             f'<div class="hoy"><ul>{li}</ul></div></section>')
 
+def seg_banner(country=None):
+    if not SEG.get("active") or (country and SEG.get("country") != country):
+        return ""
+    return (f'<a class="segb" href="#analisis/seguimiento"><b>⚠ Seguimiento especial: {esc(SEG.get("title"))}</b>'
+            f'<span>{esc(SEG.get("headline_es") or "")}</span><em>Ver el seguimiento →</em></a>')
+
 def status_box():
     if not FRESH:
         return ""
@@ -590,7 +600,7 @@ def status_box():
             f'<div class="st {cls}"><b>{ok}/{n}</b> al día <span class="lg"><i class="fr ok"></i> último dato publicado · <i class="fr late"></i> pendiente</span></div>{more}</section>')
 
 SP_PULSO = [
-    ("resumen", "Resumen", resumen_box() + status_box() + stress_box() + movers_box()),
+    ("resumen", "Resumen", seg_banner() + resumen_box() + status_box() + stress_box() + movers_box()),
     ("tipos", "Tipos y BC", grid(["estr", "sofr", "fed_upper", "iorb", "sonia"], "Tipos overnight", "Variación frente al dato anterior. Toca un cromo para ver 3 años de histórico y la lectura de liquidez.", "tipos")
      + grid(["ecb_dfr", "fed_upper", "boe_bank_rate"], "Bancos centrales", "Tipo oficial y probabilidades de mercado para las dos próximas reuniones.", "bc", extra=probs)),
     ("bonos", "Bonos", grid(["y10_de", "y10_es", "spread_es_de_10y", "y10_pt", "spread_pt_de_10y", "y10_fr", "spread_fr_de_10y", "y10_nl", "spread_nl_de_10y", "y10_it", "spread_it_de_10y", "y10_uk", "y10_pl", "y10_us", "y10_mx", "y10_br", "y10_co", "y10_cl", "y10_pe"], "Bonos soberanos 10 años", "Rentabilidad y primas de riesgo frente a Alemania.", "bonos")),
@@ -700,23 +710,22 @@ SP_CURVAS = [
 ]
 
 COUNTRIES = (("es", "España", "Banco de España"), ("pt", "Portugal", "Banco de Portugal"), ("fr", "Francia", "Banque de France"), ("nl", "Países Bajos", "De Nederlandsche Bank"))
+
 SP_REGIONAL = []
 for code, cname, bank in COUNTRIES:
     ids = [f"cpi_{code}", f"y10_{code}", f"spread_{code}_de_10y", f"gdp_{code}", f"unemp_{code}", f"loan_rate_nfc_{code}", f"dep_rate_{code}", f"dep_rate_nfc_{code}", f"dep_rate_hh_{code}", f"nfc_deposits_{code}", f"letra_{code}_3m", f"letra_{code}_12m"]
     cards = "".join(card(BY[i]).replace('id="c-', 'id="r-', 1) for i in ids if i in BY and num(BY[i].get("value")) is not None)
     notes = [b for b in BNOTES if b.get("country") == cname]
     nhtml = "".join(f'<li><b>{esc(fdate(b.get("date")))}</b> {esc(b.get("text_es"))} ' + (f'<a href="{esc(b["url"])}" target="_blank" rel="noopener">{esc(b.get("source") or "Fuente")} ↗</a>' if str(b.get("url", "")).startswith("http") else "") + "</li>" for b in notes)
-    SP_REGIONAL.append((code, cname, f'<section id="reg-{code}"><div class="sh"><h2>{cname}</h2><p>Macro, inflación, tipos bancarios y liquidez · notas de {bank}, del Tesoro y del presupuesto. Las noticias de bancos y empresas están en Watchlist → Radar.</p></div>'
-                        + (f'<div class="grid">{cards}</div>' if cards else "")
-                        + (f'<div class="box"><h3>{bank}, Tesoro y presupuesto</h3><ul class="notes">{nhtml}</ul></div>' if nhtml else "") + "</section>"))
-
-def radar(code, cname):
-    rn = [x for x in RNEWS if x.get("country") == cname]
-    return (f'<section id="radar-{code}"><div class="sh"><h2>Radar de liquidez · {cname}</h2><p>Bancos, supervisor y grandes empresas del índice: solo lo que mueve caja, financiación o liquidez, con lo que haría un analista de cash management. Marca 👍 lo que te interese y afinaré la selección.</p></div>'
-            f'<div class="news">{news_items(rn, show_rank=False, kind="radar")}</div></section>')
+    rn = sorted([x for x in RNEWS if x.get("country") == cname], key=lambda x: str(x.get("published") or ""), reverse=True)
+    SP_REGIONAL.append((code, cname, seg_banner(cname)
+                        + f'<section id="radar-{code}"><div class="sh"><h2>{cname} · noticias de liquidez</h2><p>Bancos, supervisores, Tesoro y grandes empresas: lo que mueve depósitos, saldos operativos, cash pooling, financiación o ratios de liquidez, con lo que haría la mesa de liquidez de GTB. Toca una noticia para leerla a pantalla completa y compartirla.</p></div>'
+                        f'<div class="news">{news_items(rn, show_rank=False, kind="radar")}</div></section>'
+                        + (f'<section><div class="sh"><h2>{bank}, Tesoro y presupuesto</h2><p>Publicaciones y datos oficiales recientes.</p></div><div class="box"><ul class="notes">{nhtml}</ul></div></section>' if nhtml else "")
+                        + (f'<section id="reg-{code}"><div class="sh"><h2>{cname} · indicadores</h2><p>Macro, inflación, tipos bancarios de depósitos y préstamos, y deuda pública.</p></div><div class="grid">{cards}</div></section>' if cards else "")))
 
 def prefs_page():
-    head = ('<section id="prefs"><div class="sh"><h2>Lo que aprendo de tus 👍</h2><p>Cada «Me interesa» del Top 10, del Radar y de las ideas me dice qué te sirve. Lo leo en cada actualización y prioriza lo que selecciono.</p></div>')
+    head = ('<section id="prefs"><div class="sh"><h2>Lo que aprendo de tus 👍</h2><p>Cada «Me interesa» de las noticias y de las ideas me dice qué te sirve. Lo leo en cada actualización y prioriza lo que selecciono.</p></div>')
     body = []
     if PREFS.get("summary_es"):
         body.append(f'<div class="hoy"><p>{esc(PREFS["summary_es"])}</p><small>{esc(PREFS.get("n_votes") or 0)} marcas · actualizado {esc(fdate(str(PREFS.get("as_of", ""))[:10]))}</small></div>')
@@ -729,7 +738,17 @@ def prefs_page():
     body.append('<div class="box"><h3>Marcadas en este móvil</h3><ul class="notes" id="likes-local"></ul><p class="cap" id="fb-state"></p></div>')
     return head + "".join(body) + "</section>"
 
-SP_WATCH = [("valores", "Mis valores", watch_page())] + [(f"radar-{c}", f"Radar {n}", radar(c, n)) for c, n, _ in COUNTRIES] + [("prefs", "Tus preferencias", prefs_page())]
+def ask_page():
+    reqs = PREFS.get("requests") or []
+    rl = "".join(f'<li><b>{esc(fdate(str(r.get("date") or "")[:10]))}</b> {esc(r.get("text"))}' + (f' <span class="imp">· {esc(r.get("status_es"))}</span>' if r.get("status_es") else "") + "</li>" for r in reqs[:15])
+    return ('<section id="pedir"><div class="sh"><h2>Pídeme que vigile algo</h2><p>Escribe lo que quieres que siga más de cerca (una empresa, un banco, un tema, un país, un riesgo). Lo leo en la siguiente actualización completa y lo incorporo al radar, la watchlist y el análisis.</p></div>'
+            '<div class="ask"><textarea id="ask-t" rows="4" maxlength="600" placeholder="Ej.: Seguir de cerca la caja de Carrefour y si las grandes empresas francesas abren cuentas fuera de los bancos franceses"></textarea>'
+            '<div class="ask-f"><span class="cap" id="ask-n">No escribas información interna ni confidencial del banco.</span><button type="button" id="ask-b" class="nextsub">Enviar a Claude</button></div></div>'
+            '<div class="box"><h3>Enviadas desde este móvil</h3><ul class="notes" id="ask-l"></ul></div>'
+            + (f'<div class="box"><h3>Lo que estoy siguiendo por tus peticiones</h3><ul class="notes">{rl}</ul></div>' if rl else "")
+            + "</section>")
+
+SP_WATCH = [("valores", "Mis valores", watch_page()), ("pedir", "Pídeme algo", ask_page()), ("prefs", "Tus preferencias", prefs_page())]
 
 SP_NOTICIAS = [("top10", "Top 10", f'<section id="top10"><div class="sh"><h2>Top 10 del día para la mesa de liquidez</h2><p>Selección a {esc(fdate(str(NMETA.get("as_of", ""))[:10]))} · cualquier sector, siempre que tenga implicaciones directas para liquidez y cash management. Resúmenes propios con enlace a la fuente.</p></div>'
                 f'<div class="news">{news_items(sorted(NEWS, key=lambda x: int(x.get("rank") or 99)))}</div></section>')]
@@ -918,7 +937,7 @@ def ladder(rows_def, names, title, sub, hline=None, hlab="", dep_ref=None):
             + table(head, trs))
 
 dep_es = latest("dep_rate_nfc_es")
-ladder_html = ('<section id="colocar"><div class="sh"><h2>Dónde colocar la caja hoy</h2><p>Rentabilidad por plazo de las alternativas más líquidas, con el último dato publicado de cada una. Las Letras se toman de la última subasta de cada plazo.</p></div>'
+ladder_html = ('<section id="colocar"><div class="sh"><h2>El depósito frente a sus alternativas</h2><p>Lo que el tesorero de un cliente puede conseguir fuera del banco a cada plazo (Letras, T-bills) frente a los tipos interbancarios y al depósito medio de empresas: la referencia para fijar precio a depósitos a plazo, short-term depos y notice accounts. Las Letras se toman de la última subasta de cada plazo.</p></div>'
                + ladder(LADDER_EUR, ["€STR / Euribor", "Letra del Tesoro"], "Euros", "€STR, Euribor y Letras del Tesoro españolas (%). La línea discontinua es el tipo medio de los depósitos a plazo nuevos de empresas en España.",
                         dep_es, f"Depósito empresas ES {fnum(dep_es, 2)} %" if dep_es is not None else "", dep_es)
                + ladder(LADDER_USD, ["SOFR / Term SOFR", "T-bill"], "Dólares", "SOFR, Term SOFR de CME y T-bills de EE. UU. (%).") + "</section>")
@@ -966,7 +985,9 @@ def ideas_html():
         ev = "".join(f"<li>{esc(e)}</li>" for e in (x.get("evidence") or []))
         links = "".join(f'<a class="go" href="#c-{esc(i)}" data-goto="{esc(i)}">{esc(BY[i].get("short") or i)}</a>' for i in (x.get("ids") or []) if i in BY)
         fake = {"url": "idea:" + str(x.get("title")), "headline": x.get("title"), "country": ", ".join(x.get("countries") or []), "sector": x.get("kind"), "entities": ""}
-        cards.append(f'<article class="idea {k}" id="{nid(fake)}"><div class="ih"><span class="kd">{esc(x.get("kind"))}</span><span>{esc(" · ".join(x.get("countries") or []))}</span>'
+        ij = json.dumps({"k": "Idea · " + str(x.get("kind") or ""), "t": " · ".join(x.get("countries") or []) + f" · Horizonte {x.get('horizon') or '—'} · Confianza {x.get('confidence') or '—'}", "d": fdate(str(ANALISIS.get("as_of", ""))[:10]),
+                         "h": x.get("title"), "s": x.get("thesis"), "e": x.get("evidence") or [], "a": x.get("action"), "inv": x.get("invalidation"), "src": "Análisis de Claude con los datos del monitor", "u": ""}, ensure_ascii=False)
+        cards.append(f'<article class="idea rdbl {k}" id="{nid(fake)}" data-n="{esc(ij)}" tabindex="0"><div class="ih"><span class="kd">{esc(x.get("kind"))}</span><span>{esc(" · ".join(x.get("countries") or []))}</span>'
                      f'<span>Horizonte: {esc(x.get("horizon") or "—")}</span><span>Confianza {esc(x.get("confidence") or "—")}</span></div>'
                      f'<h3>{esc(x.get("title"))}</h3><p>{esc(x.get("thesis"))}</p>'
                      + (f'<ul class="iev">{ev}</ul>' if ev else "")
@@ -975,7 +996,50 @@ def ideas_html():
                      + f'<div class="nf"><span class="ilinks">{links}</span>{like_btn(fake, "idea")}</div></article>')
     return head + pat_html + '<div class="ideas">' + "".join(cards) + "</div></section>"
 
-SP_ANALISIS = [("ideas", "Ideas", ideas_html()), ("senales", "Señales por país", signals_html), ("colocar", "Dónde colocar la caja", ladder_html)]
+def seg_html():
+    if not SEG.get("active"):
+        return ""
+    lvl = SEG.get("level") or "alta"
+    head = (f'<section id="seguimiento"><div class="sh"><h2>Seguimiento especial · {esc(SEG.get("title"))}</h2><p>Actualizado {esc(fdate(str(SEG.get("as_of", ""))[:10]))} {esc(str(SEG.get("as_of", ""))[11:16])}. '
+            'Qué está pasando, qué viene y cómo debería prepararse la mesa de liquidez de GTB. Análisis de Claude con fuentes públicas.</p></div>'
+            f'<div class="segst {esc(lvl)}"><span class="kd">Tensión {esc(lvl)}</span><p>{esc(SEG.get("status_es"))}</p></div>')
+    ids = [i for i in (SEG.get("metrics") or []) if i in BY and num(BY[i].get("value")) is not None]
+    cards = "".join(card(BY[i]).replace('id="c-', 'id="s-', 1) for i in ids)
+    parts = [head]
+    if cards:
+        parts.append(f'<h3 class="sec">Termómetro</h3><div class="grid">{cards}</div>')
+    acts = SEG.get("desk_actions") or []
+    if acts:
+        parts.append('<h3 class="sec">Qué haría la mesa ahora</h3><ol class="acts">' + "".join(f"<li>{esc(a)}</li>" for a in acts) + "</ol>")
+    tl = sorted(SEG.get("timeline") or [], key=lambda e: (str(e.get("date")), str(e.get("time") or "")))
+    if tl:
+        rows = []
+        for e in tl:
+            past = str(e.get("date")) < TODAY.isoformat() or e.get("done")
+            today = str(e.get("date")) == TODAY.isoformat()
+            rows.append(f'<li class="{"past" if past and not today else ("today" if today else "next")}"><span class="tld">{esc(fdate(e.get("date")))}{(" · " + esc(e.get("time"))) if e.get("time") else ""}</span>'
+                        f'<span class="tle">{esc(e.get("event"))}</span>' + (f'<span class="tli">{esc(e.get("impact"))}</span>' if e.get("impact") else "") + "</li>")
+        parts.append('<h3 class="sec">Calendario: lo que ya pasó y lo que viene</h3><ul class="tl">' + "".join(rows) + "</ul>")
+    sc = SEG.get("scenarios") or []
+    if sc:
+        parts.append('<h3 class="sec">Escenarios</h3><div class="ideas">' + "".join(
+            f'<article class="idea sc"><div class="ih"><span class="kd">{esc(x.get("likelihood") or "")}</span></div><h3>{esc(x.get("name"))}</h3><p>{esc(x.get("what"))}</p>'
+            f'<p class="act"><b>Para la mesa:</b> {esc(x.get("desk"))}</p></article>' for x in sc) + "</div>")
+    for key, lab in (("banks", "Bancos"), ("corporates", "Grandes empresas")):
+        xs = SEG.get(key) or []
+        if xs:
+            parts.append(f'<h3 class="sec">{lab}</h3><div class="ents">' + "".join(
+                f'<div class="ent {esc(x.get("signal") or "")}"><b>{esc(x.get("name"))}</b><p>{esc(x.get("note"))}</p></div>' for x in xs) + "</div>")
+    wn = SEG.get("watch_next") or []
+    if wn:
+        parts.append('<h3 class="sec">Qué vigilar en las próximas horas</h3><ul class="notes">' + "".join(f"<li>{esc(w)}</li>" for w in wn) + "</ul>")
+    src = SEG.get("sources") or []
+    if src:
+        parts.append('<details class="more"><summary>Fuentes</summary><ul class="notes">' + "".join(
+            f'<li><a href="{esc(x.get("url"))}" target="_blank" rel="noopener">{esc(x.get("title"))} ↗</a></li>' for x in src if str(x.get("url", "")).startswith("http")) + "</ul></details>")
+    return "".join(parts) + "</section>"
+
+SP_ANALISIS = ([("seguimiento", SEG.get("title") or "Seguimiento", seg_html())] if SEG.get("active") else []) + [("ideas", "Ideas", ideas_html()), ("senales", "Señales por país", signals_html), ("colocar", "Depósito vs alternativas", ladder_html)]
 
 if MODE == "--signals":
     out = {"now_madrid": NOW.strftime("%Y-%m-%d %H:%M"), "flags": FLAGS,
@@ -1130,6 +1194,28 @@ ul.flags{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 .fl.alta{border-left-color:var(--down)}.fl.media{border-left-color:var(--warn)}.fl .lv{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--muted);margin-right:4px}
 .pfr{display:grid;grid-template-columns:7rem 1fr;gap:8px;align-items:start;margin:8px 0;font-size:12px;color:var(--muted)}.pfr .tag{display:inline-block;margin:0 4px 4px 0;font-size:11px}
 .hoy p{margin:0;font-size:14px;line-height:1.55}.hoy small{font-size:11px;color:var(--faint)}
+.rdbl{cursor:pointer}.rdbl:focus-visible{outline:2px solid var(--accent)}
+.rd{position:fixed;inset:0;z-index:55;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:max(10px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.rd[hidden]{display:none}.rd-h{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--bg);padding:6px 0 10px;z-index:2}
+.rd .x{font:inherit;font-size:13px;color:var(--fg);background:var(--panel2);border:1px solid var(--line2);border-radius:4px;padding:7px 12px}
+.rd-b{max-width:720px;margin:0 auto}.rd-b .rk2{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.rd-b h2{font-size:24px;line-height:1.3;margin:8px 0 12px}.rd-b .rs{font-size:17px;line-height:1.6;margin:0 0 14px}.rd-b .iev{font-size:15px;color:var(--fg)}
+.rb{border-left:3px solid var(--line2);background:var(--panel);padding:10px 14px;margin:12px 0;border-radius:4px}.rb b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.rb p{margin:0;font-size:16.5px;line-height:1.55}
+.rb.imp2{border-left-color:var(--warn)}.rb.imp2 b{color:var(--warn)}.rb.act2{border-left-color:var(--accent)}.rb.act2 b{color:var(--accent)}
+.rsrc{font-size:14px;margin-top:14px}.rd-f{max-width:720px;margin:16px auto 8px;display:flex;gap:8px;flex-wrap:wrap}.rd-f .zoom{font-size:14px;padding:10px 14px}
+.rd-img{display:block;max-width:720px;width:100%;margin:12px auto;border:1px solid var(--line2);border-radius:6px}
+.segb{display:flex;flex-direction:column;gap:3px;background:var(--panel);border:1px solid var(--down);border-left:4px solid var(--down);border-radius:4px;padding:10px 12px;margin:10px 0 4px;text-decoration:none;color:var(--fg)}
+.segb b{color:var(--down);font-size:13px;letter-spacing:.03em}.segb span{font-size:13.5px;line-height:1.45}.segb em{font-style:normal;font-size:12px;color:var(--accent)}
+.segst{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:4px;padding:10px 14px}.segst.alta{border-left-color:var(--down)}.segst .kd{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--down)}.segst p{margin:6px 0 0;font-size:14.5px;line-height:1.55}
+ol.acts{margin:0;padding-left:22px;font-size:14px;line-height:1.55}ol.acts li{margin-bottom:6px}
+ul.tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--line2)}ul.tl li{position:relative;padding:6px 0 8px 14px;display:flex;flex-direction:column;gap:2px}
+ul.tl li::before{content:"";position:absolute;left:-6px;top:11px;width:10px;height:10px;border-radius:50%;background:var(--line2)}ul.tl li.next::before{background:var(--accent)}ul.tl li.today::before{background:var(--down)}
+.tld{font-family:var(--mono);font-size:11.5px;color:var(--muted)}li.today .tld{color:var(--down);font-weight:600}.tle{font-size:14px}.tli{font-size:12.5px;color:var(--warn)}li.past .tle{color:var(--muted)}
+.ents{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:6px}.ent{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:4px;padding:8px 10px}
+.ent.neg{border-left-color:var(--down)}.ent.pos{border-left-color:var(--up)}.ent.vig{border-left-color:var(--warn)}.ent b{font-size:13.5px}.ent p{margin:3px 0 0;font-size:13px;line-height:1.5}
+.idea.sc{border-top-color:var(--line2)}
+.ask{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}.ask textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:10px;resize:vertical;width:100%}
+.ask-f{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 @media (orientation:landscape) and (max-height:500px){.zm-chips{max-height:18vh}.zm-hint{display:none}.zm-r{max-height:12vh}.zm-c{min-height:150px}}
 """
 
@@ -1188,6 +1274,52 @@ function checkNew(){if(busy||!window.fetch)return;busy=1;fetch(location.pathname
 checkNew();setInterval(function(){if(document.visibilityState==='visible')checkNew();},5*60*1000);
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkNew();});
 window.addEventListener('pageshow',function(e){if(e.persisted)checkNew();});
+/* lectura a pantalla completa y compartir como imagen */
+var rd=document.getElementById('rd'),rdb=document.getElementById('rd-b'),RN=null,FILE=null,CV=null;
+function esc2(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function wrap(ctx,text,maxW){var words=String(text||'').split(/\s+/),lines=[],line='';words.forEach(function(w){var t=line?line+' '+w:w;if(ctx.measureText(t).width>maxW&&line){lines.push(line);line=w;}else{line=t;}});if(line)lines.push(line);return lines;}
+function drawCard(){var S=2,W=1080,P=72,cw=W-2*P,F='-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
+ var c=document.createElement('canvas'),x=c.getContext('2d'),bl=[];
+ function add(text,font,color,lh,gap,box){if(!text)return;x.font=font;bl.push({font:font,color:color,lines:wrap(x,text,cw-(box?56:0)),lh:lh,gap:gap,box:box||''});}
+ var idea=RN.k.indexOf('Idea')===0;
+ add(RN.k.toUpperCase(),'700 24px '+F,'#1f5f9e',34,0);
+ add([RN.t,RN.d].filter(Boolean).join('  ·  '),'400 24px '+F,'#5b6b80',34,6);
+ add(RN.h,'700 46px '+F,'#0b1726',58,26);
+ add(RN.s,'400 31px '+F,'#1d2b3a',46,24);
+ (RN.e||[]).forEach(function(v,i){add('• '+v,'400 28px '+F,'#33475b',40,i?8:18);});
+ if(RN.i){add('IMPLICACIÓN','700 22px '+F,'#8a5300',30,34,'imp');add(RN.i,'400 30px '+F,'#3d2a00',44,8,'imp');}
+ if(RN.a){add(idea?'QUÉ HARÍA':'QUÉ HACER / VIGILAR','700 22px '+F,'#1f5f9e',30,34,'act');add(RN.a,'400 30px '+F,'#0f2a44',44,8,'act');}
+ if(RN.inv){add('CAMBIARÍA DE OPINIÓN SI','700 22px '+F,'#5b6b80',30,34,'inv');add(RN.inv,'400 28px '+F,'#33475b',40,8,'inv');}
+ add(RN.src?'Fuente: '+RN.src:'','400 24px '+F,'#5b6b80',34,40);
+ var y=160,pos=[],boxes={},prevBox='';bl.forEach(function(b){var extra=(b.box&&b.box!==prevBox)?24:0;y+=b.gap+extra;var y0=y;y+=b.lines.length*b.lh;pos.push(y0);if(b.box){if(!boxes[b.box])boxes[b.box]={y0:y0-34-6,y1:y};boxes[b.box].y1=y+18;}prevBox=b.box;});
+ var H=y+130;c.width=W*S;c.height=H*S;x.scale(S,S);x.fillStyle='#ffffff';x.fillRect(0,0,W,H);
+ x.fillStyle='#0b1119';x.fillRect(0,0,W,104);x.textBaseline='middle';x.font='700 27px '+F;x.fillStyle='#7cc4ff';x.fillText('MONITOR DE LIQUIDEZ Y MERCADOS',P,52);x.font='500 23px '+F;x.fillStyle='#dbe4ee';x.textAlign='right';x.fillText('by R‑ro',W-P,52);x.textAlign='left';
+ var BG={imp:['#fff6e6','#e3a33a'],act:['#eaf3fc','#2f6fb0'],inv:['#f2f4f7','#9aa7b6']};
+ Object.keys(boxes).forEach(function(k){var b=boxes[k];x.fillStyle=BG[k][0];x.fillRect(P,b.y0,cw,b.y1-b.y0);x.fillStyle=BG[k][1];x.fillRect(P,b.y0,6,b.y1-b.y0);});
+ x.textBaseline='alphabetic';bl.forEach(function(b,i){x.font=b.font;x.fillStyle=b.color;b.lines.forEach(function(l,j){x.fillText(l,P+(b.box?28:0),pos[i]+(j+1)*b.lh-(b.lh-parseInt(b.font.split(' ')[1]))/2-6);});});
+ x.fillStyle='#dde3eb';x.fillRect(P,H-86,cw,2);x.font='400 22px '+F;x.fillStyle='#8592a3';x.fillText('Resumen de Claude con fuentes públicas · no es recomendación',P,H-46);
+ return c;}
+function prep(){FILE=null;CV=null;try{CV=drawCard();CV.toBlob(function(b){if(b&&window.File){try{FILE=new File([b],'monitor-liquidez.png',{type:'image/png'});}catch(e){}}},'image/png');}catch(e){}}
+function openRd(el){try{RN=JSON.parse(el.getAttribute('data-n'));}catch(e){return;}
+ var idea=RN.k.indexOf('Idea')===0,h='<div class="rk2">'+esc2(RN.k)+'</div><div class="nt">'+esc2([RN.t,RN.d].filter(Boolean).join(' · '))+'</div><h2>'+esc2(RN.h)+'</h2><p class="rs">'+esc2(RN.s)+'</p>';
+ if(RN.e&&RN.e.length)h+='<ul class="iev">'+RN.e.map(function(v){return '<li>'+esc2(v)+'</li>';}).join('')+'</ul>';
+ if(RN.i)h+='<div class="rb imp2"><b>Implicación</b><p>'+esc2(RN.i)+'</p></div>';
+ if(RN.a)h+='<div class="rb act2"><b>'+(idea?'Qué haría':'Qué hacer / vigilar')+'</b><p>'+esc2(RN.a)+'</p></div>';
+ if(RN.inv)h+='<div class="rb"><b>Cambiaría de opinión si</b><p>'+esc2(RN.inv)+'</p></div>';
+ if(RN.u)h+='<p class="rsrc"><a href="'+esc2(RN.u)+'" target="_blank" rel="noopener">Leer en '+esc2(RN.src||'la fuente')+' ↗</a></p>';
+ rdb.innerHTML=h;var lc=document.getElementById('rd-like'),lk=el.querySelector('[data-like]');lc.innerHTML='';if(lk)lc.appendChild(lk.cloneNode(true));
+ var im=document.getElementById('rd-img');im.hidden=true;im.removeAttribute('src');rd.hidden=false;document.body.style.overflow='hidden';rd.scrollTop=0;setTimeout(prep,30);}
+function closeRd(){rd.hidden=true;document.body.style.overflow='';}
+document.addEventListener('click',function(e){var t=e.target;if(!t.closest||t.closest('a')||t.closest('button')||t.closest('#rd'))return;var el=t.closest('.rdbl');if(el)openRd(el);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!rd.hidden)closeRd();if(e.key==='Enter'&&document.activeElement&&document.activeElement.classList&&document.activeElement.classList.contains('rdbl'))openRd(document.activeElement);});
+document.getElementById('rd-x').addEventListener('click',closeRd);
+function showImg(){if(!CV)CV=drawCard();var im=document.getElementById('rd-img');im.src=CV.toDataURL('image/png');im.hidden=false;say('Mantén pulsada la imagen para copiarla o guardarla.');setTimeout(function(){im.scrollIntoView({block:'start',behavior:'smooth'});},50);}
+document.getElementById('rd-share').addEventListener('click',function(){if(FILE&&navigator.canShare&&navigator.canShare({files:[FILE]})){navigator.share({files:[FILE],title:RN.h}).catch(function(err){if(!err||err.name!=='AbortError')showImg();});}else{showImg();}});
+document.getElementById('rd-copy').addEventListener('click',function(){if(!CV)CV=drawCard();try{if(window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){var p=new Promise(function(r){CV.toBlob(r,'image/png');});navigator.clipboard.write([new ClipboardItem({'image/png':p})]).then(function(){say('Imagen copiada en alta resolución: pégala donde quieras.');},function(){showImg();});return;}}catch(e){}showImg();});
+/* peticiones de seguimiento */
+var ab=document.getElementById('ask-b');
+function renderAsk(){var ul=document.getElementById('ask-l');if(!ul)return;var L=lget('mlv-ask','[]');ul.innerHTML='';L.slice().reverse().slice(0,20).forEach(function(r){var li=document.createElement('li');li.textContent=new Date(r.t).toLocaleString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' · '+r.x+(FB.u?'':' (guardada, pendiente de envío)');ul.appendChild(li);});if(!L.length){var li=document.createElement('li');li.textContent='Aún no has enviado nada.';ul.appendChild(li);}}
+if(ab){ab.addEventListener('click',function(){var ta=document.getElementById('ask-t'),v=(ta.value||'').trim();if(!v)return;var L=lget('mlv-ask','[]');L.push({t:Date.now(),x:v});ls('mlv-ask',JSON.stringify(L));post('C|'+v.replace(/\|/g,'/').replace(/\n/g,' ')+'|'+new Date().toISOString());ta.value='';renderAsk();say(FB.u?'Enviado: lo incorporo en la próxima actualización completa.':'Guardado en este móvil: se enviará en cuanto conectemos el formulario.');});renderAsk();}
 /* Mi vista */
 function favs(){try{return JSON.parse(ls('mlv-fav')||'[]');}catch(e){return [];}}
 function renderFav(){var f=favs(),g=document.getElementById('mv-grid');g.innerHTML='';f.forEach(function(id){var c=document.querySelector('.page:not(#mivista) details[data-id="'+id+'"]');if(!c)return;var k=c.cloneNode(true);k.removeAttribute('id');k.open=false;g.appendChild(k);});
@@ -1258,6 +1390,12 @@ def render_page(k):
 
 navh = "".join(f'<button type="button" role="tab" data-tab="{k}" aria-selected="false">{esc(v)}</button>' for k, v in TABS)
 pages = "".join(render_page(k) for k, _ in TABS)
+RD = """<div id="rd" class="rd" hidden role="dialog" aria-modal="true" aria-label="Noticia">
+<div class="rd-h"><button type="button" class="x" id="rd-x">Cerrar ✕</button><span id="rd-like"></span></div>
+<div class="rd-b" id="rd-b"></div>
+<div class="rd-f"><button type="button" class="zoom" id="rd-share">Compartir imagen</button><button type="button" class="zoom" id="rd-copy">Copiar imagen</button></div>
+<img id="rd-img" class="rd-img" alt="Noticia como imagen" hidden>
+</div>"""
 ZM = """<div id="zm" class="zm" hidden role="dialog" aria-modal="true" aria-labelledby="zm-t">
 <div class="zm-h"><b id="zm-t"></b><button type="button" class="x" id="zm-x">Cerrar ✕</button></div>
 <div class="zm-ctl"><div class="seg" id="zm-rg"><button type="button" data-r="12" aria-pressed="false">1A</button><button type="button" data-r="24" aria-pressed="false">2A</button><button type="button" data-r="36" aria-pressed="true">3A</button></div><span id="zm-n"></span></div>
@@ -1276,6 +1414,7 @@ page = f"""<!doctype html><html lang="es" class="no-js"><head><meta charset="utf
 {pages}
 <footer>Datos de fuentes públicas (bancos centrales, administradores de índices, institutos estadísticos y, donde no hay fuente oficial abierta, agregadores que se indican en cada indicador). Se actualiza los días laborables a las 8:20, 11:20, 15:20, 18:20 y 22:20 (Madrid), justo después de que se publiquen el €STR, el Euribor, el SOFR y los cierres de mercado; la página comprueba al abrirla y cada 5 minutos si hay una versión nueva y se recarga sola. Lecturas, análisis y resúmenes de noticias redactados por Claude; no constituyen recomendación de inversión. Los CDS por emisor y por país requieren datos con licencia y no se muestran.</footer>
 {ZM}
+{RD}
 <script type="application/json" id="dz">{DZJSON}</script>
 <script>{ZJS.replace('%FBU%', json.dumps(FEEDBACK_FORM)).replace('%FBE%', json.dumps(FEEDBACK_ENTRY)).replace('%BUILD%', json.dumps(BUILD_ID))}</script>
 </body></html>"""
