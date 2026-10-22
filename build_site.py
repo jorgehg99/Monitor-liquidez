@@ -6,7 +6,7 @@ La carpeta de datos contiene: ultimo.json, historico.json, eventos.json, probabi
 noticias.json, noticias_meta.json y, si existen, noticias_regionales.json y notas_bc.json.
 Todo se dibuja en el servidor (SVG en línea) y se despliega con <details>: funciona sin JavaScript.
 """
-import json, sys, html, pathlib, datetime, math, hashlib
+import json, sys, html, pathlib, datetime, math, hashlib, os
 
 # Modos: build (por defecto) · --check (indicadores diarios atrasados) · --signals (señales para el análisis)
 ARGS = sys.argv[1:]
@@ -500,7 +500,8 @@ def by_sector(items):
 # ------------------------------------------------------------------ página
 ds = sorted(str(r.get("date")) for r in U if len(str(r.get("date") or "")) == 10)
 asof = fdate(ds[-1]) if ds else "—"
-built = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=2))).strftime("%d/%m/%Y %H:%M")
+built = NOW.strftime("%d/%m/%Y %H:%M")
+BUILD_ID = os.environ.get("MLV_BUILD") or NOW.strftime("%Y%m%d%H%M%S")
 
 tape_ids = ["estr", "sofr", "sonia", "euribor_3m", "eurusd", "y10_de", "y10_es", "spread_es_de_10y", "y10_us", "brent", "ttf", "gold"]
 tape = []
@@ -1180,8 +1181,13 @@ function renderLikes(){var L=lget('mlv-likes','{}');[].slice.call(document.query
 document.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('[data-like]'):null;if(!b)return;e.preventDefault();var id=b.getAttribute('data-nid'),p=b.getAttribute('data-like'),L=lget('mlv-likes','{}'),on=!L[id];
  if(on){L[id]={h:p.split('|')[5]||id,t:Date.now()};}else{delete L[id];}ls('mlv-likes',JSON.stringify(L));post((on?'+':'-')+'|'+p+'|'+new Date().toISOString());renderLikes();say(on?'Anotado: te interesa. Lo tendré en cuenta.':'Marca quitada.');});
 renderLikes();flush();
-/* recarga automática al volver a la página */
-var t0=Date.now();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&Date.now()-t0>15*60*1000){location.reload();}});
+/* versión nueva publicada: se comprueba al abrir, al volver a la app y cada 5 minutos */
+var BUILD=%BUILD%,busy=0;
+function checkNew(){if(busy||!window.fetch)return;busy=1;fetch(location.pathname+'?chk='+Date.now(),{cache:'no-store'}).then(function(r){return r.text();}).then(function(t){busy=0;var m=t.match(/name="mlv-build" content="([0-9]+)"/);
+ if(m&&m[1]>BUILD){var tr=null;try{tr=sessionStorage.getItem('mlv-try');}catch(e){}if(tr===m[1])return;try{sessionStorage.setItem('mlv-try',m[1]);}catch(e){}say('Hay datos nuevos: actualizando…');setTimeout(function(){location.replace(location.pathname+'?v='+m[1]+location.hash);},700);}}).catch(function(){busy=0;});}
+checkNew();setInterval(function(){if(document.visibilityState==='visible')checkNew();},5*60*1000);
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkNew();});
+window.addEventListener('pageshow',function(e){if(e.persisted)checkNew();});
 /* Mi vista */
 function favs(){try{return JSON.parse(ls('mlv-fav')||'[]');}catch(e){return [];}}
 function renderFav(){var f=favs(),g=document.getElementById('mv-grid');g.innerHTML='';f.forEach(function(id){var c=document.querySelector('.page:not(#mivista) details[data-id="'+id+'"]');if(!c)return;var k=c.cloneNode(true);k.removeAttribute('id');k.open=false;g.appendChild(k);});
@@ -1268,10 +1274,10 @@ page = f"""<!doctype html><html lang="es" class="no-js"><head><meta charset="utf
 <div class="tape">{"".join(tape)}</div>
 <div class="navs"><nav role="tablist" aria-label="Pestañas">{navh}</nav><div class="subnav" id="subnav" role="tablist" aria-label="Secciones"></div></div><div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 {pages}
-<footer>Datos de fuentes públicas (bancos centrales, administradores de índices, institutos estadísticos y, donde no hay fuente oficial abierta, agregadores que se indican en cada indicador). Se actualiza los días laborables a las 8:20, 11:20, 15:20, 18:20 y 22:20 (Madrid), justo después de que se publiquen el €STR, el Euribor, el SOFR y los cierres de mercado; la página se recarga sola si llevas más de 15 minutos sin abrirla. Lecturas, análisis y resúmenes de noticias redactados por Claude; no constituyen recomendación de inversión. Los CDS por emisor y por país requieren datos con licencia y no se muestran.</footer>
+<footer>Datos de fuentes públicas (bancos centrales, administradores de índices, institutos estadísticos y, donde no hay fuente oficial abierta, agregadores que se indican en cada indicador). Se actualiza los días laborables a las 8:20, 11:20, 15:20, 18:20 y 22:20 (Madrid), justo después de que se publiquen el €STR, el Euribor, el SOFR y los cierres de mercado; la página comprueba al abrirla y cada 5 minutos si hay una versión nueva y se recarga sola. Lecturas, análisis y resúmenes de noticias redactados por Claude; no constituyen recomendación de inversión. Los CDS por emisor y por país requieren datos con licencia y no se muestran.</footer>
 {ZM}
 <script type="application/json" id="dz">{DZJSON}</script>
-<script>{ZJS.replace('%FBU%', json.dumps(FEEDBACK_FORM)).replace('%FBE%', json.dumps(FEEDBACK_ENTRY))}</script>
+<script>{ZJS.replace('%FBU%', json.dumps(FEEDBACK_FORM)).replace('%FBE%', json.dumps(FEEDBACK_ENTRY)).replace('%BUILD%', json.dumps(BUILD_ID))}</script>
 </body></html>"""
 
 (OUT / "index.html").write_text(page)
