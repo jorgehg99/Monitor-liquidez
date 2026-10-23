@@ -1320,6 +1320,7 @@ document.getElementById('rd-copy').addEventListener('click',function(){if(!CV)CV
 var ab=document.getElementById('ask-b');
 function renderAsk(){var ul=document.getElementById('ask-l');if(!ul)return;var L=lget('mlv-ask','[]');ul.innerHTML='';L.slice().reverse().slice(0,20).forEach(function(r){var li=document.createElement('li');li.textContent=new Date(r.t).toLocaleString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' · '+r.x+(FB.u?'':' (guardada, pendiente de envío)');ul.appendChild(li);});if(!L.length){var li=document.createElement('li');li.textContent='Aún no has enviado nada.';ul.appendChild(li);}}
 if(ab){ab.addEventListener('click',function(){var ta=document.getElementById('ask-t'),v=(ta.value||'').trim();if(!v)return;var L=lget('mlv-ask','[]');L.push({t:Date.now(),x:v});ls('mlv-ask',JSON.stringify(L));post('C|'+v.replace(/\|/g,'/').replace(/\n/g,' ')+'|'+new Date().toISOString());ta.value='';renderAsk();say(FB.u?'Enviado: lo incorporo en la próxima actualización completa.':'Guardado en este móvil: se enviará en cuanto conectemos el formulario.');});renderAsk();}
+document.getElementById('reload').addEventListener('click',function(){say('Cargando la última versión…');location.replace(location.pathname+'?v='+Date.now()+location.hash);});
 /* Mi vista */
 function favs(){try{return JSON.parse(ls('mlv-fav')||'[]');}catch(e){return [];}}
 function renderFav(){var f=favs(),g=document.getElementById('mv-grid');g.innerHTML='';f.forEach(function(id){var c=document.querySelector('.page:not(#mivista) details[data-id="'+id+'"]');if(!c)return;var k=c.cloneNode(true);k.removeAttribute('id');k.open=false;g.appendChild(k);});
@@ -1408,7 +1409,7 @@ ZM = """<div id="zm" class="zm" hidden role="dialog" aria-modal="true" aria-labe
 page = f"""<!doctype html><html lang="es" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Monitor de liquidez y mercados by R-ro</title><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b1119">
 <style>{CSS}{ZCSS}</style></head><body>
-<header><h1>Monitor de liquidez y mercados <span class="by">by R‑ro</span></h1><div class="asof">Datos a <b>{esc(asof)}</b> · generado {esc(built)} (hora de Madrid) <button type="button" id="theme" class="thm" aria-label="Cambiar a modo día">☀︎ Día</button></div></header>
+<header><h1>Monitor de liquidez y mercados <span class="by">by R‑ro</span></h1><div class="asof">Datos a <b>{esc(asof)}</b> · generado {esc(built)} (hora de Madrid) <button type="button" id="theme" class="thm" aria-label="Cambiar a modo día">☀︎ Día</button><button type="button" id="reload" class="thm" aria-label="Cargar la última versión">↻ Actualizar</button></div></header>
 <div class="tape">{"".join(tape)}</div>
 <div class="navs"><nav role="tablist" aria-label="Pestañas">{navh}</nav><div class="subnav" id="subnav" role="tablist" aria-label="Secciones"></div></div><div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 {pages}
