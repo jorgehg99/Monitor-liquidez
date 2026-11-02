@@ -44,17 +44,23 @@ def merge_auto():
     hidx = {(h.get("id"), str(h.get("month"))): h for h in hist}
     for r in ult:
         s = auto.get(r.get("id"))
-        if not s or not s.get("obs") or str(r.get("group")) == "policy":
+        if not s or not s.get("obs"):
             continue
         last = s["obs"][-1]
         cur = str(r.get("date") or "")
-        if len(cur) != 10 or last["date"] <= cur:
+        if cur and (len(cur) != len(last["date"]) or last["date"] <= cur):
             continue
-        prev = [o for o in s["obs"] if o["date"] < last["date"]]
-        if cur and r.get("value") is not None and (not prev or prev[-1]["date"] <= cur):
-            r["prev_date"], r["prev_value"] = cur, r["value"]
-        elif prev:
-            r["prev_date"], r["prev_value"] = prev[-1]["date"], prev[-1]["value"]
+        if str(r.get("group")) == "policy":
+            # Tipos oficiales: solo cambian cuando hay decisión (el anterior pasa a prev)
+            if isinstance(r.get("value"), (int, float)) and abs(float(last["value"]) - float(r["value"])) < 1e-9:
+                continue
+            r["prev_date"], r["prev_value"] = cur or None, r.get("value")
+        else:
+            prev = [o for o in s["obs"] if o["date"] < last["date"]]
+            if cur and r.get("value") is not None and (not prev or prev[-1]["date"] <= cur):
+                r["prev_date"], r["prev_value"] = cur, r["value"]
+            elif prev:
+                r["prev_date"], r["prev_value"] = prev[-1]["date"], prev[-1]["value"]
         r["date"], r["value"] = last["date"], last["value"]
         r["source"], r["source_url"] = s.get("source") or r.get("source"), s.get("source_url") or r.get("source_url")
         AUTO_UPDATED.append(r["id"])

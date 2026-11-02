@@ -131,6 +131,17 @@ FRED = {
 }
 
 
+def fed_policy():
+    key = os.environ.get("FRED_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError("falta FRED_API_KEY")
+    for sid, ser in (("fed_upper", "DFEDTARU"), ("fed_lower", "DFEDTARL"), ("iorb", "IORB")):
+        d = json.loads(get("https://api.stlouisfed.org/fred/series/observations", {"series_id": ser, "api_key": key, "file_type": "json", "sort_order": "desc", "limit": 5}))
+        for o in d.get("observations", []):
+            if o.get("value") not in (None, "", "."):
+                put(sid, o["date"], o["value"], f"Federal Reserve vía FRED ({ser})", f"https://fred.stlouisfed.org/series/{ser}", 2)
+
+
 def fred():
     key = os.environ.get("FRED_API_KEY", "").strip()
     if not key:
@@ -145,6 +156,194 @@ def fred():
             LOG.append(f"  FRED {s}: ERROR {e}")
 
 
+# ---------- Eurostat (IPCA, PIB, paro) ----------
+EST = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/"
+
+
+def eurostat(dataset, params):
+    q = dict(params)
+    q.update({"format": "JSON", "lang": "EN"})
+    d = json.loads(get(EST + dataset, q))
+    tdim = d["dimension"]["time"]["category"]["index"]
+    pos = {v: k for k, v in tdim.items()}
+    out = []
+    for k, v in d.get("value", {}).items():
+        t = pos.get(int(k))
+        if t is not None and v is not None:
+            if "-Q" in t:  # trimestre → último mes del trimestre
+                y, q_ = t.split("-Q")
+                t = f"{y}-{int(q_) * 3:02d}"
+            out.append((t, v))
+    return sorted(out)
+
+
+def eurostat_all():
+    since = (datetime.date.today() - datetime.timedelta(days=500)).strftime("%Y-%m")
+    hicp = [("cpi_ea", "EA", "TOTAL"), ("core_ea", "EA", "TOT_X_NRG_FOOD"), ("cpi_pt", "PT", "TOTAL"), ("core_pt", "PT", "TOT_X_NRG_FOOD"),
+            ("cpi_fr", "FR", "TOTAL"), ("core_fr", "FR", "TOT_X_NRG_FOOD"), ("cpi_nl", "NL", "TOTAL"), ("core_nl", "NL", "TOT_X_NRG_FOOD"),
+            ("core_de", "DE", "TOT_X_NRG_FOOD")]
+    for sid, geo, c in hicp:
+        try:
+            for t, v in eurostat("prc_hicp_minr", {"geo": geo, "unit": "RCH_A", "coicop18": c, "sinceTimePeriod": since}):
+                put(sid, t, v, "Eurostat (IPCA)", f"{EST}prc_hicp_minr?geo={geo}&unit=RCH_A&coicop18={c}&lang=EN", 1)
+        except Exception as e:
+            LOG.append(f"  Eurostat {sid}: ERROR {e}")
+    for sid, geo in (("gdp_fr", "FR"), ("gdp_pt", "PT"), ("gdp_nl", "NL")):
+        try:
+            for t, v in eurostat("namq_10_gdp", {"geo": geo, "unit": "CLV_PCH_SM", "s_adj": "SCA", "na_item": "B1GQ", "sinceTimePeriod": "2024-Q1"}):
+                put(sid, t, v, "Eurostat (PIB trimestral, tasa interanual)", f"{EST}namq_10_gdp?geo={geo}&unit=CLV_PCH_SM&s_adj=SCA&na_item=B1GQ&lang=EN", 1)
+        except Exception as e:
+            LOG.append(f"  Eurostat {sid}: ERROR {e}")
+    for sid, geo in (("unemp_pt", "PT"), ("unemp_nl", "NL")):
+        try:
+            for t, v in eurostat("une_rt_m", {"geo": geo, "unit": "PC_ACT", "s_adj": "SA", "age": "TOTAL", "sex": "T", "sinceTimePeriod": since}):
+                put(sid, t, v, "Eurostat (paro desestacionalizado)", f"{EST}une_rt_m?geo={geo}&unit=PC_ACT&s_adj=SA&age=TOTAL&sex=T&lang=EN", 1)
+        except Exception as e:
+            LOG.append(f"  Eurostat {sid}: ERROR {e}")
+
+
+# ---------- BCE: tipos bancarios (MIR), depósitos de empresas (BSI) y tipos oficiales ----------
+def ecb_mir():
+    keys = [
+        ("loan_rate_nfc_nl", "MIR/M.NL.B.A2I.AM.R.A.2240.EUR.N", "BCE MIR (préstamos nuevos a empresas, coste compuesto)"),
+        ("dep_rate_nl", "MIR/M.NL.B.L22.F.R.A.2240.EUR.N", "BCE MIR (depósitos a plazo nuevos de empresas, hasta 1 año)"),
+    ]
+    for sid, key, src in keys:
+        try:
+            for r in ecb_csv(key, 14):
+                if r.get("OBS_VALUE"):
+                    put(sid, r["TIME_PERIOD"], r["OBS_VALUE"], src, "https://data.ecb.europa.eu/data/datasets/MIR/" + key.replace("/", "."), 2)
+        except Exception as e:
+            LOG.append(f"  BCE {key}: ERROR {e}")
+    for sid, cc in (("nfc_deposits_nl", "NL"), ("nfc_deposits_fr", "FR"), ("nfc_deposits_pt", "PT")):
+        for key in (f"BSI/M.{cc}.N.A.L20.A.I.{cc}.2240.Z01.A", f"BSI/M.{cc}.N.A.L20.A.I.U2.2240.Z01.A"):
+            try:
+                rows = [r for r in ecb_csv(key, 14) if r.get("OBS_VALUE")]
+                if rows:
+                    for r in rows:
+                        put(sid, r["TIME_PERIOD"], r["OBS_VALUE"], "BCE BSI (depósitos de empresas, tasa interanual)", "https://data.ecb.europa.eu/data/datasets/BSI/" + key.replace("BSI/", "BSI."), 1)
+                    break
+            except Exception as e:
+                LOG.append(f"  BCE {key}: ERROR {e}")
+
+
+def ecb_key_rates():
+    for sid, key in (("ecb_dfr", "FM/B.U2.EUR.4F.KR.DFR.LEV"), ("ecb_mro", "FM/B.U2.EUR.4F.KR.MRR_FR.LEV"), ("ecb_mlf", "FM/B.U2.EUR.4F.KR.MLFR.LEV")):
+        for r in ecb_csv(key, 5):
+            if r.get("OBS_VALUE"):
+                put(sid, r["TIME_PERIOD"], r["OBS_VALUE"], "BCE (ECB Data Portal)", "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html", 2)
+
+
+# ---------- Banco de Portugal (BPstat) ----------
+def bpstat():
+    for sid, ds, ser in (("loan_rate_nfc_pt", "9ab0b6dd481ff9d0a79aeca89363b9ec", "12533748"), ("dep_rate_pt", "ec7b2a0f066656833f1013b3a2f9f189", "12519736")):
+        url = f"https://bpstat.bportugal.pt/data/v1/domains/21/datasets/{ds}"
+        try:
+            d = json.loads(get(url, {"lang": "EN", "series_ids": ser, "obs_since": "2024-06-01"}))
+            dims = d.get("dimension", {})
+            tkey = next((k for k in d.get("id", []) if "date" in k.lower() or "time" in k.lower()), None)
+            if not tkey:
+                raise RuntimeError(f"estructura no reconocida: id={d.get('id')}")
+            cats = dims[tkey]["category"]["index"]
+            order = sorted(cats, key=lambda c: cats[c]) if isinstance(cats, dict) else cats
+            vals = d.get("value", [])
+            if isinstance(vals, dict):
+                vals = [vals.get(str(i)) for i in range(len(order))]
+            for t, v in zip(order, vals):
+                if v is not None:
+                    put(sid, str(t)[:7], v, "Banco de Portugal (BPstat)", f"{url}?lang=EN&series_ids={ser}", 2)
+        except Exception as e:
+            LOG.append(f"  BPstat {sid}: ERROR {e}")
+
+
+# ---------- Banco de España (Boletín Estadístico, cap. 19) ----------
+BDE = "https://www.bde.es/webbe/es/estadisticas/compartido/datos/csv/"
+MESES = {"ENE": 1, "FEB": 2, "MAR": 3, "ABR": 4, "MAY": 5, "JUN": 6, "JUL": 7, "AGO": 8, "SEP": 9, "OCT": 10, "NOV": 11, "DIC": 12}
+
+
+def bde_csv(name):
+    raw = urllib.request.urlopen(urllib.request.Request(BDE + name, headers=UA), timeout=40).read()
+    try:
+        t = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        t = raw.decode("latin-1")
+    rows = list(csv.reader(io.StringIO(t)))
+    head = [r for r in rows[:8]]
+    data = []
+    for r in rows:
+        if not r:
+            continue
+        m = r[0].strip().upper().replace('"', "")
+        parts = m.split()
+        if len(parts) == 2 and parts[0][:3] in MESES and parts[1].isdigit():
+            data.append((f"{parts[1]}-{MESES[parts[0][:3]]:02d}", r))
+    return head, data
+
+
+def bde():
+    targets = {
+        # id: (csv, palabras que deben estar en la descripción de la columna)
+        "loan_rate_nfc_es": ("be1903.csv", ["sociedades no financieras"]),
+        "dep_rate_nfc_es": ("be1907.csv", ["sociedades no financieras", "plazo"]),
+        "dep_rate_hh_es": ("be1907.csv", ["hogares", "plazo"]),
+    }
+    cache = {}
+    for sid, (f, words) in targets.items():
+        try:
+            if f not in cache:
+                cache[f] = bde_csv(f)
+            head, data = cache[f]
+            ncol = max(len(r) for r in head)
+            desc = [" ".join((h[c] if c < len(h) else "") for h in head).lower() for c in range(ncol)]
+            cols = [c for c in range(1, ncol) if all(w in desc[c] for w in words)]
+            if not cols:
+                LOG.append(f"  BdE {sid}: columna no encontrada; cabeceras: " + " || ".join(d[:120] for d in desc[:12]))
+                continue
+            c = cols[0]
+            LOG.append(f"  BdE {sid}: columna {c} «{desc[c][:160]}»")
+            for t, r in data[-14:]:
+                v = r[c].strip().replace(",", ".") if c < len(r) else ""
+                try:
+                    put(sid, t, float(v), "Banco de España (Boletín Estadístico, cap. 19)", BDE + f, 3)
+                except ValueError:
+                    pass
+        except Exception as e:
+            LOG.append(f"  BdE {sid}: ERROR {e}")
+
+
+# ---------- Bank of England (SONIA y Bank Rate) ----------
+def boe():
+    start = (datetime.date.today() - datetime.timedelta(days=20)).strftime("%d/%b/%Y")
+    t = get("https://www.bankofengland.co.uk/boeapps/database/_iadb-fromshowcolumns.asp",
+            {"csv.x": "yes", "Datefrom": start, "Dateto": "now", "SeriesCodes": "IUDSOIA,IUDBEDR", "CSVF": "TN", "UsingCodes": "Y", "VPD": "Y", "VFD": "N"})
+    rows = list(csv.reader(io.StringIO(t)))
+    if not rows or "DATE" not in rows[0][0].upper():
+        raise RuntimeError("respuesta inesperada: " + t[:120].replace("\n", " "))
+    hdr = [h.strip().upper() for h in rows[0]]
+    for r in rows[1:]:
+        if len(r) < len(hdr):
+            continue
+        dt = datetime.datetime.strptime(r[0].strip(), "%d %b %Y").date().isoformat()
+        for code, sid, nd in (("IUDSOIA", "sonia", 4), ("IUDBEDR", "boe_bank_rate", 2)):
+            if code in hdr and r[hdr.index(code)].strip():
+                put(sid, dt, r[hdr.index(code)], "Bank of England (base de datos)", "https://www.bankofengland.co.uk/boeapps/database/", nd)
+
+
+# ---------- IPC de EE. UU. (tasa interanual desde el índice de FRED) ----------
+def us_cpi():
+    key = os.environ.get("FRED_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError("falta FRED_API_KEY")
+    for sid, s in (("cpi_us", "CPIAUCNS"), ("core_us", "CPILFENS")):
+        d = json.loads(get("https://api.stlouisfed.org/fred/series/observations", {"series_id": s, "api_key": key, "file_type": "json", "sort_order": "desc", "limit": 30}))
+        idx = {o["date"][:7]: float(o["value"]) for o in d.get("observations", []) if o.get("value") not in (None, "", ".")}
+        for m, v in idx.items():
+            y, mo = m.split("-")
+            prev = idx.get(f"{int(y) - 1}-{mo}")
+            if prev:
+                put(sid, m, (v / prev - 1) * 100, f"BLS vía FRED ({s}), tasa interanual", f"https://fred.stlouisfed.org/series/{s}", 1)
+
+
 def main():
     step("NY Fed tipos", nyfed_rates)
     step("NY Fed operaciones", nyfed_ops)
@@ -152,9 +351,17 @@ def main():
     step("BCE divisas", ecb_fx)
     step("BCE balance semanal", ecb_ilm)
     step("FRED", fred)
+    step("FRED tipos oficiales de la Fed", fed_policy)
+    step("IPC EE. UU.", us_cpi)
+    step("BCE tipos oficiales", ecb_key_rates)
+    step("BCE tipos bancarios y depósitos", ecb_mir)
+    step("Eurostat", eurostat_all)
+    step("Banco de Portugal", bpstat)
+    step("Banco de España", bde)
+    step("Bank of England", boe)
     out = {"generated": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), "log": LOG, "series": {}}
     for sid, s in sorted(SER.items()):
-        obs = sorted(s["obs"].items())[-10:]
+        obs = sorted(s["obs"].items())[-14:]
         out["series"][sid] = {"source": s["source"], "source_url": s["source_url"], "obs": [{"date": d, "value": v} for d, v in obs]}
     old = {}
     if OUT.exists():
