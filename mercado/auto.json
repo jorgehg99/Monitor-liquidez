@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-02T21:16:12+00:00",
+ "generated": "2026-11-02T21:18:25+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -10,16 +10,13 @@
   "FRED tipos oficiales de la Fed: ok (+15)",
   "IPC EE. UU.: ok (+34)",
   "BCE tipos oficiales: ok (+15)",
-  "  BCE BSI/M.NL.N.A.L20.A.I.NL.2240.Z01.A: ERROR HTTP Error 404: Not Found",
-  "  BCE BSI/M.FR.N.A.L20.A.I.FR.2240.Z01.A: ERROR HTTP Error 404: Not Found",
-  "  BCE BSI/M.PT.N.A.L20.A.I.PT.2240.Z01.A: ERROR HTTP Error 404: Not Found",
-  "BCE tipos bancarios y depósitos: ok (+70)",
+  "BCE tipos bancarios y depósitos: ok (+28)",
   "Eurostat: ok (+209)",
   "Banco de Portugal: ok (+56)",
-  "  BdE loan_rate_nfc_es: columna no encontrada; cabeceras: código de la serie número secuencial alias de la serie descripción de la serie descripción de las unidades frecuencia en || dn_1ti2t0135 2806188 be_19_3.1 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0136 2806189 be_19_3.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0137 2806190 be_19_3.3 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0116 2806184 be_19_3.4 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0138 2806191 be_19_3.5 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0139 2806192 be_19_3.6 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0140 2806193 be_19_3.7 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t1141 2806306 be_19_3.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0142 2806194 be_19_3.9 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0143 2806195 be_19_3.10 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh || dn_1ti2t0144 2806196 be_19_3.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. crédito tot",
-  "  BdE dep_rate_nfc_es: columna no encontrada; cabeceras: código de la serie número secuencial alias de la serie descripción de la serie descripción de las unidades frecuencia en || dn_1ti1t0010 989007 be_19_7.1 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. depósitos de hogar || dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti2t0025 988655 be_19_7.3 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti2t0026 988656 be_19_7.4 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti2t0027 988657 be_19_7.5 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti2t0028 988658 be_19_7.6 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti1t0014 989011 be_19_7.7 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a l || dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a p || dn_1ti2t0030 988659 be_19_7.9 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a p || dn_1ti2t0031 988660 be_19_7.10 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a  || dn_1ti2t0032 988661 be_19_7.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a ",
+  "  BdE loan_rate_nfc_es: columna 11 «dn_1ti2t0144 2806196 be_19_3.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. crédito total porcentaje mensual _ _»",
+  "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
-  "Banco de España: ok (+14)",
+  "Banco de España: ok (+42)",
   "Bank of England: ok (+27)"
  ],
  "series": {
@@ -921,6 +918,68 @@
     }
    ]
   },
+  "dep_rate_nfc_es": {
+   "source": "Banco de España (Boletín Estadístico, cap. 19)",
+   "source_url": "https://www.bde.es/webbe/es/estadisticas/compartido/datos/csv/be1907.csv",
+   "obs": [
+    {
+     "date": "2025-07",
+     "value": 1.752
+    },
+    {
+     "date": "2025-08",
+     "value": 1.828
+    },
+    {
+     "date": "2025-09",
+     "value": 1.896
+    },
+    {
+     "date": "2025-10",
+     "value": 1.811
+    },
+    {
+     "date": "2025-11",
+     "value": 1.975
+    },
+    {
+     "date": "2025-12",
+     "value": 1.928
+    },
+    {
+     "date": "2026-01",
+     "value": 1.894
+    },
+    {
+     "date": "2026-02",
+     "value": 1.8
+    },
+    {
+     "date": "2026-03",
+     "value": 1.938
+    },
+    {
+     "date": "2026-04",
+     "value": 1.946
+    },
+    {
+     "date": "2026-05",
+     "value": 2.036
+    },
+    {
+     "date": "2026-06",
+     "value": 2.063
+    },
+    {
+     "date": "2026-07",
+     "value": 2.09
+    },
+    {
+     "date": "2026-08",
+     "value": 2.137
+    }
+   ]
+  },
   "dep_rate_nl": {
    "source": "BCE MIR (depósitos a plazo nuevos de empresas, hasta 1 año)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/MIR/MIR.M.NL.B.L22.F.R.A.2240.EUR.N",
@@ -1721,6 +1780,68 @@
     }
    ]
   },
+  "loan_rate_nfc_es": {
+   "source": "Banco de España (Boletín Estadístico, cap. 19)",
+   "source_url": "https://www.bde.es/webbe/es/estadisticas/compartido/datos/csv/be1903.csv",
+   "obs": [
+    {
+     "date": "2025-07",
+     "value": 3.272
+    },
+    {
+     "date": "2025-08",
+     "value": 3.243
+    },
+    {
+     "date": "2025-09",
+     "value": 3.192
+    },
+    {
+     "date": "2025-10",
+     "value": 3.225
+    },
+    {
+     "date": "2025-11",
+     "value": 3.314
+    },
+    {
+     "date": "2025-12",
+     "value": 3.284
+    },
+    {
+     "date": "2026-01",
+     "value": 3.331
+    },
+    {
+     "date": "2026-02",
+     "value": 3.274
+    },
+    {
+     "date": "2026-03",
+     "value": 3.237
+    },
+    {
+     "date": "2026-04",
+     "value": 3.414
+    },
+    {
+     "date": "2026-05",
+     "value": 3.485
+    },
+    {
+     "date": "2026-06",
+     "value": 3.526
+    },
+    {
+     "date": "2026-07",
+     "value": 3.682
+    },
+    {
+     "date": "2026-08",
+     "value": 3.568
+    }
+   ]
+  },
   "loan_rate_nfc_nl": {
    "source": "BCE MIR (préstamos nuevos a empresas, coste compuesto)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/MIR/MIR.M.NL.B.A2I.AM.R.A.2240.EUR.N",
@@ -1902,192 +2023,6 @@
     {
      "date": "2026-10-23",
      "value": 19.253
-    }
-   ]
-  },
-  "nfc_deposits_fr": {
-   "source": "BCE BSI (depósitos de empresas, tasa interanual)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/BSI/BSI.M.FR.N.A.L20.A.I.U2.2240.Z01.A",
-   "obs": [
-    {
-     "date": "2025-08",
-     "value": 0.4
-    },
-    {
-     "date": "2025-09",
-     "value": 1.8
-    },
-    {
-     "date": "2025-10",
-     "value": 2.4
-    },
-    {
-     "date": "2025-11",
-     "value": 1.9
-    },
-    {
-     "date": "2025-12",
-     "value": 3.4
-    },
-    {
-     "date": "2026-01",
-     "value": 2.8
-    },
-    {
-     "date": "2026-02",
-     "value": 3.6
-    },
-    {
-     "date": "2026-03",
-     "value": 3.6
-    },
-    {
-     "date": "2026-04",
-     "value": 2.9
-    },
-    {
-     "date": "2026-05",
-     "value": 2.1
-    },
-    {
-     "date": "2026-06",
-     "value": 3.4
-    },
-    {
-     "date": "2026-07",
-     "value": 2.8
-    },
-    {
-     "date": "2026-08",
-     "value": 1.7
-    },
-    {
-     "date": "2026-09",
-     "value": 3.0
-    }
-   ]
-  },
-  "nfc_deposits_nl": {
-   "source": "BCE BSI (depósitos de empresas, tasa interanual)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/BSI/BSI.M.NL.N.A.L20.A.I.U2.2240.Z01.A",
-   "obs": [
-    {
-     "date": "2025-08",
-     "value": 6.1
-    },
-    {
-     "date": "2025-09",
-     "value": 6.2
-    },
-    {
-     "date": "2025-10",
-     "value": 3.3
-    },
-    {
-     "date": "2025-11",
-     "value": 4.7
-    },
-    {
-     "date": "2025-12",
-     "value": 4.0
-    },
-    {
-     "date": "2026-01",
-     "value": 3.6
-    },
-    {
-     "date": "2026-02",
-     "value": 4.8
-    },
-    {
-     "date": "2026-03",
-     "value": 6.2
-    },
-    {
-     "date": "2026-04",
-     "value": 3.4
-    },
-    {
-     "date": "2026-05",
-     "value": 4.8
-    },
-    {
-     "date": "2026-06",
-     "value": 6.4
-    },
-    {
-     "date": "2026-07",
-     "value": 9.0
-    },
-    {
-     "date": "2026-08",
-     "value": 8.1
-    },
-    {
-     "date": "2026-09",
-     "value": 7.0
-    }
-   ]
-  },
-  "nfc_deposits_pt": {
-   "source": "BCE BSI (depósitos de empresas, tasa interanual)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/BSI/BSI.M.PT.N.A.L20.A.I.U2.2240.Z01.A",
-   "obs": [
-    {
-     "date": "2025-08",
-     "value": 9.5
-    },
-    {
-     "date": "2025-09",
-     "value": 11.1
-    },
-    {
-     "date": "2025-10",
-     "value": 11.3
-    },
-    {
-     "date": "2025-11",
-     "value": 10.4
-    },
-    {
-     "date": "2025-12",
-     "value": 9.1
-    },
-    {
-     "date": "2026-01",
-     "value": 7.8
-    },
-    {
-     "date": "2026-02",
-     "value": 7.5
-    },
-    {
-     "date": "2026-03",
-     "value": 10.8
-    },
-    {
-     "date": "2026-04",
-     "value": 12.0
-    },
-    {
-     "date": "2026-05",
-     "value": 11.9
-    },
-    {
-     "date": "2026-06",
-     "value": 12.1
-    },
-    {
-     "date": "2026-07",
-     "value": 11.7
-    },
-    {
-     "date": "2026-08",
-     "value": 11.7
-    },
-    {
-     "date": "2026-09",
-     "value": 11.0
     }
    ]
   },
@@ -2888,10 +2823,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DTB1YR",
    "obs": [
     {
-     "date": "2026-10-16",
-     "value": 4.24
-    },
-    {
      "date": "2026-10-19",
      "value": 4.27
     },
@@ -2926,6 +2857,10 @@
     {
      "date": "2026-10-29",
      "value": 4.22
+    },
+    {
+     "date": "2026-10-30",
+     "value": 4.17
     }
    ]
   },
@@ -2933,10 +2868,6 @@
    "source": "FRED (DTB3)",
    "source_url": "https://fred.stlouisfed.org/series/DTB3",
    "obs": [
-    {
-     "date": "2026-10-16",
-     "value": 4.08
-    },
     {
      "date": "2026-10-19",
      "value": 4.1
@@ -2972,6 +2903,10 @@
     {
      "date": "2026-10-29",
      "value": 4.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.99
     }
    ]
   },
@@ -2979,10 +2914,6 @@
    "source": "FRED (DTB6)",
    "source_url": "https://fred.stlouisfed.org/series/DTB6",
    "obs": [
-    {
-     "date": "2026-10-16",
-     "value": 4.2
-    },
     {
      "date": "2026-10-19",
      "value": 4.23
@@ -3018,6 +2949,10 @@
     {
      "date": "2026-10-29",
      "value": 4.15
+    },
+    {
+     "date": "2026-10-30",
+     "value": 4.11
     }
    ]
   },
@@ -3320,10 +3255,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DGS10",
    "obs": [
     {
-     "date": "2026-10-16",
-     "value": 5.09
-    },
-    {
      "date": "2026-10-19",
      "value": 5.15
     },
@@ -3358,6 +3289,10 @@
     {
      "date": "2026-10-29",
      "value": 4.98
+    },
+    {
+     "date": "2026-10-30",
+     "value": 4.94
     }
    ]
   }
