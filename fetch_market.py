@@ -215,17 +215,7 @@ def ecb_mir():
                     put(sid, r["TIME_PERIOD"], r["OBS_VALUE"], src, "https://data.ecb.europa.eu/data/datasets/MIR/" + key.replace("/", "."), 2)
         except Exception as e:
             LOG.append(f"  BCE {key}: ERROR {e}")
-    for sid, cc in (("nfc_deposits_nl", "NL"), ("nfc_deposits_fr", "FR"), ("nfc_deposits_pt", "PT")):
-        for key in (f"BSI/M.{cc}.N.A.L20.A.I.{cc}.2240.Z01.A", f"BSI/M.{cc}.N.A.L20.A.I.U2.2240.Z01.A"):
-            try:
-                rows = [r for r in ecb_csv(key, 14) if r.get("OBS_VALUE")]
-                if rows:
-                    for r in rows:
-                        put(sid, r["TIME_PERIOD"], r["OBS_VALUE"], "BCE BSI (depósitos de empresas, tasa interanual)", "https://data.ecb.europa.eu/data/datasets/BSI/" + key.replace("BSI/", "BSI."), 1)
-                    break
-            except Exception as e:
-                LOG.append(f"  BCE {key}: ERROR {e}")
-
+    # Depósitos de empresas (BSI): la tasa interanual oficial no está en la API pública con una clave estable; se deja a Claude.
 
 def ecb_key_rates():
     for sid, key in (("ecb_dfr", "FM/B.U2.EUR.4F.KR.DFR.LEV"), ("ecb_mro", "FM/B.U2.EUR.4F.KR.MRR_FR.LEV"), ("ecb_mlf", "FM/B.U2.EUR.4F.KR.MLFR.LEV")):
@@ -283,9 +273,9 @@ def bde_csv(name):
 def bde():
     targets = {
         # id: (csv, palabras que deben estar en la descripción de la columna)
-        "loan_rate_nfc_es": ("be1903.csv", ["sociedades no financieras"]),
-        "dep_rate_nfc_es": ("be1907.csv", ["sociedades no financieras", "plazo"]),
-        "dep_rate_hh_es": ("be1907.csv", ["hogares", "plazo"]),
+        "loan_rate_nfc_es": ("be1903.csv", ["snf.", "crédito total"]),
+        "dep_rate_nfc_es": ("be1907.csv", ["snf.", "depósitos a plazo", "tipo medio ponderado"]),
+        "dep_rate_hh_es": ("be1907.csv", ["hogares", "depósitos a plazo", "tipo medio ponderado"]),
     }
     cache = {}
     for sid, (f, words) in targets.items():
