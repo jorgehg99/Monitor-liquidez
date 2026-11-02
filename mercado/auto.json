@@ -1,14 +1,90 @@
 {
- "generated": "2026-11-02T21:04:42+00:00",
+ "generated": "2026-11-02T21:16:12+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+18)",
-  "FRED: ok (+200)"
+  "FRED: ok (+200)",
+  "FRED tipos oficiales de la Fed: ok (+15)",
+  "IPC EE. UU.: ok (+34)",
+  "BCE tipos oficiales: ok (+15)",
+  "  BCE BSI/M.NL.N.A.L20.A.I.NL.2240.Z01.A: ERROR HTTP Error 404: Not Found",
+  "  BCE BSI/M.FR.N.A.L20.A.I.FR.2240.Z01.A: ERROR HTTP Error 404: Not Found",
+  "  BCE BSI/M.PT.N.A.L20.A.I.PT.2240.Z01.A: ERROR HTTP Error 404: Not Found",
+  "BCE tipos bancarios y depósitos: ok (+70)",
+  "Eurostat: ok (+209)",
+  "Banco de Portugal: ok (+56)",
+  "  BdE loan_rate_nfc_es: columna no encontrada; cabeceras: código de la serie número secuencial alias de la serie descripción de la serie descripción de las unidades frecuencia en || dn_1ti2t0135 2806188 be_19_3.1 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0136 2806189 be_19_3.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0137 2806190 be_19_3.3 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0116 2806184 be_19_3.4 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0138 2806191 be_19_3.5 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0139 2806192 be_19_3.6 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0140 2806193 be_19_3.7 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t1141 2806306 be_19_3.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0142 2806194 be_19_3.9 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. || dn_1ti2t0143 2806195 be_19_3.10 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh || dn_1ti2t0144 2806196 be_19_3.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. crédito tot",
+  "  BdE dep_rate_nfc_es: columna no encontrada; cabeceras: código de la serie número secuencial alias de la serie descripción de la serie descripción de las unidades frecuencia en || dn_1ti1t0010 989007 be_19_7.1 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. depósitos de hogar || dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti2t0025 988655 be_19_7.3 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti2t0026 988656 be_19_7.4 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti2t0027 988657 be_19_7.5 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti2t0028 988658 be_19_7.6 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh.  || dn_1ti1t0014 989011 be_19_7.7 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a l || dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a p || dn_1ti2t0030 988659 be_19_7.9 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a p || dn_1ti2t0031 988660 be_19_7.10 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a  || dn_1ti2t0032 988661 be_19_7.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a ",
+  "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
+  "Banco de España: ok (+14)",
+  "Bank of England: ok (+27)"
  ],
  "series": {
+  "boe_bank_rate": {
+   "source": "Bank of England (base de datos)",
+   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
+   "obs": [
+    {
+     "date": "2026-10-13",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-14",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-15",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-16",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-19",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.75
+    }
+   ]
+  },
   "breakeven_10y_us": {
    "source": "FRED (T10YIE)",
    "source_url": "https://fred.stlouisfed.org/series/T10YIE",
@@ -101,6 +177,874 @@
     }
    ]
   },
+  "core_de": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=DE&unit=RCH_A&coicop18=TOT_X_NRG_FOOD&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 2.4
+    },
+    {
+     "date": "2025-09",
+     "value": 2.6
+    },
+    {
+     "date": "2025-10",
+     "value": 2.7
+    },
+    {
+     "date": "2025-11",
+     "value": 3.0
+    },
+    {
+     "date": "2025-12",
+     "value": 2.5
+    },
+    {
+     "date": "2026-01",
+     "value": 2.4
+    },
+    {
+     "date": "2026-02",
+     "value": 2.5
+    },
+    {
+     "date": "2026-03",
+     "value": 2.5
+    },
+    {
+     "date": "2026-04",
+     "value": 2.3
+    },
+    {
+     "date": "2026-05",
+     "value": 2.6
+    },
+    {
+     "date": "2026-06",
+     "value": 2.5
+    },
+    {
+     "date": "2026-07",
+     "value": 2.6
+    },
+    {
+     "date": "2026-08",
+     "value": 2.6
+    },
+    {
+     "date": "2026-09",
+     "value": 2.5
+    }
+   ]
+  },
+  "core_ea": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=EA&unit=RCH_A&coicop18=TOT_X_NRG_FOOD&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 2.3
+    },
+    {
+     "date": "2025-09",
+     "value": 2.4
+    },
+    {
+     "date": "2025-10",
+     "value": 2.4
+    },
+    {
+     "date": "2025-11",
+     "value": 2.4
+    },
+    {
+     "date": "2025-12",
+     "value": 2.3
+    },
+    {
+     "date": "2026-01",
+     "value": 2.2
+    },
+    {
+     "date": "2026-02",
+     "value": 2.4
+    },
+    {
+     "date": "2026-03",
+     "value": 2.3
+    },
+    {
+     "date": "2026-04",
+     "value": 2.2
+    },
+    {
+     "date": "2026-05",
+     "value": 2.6
+    },
+    {
+     "date": "2026-06",
+     "value": 2.4
+    },
+    {
+     "date": "2026-07",
+     "value": 2.5
+    },
+    {
+     "date": "2026-08",
+     "value": 2.4
+    },
+    {
+     "date": "2026-09",
+     "value": 2.5
+    }
+   ]
+  },
+  "core_fr": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=FR&unit=RCH_A&coicop18=TOT_X_NRG_FOOD&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 1.4
+    },
+    {
+     "date": "2025-09",
+     "value": 1.5
+    },
+    {
+     "date": "2025-10",
+     "value": 1.5
+    },
+    {
+     "date": "2025-11",
+     "value": 1.2
+    },
+    {
+     "date": "2025-12",
+     "value": 1.3
+    },
+    {
+     "date": "2026-01",
+     "value": 1.0
+    },
+    {
+     "date": "2026-02",
+     "value": 1.3
+    },
+    {
+     "date": "2026-03",
+     "value": 1.3
+    },
+    {
+     "date": "2026-04",
+     "value": 1.4
+    },
+    {
+     "date": "2026-05",
+     "value": 1.6
+    },
+    {
+     "date": "2026-06",
+     "value": 1.2
+    },
+    {
+     "date": "2026-07",
+     "value": 1.4
+    },
+    {
+     "date": "2026-08",
+     "value": 1.3
+    },
+    {
+     "date": "2026-09",
+     "value": 1.8
+    }
+   ]
+  },
+  "core_nl": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=NL&unit=RCH_A&coicop18=TOT_X_NRG_FOOD&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 2.1
+    },
+    {
+     "date": "2025-09",
+     "value": 2.7
+    },
+    {
+     "date": "2025-10",
+     "value": 2.9
+    },
+    {
+     "date": "2025-11",
+     "value": 2.7
+    },
+    {
+     "date": "2025-12",
+     "value": 3.0
+    },
+    {
+     "date": "2026-01",
+     "value": 2.4
+    },
+    {
+     "date": "2026-02",
+     "value": 2.7
+    },
+    {
+     "date": "2026-03",
+     "value": 2.3
+    },
+    {
+     "date": "2026-04",
+     "value": 2.1
+    },
+    {
+     "date": "2026-05",
+     "value": 3.4
+    },
+    {
+     "date": "2026-06",
+     "value": 2.7
+    },
+    {
+     "date": "2026-07",
+     "value": 3.0
+    },
+    {
+     "date": "2026-08",
+     "value": 2.7
+    },
+    {
+     "date": "2026-09",
+     "value": 2.9
+    }
+   ]
+  },
+  "core_pt": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=PT&unit=RCH_A&coicop18=TOT_X_NRG_FOOD&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 2.5
+    },
+    {
+     "date": "2025-09",
+     "value": 1.6
+    },
+    {
+     "date": "2025-10",
+     "value": 1.9
+    },
+    {
+     "date": "2025-11",
+     "value": 2.1
+    },
+    {
+     "date": "2025-12",
+     "value": 2.6
+    },
+    {
+     "date": "2026-01",
+     "value": 2.0
+    },
+    {
+     "date": "2026-02",
+     "value": 2.2
+    },
+    {
+     "date": "2026-03",
+     "value": 2.1
+    },
+    {
+     "date": "2026-04",
+     "value": 2.1
+    },
+    {
+     "date": "2026-05",
+     "value": 2.0
+    },
+    {
+     "date": "2026-06",
+     "value": 2.6
+    },
+    {
+     "date": "2026-07",
+     "value": 2.9
+    },
+    {
+     "date": "2026-08",
+     "value": 3.1
+    },
+    {
+     "date": "2026-09",
+     "value": 2.9
+    }
+   ]
+  },
+  "core_us": {
+   "source": "BLS vía FRED (CPILFENS), tasa interanual",
+   "source_url": "https://fred.stlouisfed.org/series/CPILFENS",
+   "obs": [
+    {
+     "date": "2025-07",
+     "value": 3.1
+    },
+    {
+     "date": "2025-08",
+     "value": 3.1
+    },
+    {
+     "date": "2025-09",
+     "value": 3.0
+    },
+    {
+     "date": "2025-11",
+     "value": 2.6
+    },
+    {
+     "date": "2025-12",
+     "value": 2.6
+    },
+    {
+     "date": "2026-01",
+     "value": 2.5
+    },
+    {
+     "date": "2026-02",
+     "value": 2.5
+    },
+    {
+     "date": "2026-03",
+     "value": 2.6
+    },
+    {
+     "date": "2026-04",
+     "value": 2.8
+    },
+    {
+     "date": "2026-05",
+     "value": 2.9
+    },
+    {
+     "date": "2026-06",
+     "value": 2.6
+    },
+    {
+     "date": "2026-07",
+     "value": 2.5
+    },
+    {
+     "date": "2026-08",
+     "value": 2.4
+    },
+    {
+     "date": "2026-09",
+     "value": 2.6
+    }
+   ]
+  },
+  "cpi_ea": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=EA&unit=RCH_A&coicop18=TOTAL&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 2.0
+    },
+    {
+     "date": "2025-09",
+     "value": 2.2
+    },
+    {
+     "date": "2025-10",
+     "value": 2.1
+    },
+    {
+     "date": "2025-11",
+     "value": 2.1
+    },
+    {
+     "date": "2025-12",
+     "value": 2.0
+    },
+    {
+     "date": "2026-01",
+     "value": 1.7
+    },
+    {
+     "date": "2026-02",
+     "value": 1.9
+    },
+    {
+     "date": "2026-03",
+     "value": 2.6
+    },
+    {
+     "date": "2026-04",
+     "value": 3.0
+    },
+    {
+     "date": "2026-05",
+     "value": 3.2
+    },
+    {
+     "date": "2026-06",
+     "value": 2.8
+    },
+    {
+     "date": "2026-07",
+     "value": 2.9
+    },
+    {
+     "date": "2026-08",
+     "value": 3.2
+    },
+    {
+     "date": "2026-09",
+     "value": 3.8
+    }
+   ]
+  },
+  "cpi_fr": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=FR&unit=RCH_A&coicop18=TOTAL&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 0.8
+    },
+    {
+     "date": "2025-09",
+     "value": 1.1
+    },
+    {
+     "date": "2025-10",
+     "value": 0.8
+    },
+    {
+     "date": "2025-11",
+     "value": 0.8
+    },
+    {
+     "date": "2025-12",
+     "value": 0.7
+    },
+    {
+     "date": "2026-01",
+     "value": 0.4
+    },
+    {
+     "date": "2026-02",
+     "value": 1.1
+    },
+    {
+     "date": "2026-03",
+     "value": 2.0
+    },
+    {
+     "date": "2026-04",
+     "value": 2.5
+    },
+    {
+     "date": "2026-05",
+     "value": 2.8
+    },
+    {
+     "date": "2026-06",
+     "value": 2.0
+    },
+    {
+     "date": "2026-07",
+     "value": 2.4
+    },
+    {
+     "date": "2026-08",
+     "value": 2.6
+    },
+    {
+     "date": "2026-09",
+     "value": 3.4
+    }
+   ]
+  },
+  "cpi_nl": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=NL&unit=RCH_A&coicop18=TOTAL&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 2.4
+    },
+    {
+     "date": "2025-09",
+     "value": 3.0
+    },
+    {
+     "date": "2025-10",
+     "value": 3.0
+    },
+    {
+     "date": "2025-11",
+     "value": 2.6
+    },
+    {
+     "date": "2025-12",
+     "value": 2.7
+    },
+    {
+     "date": "2026-01",
+     "value": 2.2
+    },
+    {
+     "date": "2026-02",
+     "value": 2.3
+    },
+    {
+     "date": "2026-03",
+     "value": 2.6
+    },
+    {
+     "date": "2026-04",
+     "value": 2.5
+    },
+    {
+     "date": "2026-05",
+     "value": 3.4
+    },
+    {
+     "date": "2026-06",
+     "value": 2.5
+    },
+    {
+     "date": "2026-07",
+     "value": 3.0
+    },
+    {
+     "date": "2026-08",
+     "value": 2.8
+    },
+    {
+     "date": "2026-09",
+     "value": 3.0
+    }
+   ]
+  },
+  "cpi_pt": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=PT&unit=RCH_A&coicop18=TOTAL&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 2.5
+    },
+    {
+     "date": "2025-09",
+     "value": 1.9
+    },
+    {
+     "date": "2025-10",
+     "value": 2.0
+    },
+    {
+     "date": "2025-11",
+     "value": 2.1
+    },
+    {
+     "date": "2025-12",
+     "value": 2.4
+    },
+    {
+     "date": "2026-01",
+     "value": 1.9
+    },
+    {
+     "date": "2026-02",
+     "value": 2.1
+    },
+    {
+     "date": "2026-03",
+     "value": 2.7
+    },
+    {
+     "date": "2026-04",
+     "value": 3.3
+    },
+    {
+     "date": "2026-05",
+     "value": 3.1
+    },
+    {
+     "date": "2026-06",
+     "value": 3.1
+    },
+    {
+     "date": "2026-07",
+     "value": 3.1
+    },
+    {
+     "date": "2026-08",
+     "value": 3.6
+    },
+    {
+     "date": "2026-09",
+     "value": 3.6
+    }
+   ]
+  },
+  "cpi_us": {
+   "source": "BLS vía FRED (CPIAUCNS), tasa interanual",
+   "source_url": "https://fred.stlouisfed.org/series/CPIAUCNS",
+   "obs": [
+    {
+     "date": "2025-07",
+     "value": 2.7
+    },
+    {
+     "date": "2025-08",
+     "value": 2.9
+    },
+    {
+     "date": "2025-09",
+     "value": 3.0
+    },
+    {
+     "date": "2025-11",
+     "value": 2.7
+    },
+    {
+     "date": "2025-12",
+     "value": 2.7
+    },
+    {
+     "date": "2026-01",
+     "value": 2.4
+    },
+    {
+     "date": "2026-02",
+     "value": 2.4
+    },
+    {
+     "date": "2026-03",
+     "value": 3.3
+    },
+    {
+     "date": "2026-04",
+     "value": 3.8
+    },
+    {
+     "date": "2026-05",
+     "value": 4.2
+    },
+    {
+     "date": "2026-06",
+     "value": 3.5
+    },
+    {
+     "date": "2026-07",
+     "value": 3.4
+    },
+    {
+     "date": "2026-08",
+     "value": 3.4
+    },
+    {
+     "date": "2026-09",
+     "value": 3.7
+    }
+   ]
+  },
+  "dep_rate_hh_es": {
+   "source": "Banco de España (Boletín Estadístico, cap. 19)",
+   "source_url": "https://www.bde.es/webbe/es/estadisticas/compartido/datos/csv/be1907.csv",
+   "obs": [
+    {
+     "date": "2025-07",
+     "value": 1.622
+    },
+    {
+     "date": "2025-08",
+     "value": 1.625
+    },
+    {
+     "date": "2025-09",
+     "value": 1.659
+    },
+    {
+     "date": "2025-10",
+     "value": 1.759
+    },
+    {
+     "date": "2025-11",
+     "value": 1.639
+    },
+    {
+     "date": "2025-12",
+     "value": 1.679
+    },
+    {
+     "date": "2026-01",
+     "value": 1.667
+    },
+    {
+     "date": "2026-02",
+     "value": 1.738
+    },
+    {
+     "date": "2026-03",
+     "value": 1.746
+    },
+    {
+     "date": "2026-04",
+     "value": 1.771
+    },
+    {
+     "date": "2026-05",
+     "value": 1.825
+    },
+    {
+     "date": "2026-06",
+     "value": 1.919
+    },
+    {
+     "date": "2026-07",
+     "value": 2.007
+    },
+    {
+     "date": "2026-08",
+     "value": 2.016
+    }
+   ]
+  },
+  "dep_rate_nl": {
+   "source": "BCE MIR (depósitos a plazo nuevos de empresas, hasta 1 año)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/MIR/MIR.M.NL.B.L22.F.R.A.2240.EUR.N",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 1.81
+    },
+    {
+     "date": "2025-09",
+     "value": 1.81
+    },
+    {
+     "date": "2025-10",
+     "value": 1.82
+    },
+    {
+     "date": "2025-11",
+     "value": 1.84
+    },
+    {
+     "date": "2025-12",
+     "value": 1.83
+    },
+    {
+     "date": "2026-01",
+     "value": 1.87
+    },
+    {
+     "date": "2026-02",
+     "value": 1.87
+    },
+    {
+     "date": "2026-03",
+     "value": 1.94
+    },
+    {
+     "date": "2026-04",
+     "value": 1.97
+    },
+    {
+     "date": "2026-05",
+     "value": 2.0
+    },
+    {
+     "date": "2026-06",
+     "value": 2.19
+    },
+    {
+     "date": "2026-07",
+     "value": 2.21
+    },
+    {
+     "date": "2026-08",
+     "value": 2.25
+    },
+    {
+     "date": "2026-09",
+     "value": 2.4
+    }
+   ]
+  },
+  "dep_rate_pt": {
+   "source": "Banco de Portugal (BPstat)",
+   "source_url": "https://bpstat.bportugal.pt/data/v1/domains/21/datasets/ec7b2a0f066656833f1013b3a2f9f189?lang=EN&series_ids=12519736",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 1.46
+    },
+    {
+     "date": "2025-09",
+     "value": 1.49
+    },
+    {
+     "date": "2025-10",
+     "value": 1.5
+    },
+    {
+     "date": "2025-11",
+     "value": 1.49
+    },
+    {
+     "date": "2025-12",
+     "value": 1.54
+    },
+    {
+     "date": "2026-01",
+     "value": 1.5
+    },
+    {
+     "date": "2026-02",
+     "value": 1.51
+    },
+    {
+     "date": "2026-03",
+     "value": 1.59
+    },
+    {
+     "date": "2026-04",
+     "value": 1.62
+    },
+    {
+     "date": "2026-05",
+     "value": 1.68
+    },
+    {
+     "date": "2026-06",
+     "value": 1.73
+    },
+    {
+     "date": "2026-07",
+     "value": 1.77
+    },
+    {
+     "date": "2026-08",
+     "value": 1.78
+    },
+    {
+     "date": "2026-09",
+     "value": 2.01
+    }
+   ]
+  },
   "dfr_recourse_ecb": {
    "source": "BCE, estado financiero semanal (ECB Data Portal)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
@@ -128,6 +1072,84 @@
     {
      "date": "2026-10-23",
      "value": 1943.141
+    }
+   ]
+  },
+  "ecb_dfr": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2025-03-12",
+     "value": 2.5
+    },
+    {
+     "date": "2025-04-23",
+     "value": 2.25
+    },
+    {
+     "date": "2025-06-11",
+     "value": 2.0
+    },
+    {
+     "date": "2026-06-17",
+     "value": 2.25
+    },
+    {
+     "date": "2026-09-16",
+     "value": 2.5
+    }
+   ]
+  },
+  "ecb_mlf": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2025-03-12",
+     "value": 2.9
+    },
+    {
+     "date": "2025-04-23",
+     "value": 2.65
+    },
+    {
+     "date": "2025-06-11",
+     "value": 2.4
+    },
+    {
+     "date": "2026-06-17",
+     "value": 2.65
+    },
+    {
+     "date": "2026-09-16",
+     "value": 2.9
+    }
+   ]
+  },
+  "ecb_mro": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2025-03-12",
+     "value": 2.65
+    },
+    {
+     "date": "2025-04-23",
+     "value": 2.4
+    },
+    {
+     "date": "2025-06-11",
+     "value": 2.15
+    },
+    {
+     "date": "2026-06-17",
+     "value": 2.4
+    },
+    {
+     "date": "2026-09-16",
+     "value": 2.65
     }
    ]
   },
@@ -182,6 +1204,22 @@
    "source_url": "https://data.ecb.europa.eu/data/datasets/EST/EST.B.EU000A2X2A25.WT",
    "obs": [
     {
+     "date": "2026-10-13",
+     "value": 2.439
+    },
+    {
+     "date": "2026-10-14",
+     "value": 2.44
+    },
+    {
+     "date": "2026-10-15",
+     "value": 2.44
+    },
+    {
+     "date": "2026-10-16",
+     "value": 2.441
+    },
+    {
      "date": "2026-10-19",
      "value": 2.441
     },
@@ -227,6 +1265,22 @@
    "source": "BCE, tipos de referencia",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
+    {
+     "date": "2026-10-14",
+     "value": 1.1195
+    },
+    {
+     "date": "2026-10-15",
+     "value": 1.1208
+    },
+    {
+     "date": "2026-10-16",
+     "value": 1.1253
+    },
+    {
+     "date": "2026-10-19",
+     "value": 1.1225
+    },
     {
      "date": "2026-10-20",
      "value": 1.1215
@@ -315,10 +1369,78 @@
     }
    ]
   },
+  "fed_lower": {
+   "source": "Federal Reserve vía FRED (DFEDTARL)",
+   "source_url": "https://fred.stlouisfed.org/series/DFEDTARL",
+   "obs": [
+    {
+     "date": "2026-10-29",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-31",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-01",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.75
+    }
+   ]
+  },
+  "fed_upper": {
+   "source": "Federal Reserve vía FRED (DFEDTARU)",
+   "source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
+   "obs": [
+    {
+     "date": "2026-10-29",
+     "value": 4.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 4.0
+    },
+    {
+     "date": "2026-10-31",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-01",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-02",
+     "value": 4.0
+    }
+   ]
+  },
   "gbpeur": {
    "source": "BCE, tipos de referencia (inverso de EUR/GBP)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
+    {
+     "date": "2026-10-14",
+     "value": 1.185
+    },
+    {
+     "date": "2026-10-15",
+     "value": 1.1819
+    },
+    {
+     "date": "2026-10-16",
+     "value": 1.185
+    },
+    {
+     "date": "2026-10-19",
+     "value": 1.1876
+    },
     {
      "date": "2026-10-20",
      "value": 1.1901
@@ -366,6 +1488,22 @@
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
     {
+     "date": "2026-10-14",
+     "value": 1.3267
+    },
+    {
+     "date": "2026-10-15",
+     "value": 1.3247
+    },
+    {
+     "date": "2026-10-16",
+     "value": 1.3335
+    },
+    {
+     "date": "2026-10-19",
+     "value": 1.3331
+    },
+    {
      "date": "2026-10-20",
      "value": 1.3347
     },
@@ -404,6 +1542,306 @@
     {
      "date": "2026-11-02",
      "value": 1.3419
+    }
+   ]
+  },
+  "gdp_fr": {
+   "source": "Eurostat (PIB trimestral, tasa interanual)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?geo=FR&unit=CLV_PCH_SM&s_adj=SCA&na_item=B1GQ&lang=EN",
+   "obs": [
+    {
+     "date": "2024-03",
+     "value": 2.1
+    },
+    {
+     "date": "2024-06",
+     "value": 1.3
+    },
+    {
+     "date": "2024-09",
+     "value": 1.4
+    },
+    {
+     "date": "2024-12",
+     "value": 0.9
+    },
+    {
+     "date": "2025-03",
+     "value": 0.8
+    },
+    {
+     "date": "2025-06",
+     "value": 0.8
+    },
+    {
+     "date": "2025-09",
+     "value": 0.8
+    },
+    {
+     "date": "2025-12",
+     "value": 1.1
+    },
+    {
+     "date": "2026-03",
+     "value": 0.8
+    },
+    {
+     "date": "2026-06",
+     "value": 0.5
+    },
+    {
+     "date": "2026-09",
+     "value": -0.1
+    }
+   ]
+  },
+  "gdp_nl": {
+   "source": "Eurostat (PIB trimestral, tasa interanual)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?geo=NL&unit=CLV_PCH_SM&s_adj=SCA&na_item=B1GQ&lang=EN",
+   "obs": [
+    {
+     "date": "2024-03",
+     "value": -0.6
+    },
+    {
+     "date": "2024-06",
+     "value": 0.7
+    },
+    {
+     "date": "2024-09",
+     "value": 2.0
+    },
+    {
+     "date": "2024-12",
+     "value": 2.1
+    },
+    {
+     "date": "2025-03",
+     "value": 2.0
+    },
+    {
+     "date": "2025-06",
+     "value": 1.5
+    },
+    {
+     "date": "2025-09",
+     "value": 1.3
+    },
+    {
+     "date": "2025-12",
+     "value": 1.4
+    },
+    {
+     "date": "2026-03",
+     "value": 1.4
+    },
+    {
+     "date": "2026-06",
+     "value": 1.8
+    },
+    {
+     "date": "2026-09",
+     "value": 2.1
+    }
+   ]
+  },
+  "gdp_pt": {
+   "source": "Eurostat (PIB trimestral, tasa interanual)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp?geo=PT&unit=CLV_PCH_SM&s_adj=SCA&na_item=B1GQ&lang=EN",
+   "obs": [
+    {
+     "date": "2024-03",
+     "value": 2.4
+    },
+    {
+     "date": "2024-06",
+     "value": 2.6
+    },
+    {
+     "date": "2024-09",
+     "value": 2.7
+    },
+    {
+     "date": "2024-12",
+     "value": 3.0
+    },
+    {
+     "date": "2025-03",
+     "value": 1.8
+    },
+    {
+     "date": "2025-06",
+     "value": 1.8
+    },
+    {
+     "date": "2025-09",
+     "value": 2.1
+    },
+    {
+     "date": "2025-12",
+     "value": 1.9
+    },
+    {
+     "date": "2026-03",
+     "value": 2.4
+    },
+    {
+     "date": "2026-06",
+     "value": 2.6
+    },
+    {
+     "date": "2026-09",
+     "value": 2.4
+    }
+   ]
+  },
+  "iorb": {
+   "source": "Federal Reserve vía FRED (IORB)",
+   "source_url": "https://fred.stlouisfed.org/series/IORB",
+   "obs": [
+    {
+     "date": "2026-10-29",
+     "value": 3.9
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.9
+    },
+    {
+     "date": "2026-10-31",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-01",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.9
+    }
+   ]
+  },
+  "loan_rate_nfc_nl": {
+   "source": "BCE MIR (préstamos nuevos a empresas, coste compuesto)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/MIR/MIR.M.NL.B.A2I.AM.R.A.2240.EUR.N",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 3.06
+    },
+    {
+     "date": "2025-09",
+     "value": 3.01
+    },
+    {
+     "date": "2025-10",
+     "value": 2.97
+    },
+    {
+     "date": "2025-11",
+     "value": 2.92
+    },
+    {
+     "date": "2025-12",
+     "value": 3.11
+    },
+    {
+     "date": "2026-01",
+     "value": 3.11
+    },
+    {
+     "date": "2026-02",
+     "value": 3.17
+    },
+    {
+     "date": "2026-03",
+     "value": 3.06
+    },
+    {
+     "date": "2026-04",
+     "value": 3.04
+    },
+    {
+     "date": "2026-05",
+     "value": 3.17
+    },
+    {
+     "date": "2026-06",
+     "value": 3.29
+    },
+    {
+     "date": "2026-07",
+     "value": 3.04
+    },
+    {
+     "date": "2026-08",
+     "value": 2.97
+    },
+    {
+     "date": "2026-09",
+     "value": 3.12
+    }
+   ]
+  },
+  "loan_rate_nfc_pt": {
+   "source": "Banco de Portugal (BPstat)",
+   "source_url": "https://bpstat.bportugal.pt/data/v1/domains/21/datasets/9ab0b6dd481ff9d0a79aeca89363b9ec?lang=EN&series_ids=12533748",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 3.54
+    },
+    {
+     "date": "2025-09",
+     "value": 3.61
+    },
+    {
+     "date": "2025-10",
+     "value": 3.67
+    },
+    {
+     "date": "2025-11",
+     "value": 3.68
+    },
+    {
+     "date": "2025-12",
+     "value": 3.65
+    },
+    {
+     "date": "2026-01",
+     "value": 3.71
+    },
+    {
+     "date": "2026-02",
+     "value": 3.71
+    },
+    {
+     "date": "2026-03",
+     "value": 3.53
+    },
+    {
+     "date": "2026-04",
+     "value": 3.78
+    },
+    {
+     "date": "2026-05",
+     "value": 3.92
+    },
+    {
+     "date": "2026-06",
+     "value": 4.09
+    },
+    {
+     "date": "2026-07",
+     "value": 4.04
+    },
+    {
+     "date": "2026-08",
+     "value": 4.15
+    },
+    {
+     "date": "2026-09",
+     "value": 4.25
     }
    ]
   },
@@ -464,6 +1902,192 @@
     {
      "date": "2026-10-23",
      "value": 19.253
+    }
+   ]
+  },
+  "nfc_deposits_fr": {
+   "source": "BCE BSI (depósitos de empresas, tasa interanual)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/BSI/BSI.M.FR.N.A.L20.A.I.U2.2240.Z01.A",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 0.4
+    },
+    {
+     "date": "2025-09",
+     "value": 1.8
+    },
+    {
+     "date": "2025-10",
+     "value": 2.4
+    },
+    {
+     "date": "2025-11",
+     "value": 1.9
+    },
+    {
+     "date": "2025-12",
+     "value": 3.4
+    },
+    {
+     "date": "2026-01",
+     "value": 2.8
+    },
+    {
+     "date": "2026-02",
+     "value": 3.6
+    },
+    {
+     "date": "2026-03",
+     "value": 3.6
+    },
+    {
+     "date": "2026-04",
+     "value": 2.9
+    },
+    {
+     "date": "2026-05",
+     "value": 2.1
+    },
+    {
+     "date": "2026-06",
+     "value": 3.4
+    },
+    {
+     "date": "2026-07",
+     "value": 2.8
+    },
+    {
+     "date": "2026-08",
+     "value": 1.7
+    },
+    {
+     "date": "2026-09",
+     "value": 3.0
+    }
+   ]
+  },
+  "nfc_deposits_nl": {
+   "source": "BCE BSI (depósitos de empresas, tasa interanual)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/BSI/BSI.M.NL.N.A.L20.A.I.U2.2240.Z01.A",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 6.1
+    },
+    {
+     "date": "2025-09",
+     "value": 6.2
+    },
+    {
+     "date": "2025-10",
+     "value": 3.3
+    },
+    {
+     "date": "2025-11",
+     "value": 4.7
+    },
+    {
+     "date": "2025-12",
+     "value": 4.0
+    },
+    {
+     "date": "2026-01",
+     "value": 3.6
+    },
+    {
+     "date": "2026-02",
+     "value": 4.8
+    },
+    {
+     "date": "2026-03",
+     "value": 6.2
+    },
+    {
+     "date": "2026-04",
+     "value": 3.4
+    },
+    {
+     "date": "2026-05",
+     "value": 4.8
+    },
+    {
+     "date": "2026-06",
+     "value": 6.4
+    },
+    {
+     "date": "2026-07",
+     "value": 9.0
+    },
+    {
+     "date": "2026-08",
+     "value": 8.1
+    },
+    {
+     "date": "2026-09",
+     "value": 7.0
+    }
+   ]
+  },
+  "nfc_deposits_pt": {
+   "source": "BCE BSI (depósitos de empresas, tasa interanual)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/BSI/BSI.M.PT.N.A.L20.A.I.U2.2240.Z01.A",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 9.5
+    },
+    {
+     "date": "2025-09",
+     "value": 11.1
+    },
+    {
+     "date": "2025-10",
+     "value": 11.3
+    },
+    {
+     "date": "2025-11",
+     "value": 10.4
+    },
+    {
+     "date": "2025-12",
+     "value": 9.1
+    },
+    {
+     "date": "2026-01",
+     "value": 7.8
+    },
+    {
+     "date": "2026-02",
+     "value": 7.5
+    },
+    {
+     "date": "2026-03",
+     "value": 10.8
+    },
+    {
+     "date": "2026-04",
+     "value": 12.0
+    },
+    {
+     "date": "2026-05",
+     "value": 11.9
+    },
+    {
+     "date": "2026-06",
+     "value": 12.1
+    },
+    {
+     "date": "2026-07",
+     "value": 11.7
+    },
+    {
+     "date": "2026-08",
+     "value": 11.7
+    },
+    {
+     "date": "2026-09",
+     "value": 11.0
     }
    ]
   },
@@ -1179,6 +2803,64 @@
     }
    ]
   },
+  "sonia": {
+   "source": "Bank of England (base de datos)",
+   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
+   "obs": [
+    {
+     "date": "2026-10-13",
+     "value": 3.7319
+    },
+    {
+     "date": "2026-10-14",
+     "value": 3.7324
+    },
+    {
+     "date": "2026-10-15",
+     "value": 3.7335
+    },
+    {
+     "date": "2026-10-16",
+     "value": 3.7344
+    },
+    {
+     "date": "2026-10-19",
+     "value": 3.7337
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.734
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.734
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.7345
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.7338
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.7328
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.734
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.7338
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.7352
+    }
+   ]
+  },
   "srf_fed": {
    "source": "Federal Reserve Bank of New York (API de operaciones)",
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
@@ -1385,10 +3067,150 @@
     }
    ]
   },
+  "unemp_nl": {
+   "source": "Eurostat (paro desestacionalizado)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?geo=NL&unit=PC_ACT&s_adj=SA&age=TOTAL&sex=T&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 3.9
+    },
+    {
+     "date": "2025-09",
+     "value": 4.0
+    },
+    {
+     "date": "2025-10",
+     "value": 4.0
+    },
+    {
+     "date": "2025-11",
+     "value": 4.0
+    },
+    {
+     "date": "2025-12",
+     "value": 4.0
+    },
+    {
+     "date": "2026-01",
+     "value": 4.0
+    },
+    {
+     "date": "2026-02",
+     "value": 4.1
+    },
+    {
+     "date": "2026-03",
+     "value": 4.0
+    },
+    {
+     "date": "2026-04",
+     "value": 3.9
+    },
+    {
+     "date": "2026-05",
+     "value": 3.9
+    },
+    {
+     "date": "2026-06",
+     "value": 3.8
+    },
+    {
+     "date": "2026-07",
+     "value": 4.0
+    },
+    {
+     "date": "2026-08",
+     "value": 4.0
+    },
+    {
+     "date": "2026-09",
+     "value": 4.0
+    }
+   ]
+  },
+  "unemp_pt": {
+   "source": "Eurostat (paro desestacionalizado)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_m?geo=PT&unit=PC_ACT&s_adj=SA&age=TOTAL&sex=T&lang=EN",
+   "obs": [
+    {
+     "date": "2025-08",
+     "value": 5.8
+    },
+    {
+     "date": "2025-09",
+     "value": 5.9
+    },
+    {
+     "date": "2025-10",
+     "value": 5.8
+    },
+    {
+     "date": "2025-11",
+     "value": 5.7
+    },
+    {
+     "date": "2025-12",
+     "value": 5.7
+    },
+    {
+     "date": "2026-01",
+     "value": 5.8
+    },
+    {
+     "date": "2026-02",
+     "value": 6.0
+    },
+    {
+     "date": "2026-03",
+     "value": 5.9
+    },
+    {
+     "date": "2026-04",
+     "value": 5.7
+    },
+    {
+     "date": "2026-05",
+     "value": 5.6
+    },
+    {
+     "date": "2026-06",
+     "value": 5.7
+    },
+    {
+     "date": "2026-07",
+     "value": 5.7
+    },
+    {
+     "date": "2026-08",
+     "value": 5.6
+    },
+    {
+     "date": "2026-09",
+     "value": 5.6
+    }
+   ]
+  },
   "usdbrl": {
    "source": "BCE, tipos de referencia (cruce EUR/BRL ÷ EUR/USD)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
+    {
+     "date": "2026-10-14",
+     "value": 5.0242
+    },
+    {
+     "date": "2026-10-15",
+     "value": 5.057
+    },
+    {
+     "date": "2026-10-16",
+     "value": 5.0828
+    },
+    {
+     "date": "2026-10-19",
+     "value": 5.0453
+    },
     {
      "date": "2026-10-20",
      "value": 5.0235
@@ -1435,6 +3257,22 @@
    "source": "BCE, tipos de referencia (cruce EUR/MXN ÷ EUR/USD)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
+    {
+     "date": "2026-10-14",
+     "value": 18.3653
+    },
+    {
+     "date": "2026-10-15",
+     "value": 18.5221
+    },
+    {
+     "date": "2026-10-16",
+     "value": 18.3836
+    },
+    {
+     "date": "2026-10-19",
+     "value": 18.4838
+    },
     {
      "date": "2026-10-20",
      "value": 18.5215
