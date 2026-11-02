@@ -1,0 +1,5 @@
+data/
+*.json
+!mercado/
+!mercado/auto.json
+__pycache__/

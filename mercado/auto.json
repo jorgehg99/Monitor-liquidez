@@ -1,0 +1,1527 @@
+{
+ "generated": "2026-11-02T21:04:42+00:00",
+ "log": [
+  "NY Fed tipos: ok (+40)",
+  "NY Fed operaciones: ok (+8)",
+  "BCE €STR: ok (+15)",
+  "BCE divisas: ok (+75)",
+  "BCE balance semanal: ok (+18)",
+  "FRED: ok (+200)"
+ ],
+ "series": {
+  "breakeven_10y_us": {
+   "source": "FRED (T10YIE)",
+   "source_url": "https://fred.stlouisfed.org/series/T10YIE",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 2.35
+    },
+    {
+     "date": "2026-10-20",
+     "value": 2.35
+    },
+    {
+     "date": "2026-10-21",
+     "value": 2.37
+    },
+    {
+     "date": "2026-10-22",
+     "value": 2.32
+    },
+    {
+     "date": "2026-10-23",
+     "value": 2.34
+    },
+    {
+     "date": "2026-10-26",
+     "value": 2.34
+    },
+    {
+     "date": "2026-10-27",
+     "value": 2.35
+    },
+    {
+     "date": "2026-10-28",
+     "value": 2.38
+    },
+    {
+     "date": "2026-10-29",
+     "value": 2.35
+    },
+    {
+     "date": "2026-10-30",
+     "value": 2.34
+    }
+   ]
+  },
+  "brent_spot": {
+   "source": "FRED (DCOILBRENTEU)",
+   "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
+   "obs": [
+    {
+     "date": "2026-10-14",
+     "value": 126.55
+    },
+    {
+     "date": "2026-10-15",
+     "value": 126.35
+    },
+    {
+     "date": "2026-10-16",
+     "value": 119.33
+    },
+    {
+     "date": "2026-10-19",
+     "value": 118.82
+    },
+    {
+     "date": "2026-10-20",
+     "value": 115.22
+    },
+    {
+     "date": "2026-10-21",
+     "value": 117.37
+    },
+    {
+     "date": "2026-10-22",
+     "value": 125.39
+    },
+    {
+     "date": "2026-10-23",
+     "value": 128.3
+    },
+    {
+     "date": "2026-10-26",
+     "value": 128.12
+    },
+    {
+     "date": "2026-10-27",
+     "value": 123.1
+    }
+   ]
+  },
+  "dfr_recourse_ecb": {
+   "source": "BCE, estado financiero semanal (ECB Data Portal)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
+   "obs": [
+    {
+     "date": "2026-09-18",
+     "value": 1955.874
+    },
+    {
+     "date": "2026-09-25",
+     "value": 1956.554
+    },
+    {
+     "date": "2026-10-02",
+     "value": 1959.733
+    },
+    {
+     "date": "2026-10-09",
+     "value": 1954.655
+    },
+    {
+     "date": "2026-10-16",
+     "value": 1962.19
+    },
+    {
+     "date": "2026-10-23",
+     "value": 1943.141
+    }
+   ]
+  },
+  "effr": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.88
+    }
+   ]
+  },
+  "estr": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/EST/EST.B.EU000A2X2A25.WT",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 2.441
+    },
+    {
+     "date": "2026-10-20",
+     "value": 2.44
+    },
+    {
+     "date": "2026-10-21",
+     "value": 2.44
+    },
+    {
+     "date": "2026-10-22",
+     "value": 2.442
+    },
+    {
+     "date": "2026-10-23",
+     "value": 2.442
+    },
+    {
+     "date": "2026-10-26",
+     "value": 2.441
+    },
+    {
+     "date": "2026-10-27",
+     "value": 2.44
+    },
+    {
+     "date": "2026-10-28",
+     "value": 2.439
+    },
+    {
+     "date": "2026-10-29",
+     "value": 2.439
+    },
+    {
+     "date": "2026-10-30",
+     "value": 2.44
+    }
+   ]
+  },
+  "eurusd": {
+   "source": "BCE, tipos de referencia",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2026-10-20",
+     "value": 1.1215
+    },
+    {
+     "date": "2026-10-21",
+     "value": 1.1234
+    },
+    {
+     "date": "2026-10-22",
+     "value": 1.1205
+    },
+    {
+     "date": "2026-10-23",
+     "value": 1.1193
+    },
+    {
+     "date": "2026-10-26",
+     "value": 1.1188
+    },
+    {
+     "date": "2026-10-27",
+     "value": 1.115
+    },
+    {
+     "date": "2026-10-28",
+     "value": 1.1133
+    },
+    {
+     "date": "2026-10-29",
+     "value": 1.113
+    },
+    {
+     "date": "2026-10-30",
+     "value": 1.1172
+    },
+    {
+     "date": "2026-11-02",
+     "value": 1.1216
+    }
+   ]
+  },
+  "fed_assets": {
+   "source": "FRED (WALCL)",
+   "source_url": "https://fred.stlouisfed.org/series/WALCL",
+   "obs": [
+    {
+     "date": "2026-08-26",
+     "value": 6730.912
+    },
+    {
+     "date": "2026-09-02",
+     "value": 6737.204
+    },
+    {
+     "date": "2026-09-09",
+     "value": 6740.619
+    },
+    {
+     "date": "2026-09-16",
+     "value": 6746.548
+    },
+    {
+     "date": "2026-09-23",
+     "value": 6747.704
+    },
+    {
+     "date": "2026-09-30",
+     "value": 6743.031
+    },
+    {
+     "date": "2026-10-07",
+     "value": 6747.56
+    },
+    {
+     "date": "2026-10-14",
+     "value": 6755.639
+    },
+    {
+     "date": "2026-10-21",
+     "value": 6753.604
+    },
+    {
+     "date": "2026-10-28",
+     "value": 6745.635
+    }
+   ]
+  },
+  "gbpeur": {
+   "source": "BCE, tipos de referencia (inverso de EUR/GBP)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2026-10-20",
+     "value": 1.1901
+    },
+    {
+     "date": "2026-10-21",
+     "value": 1.193
+    },
+    {
+     "date": "2026-10-22",
+     "value": 1.1937
+    },
+    {
+     "date": "2026-10-23",
+     "value": 1.1943
+    },
+    {
+     "date": "2026-10-26",
+     "value": 1.193
+    },
+    {
+     "date": "2026-10-27",
+     "value": 1.1953
+    },
+    {
+     "date": "2026-10-28",
+     "value": 1.1935
+    },
+    {
+     "date": "2026-10-29",
+     "value": 1.1965
+    },
+    {
+     "date": "2026-10-30",
+     "value": 1.1993
+    },
+    {
+     "date": "2026-11-02",
+     "value": 1.1965
+    }
+   ]
+  },
+  "gbpusd": {
+   "source": "BCE, tipos de referencia (cruce EUR/USD ÷ EUR/GBP)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2026-10-20",
+     "value": 1.3347
+    },
+    {
+     "date": "2026-10-21",
+     "value": 1.3402
+    },
+    {
+     "date": "2026-10-22",
+     "value": 1.3376
+    },
+    {
+     "date": "2026-10-23",
+     "value": 1.3368
+    },
+    {
+     "date": "2026-10-26",
+     "value": 1.3348
+    },
+    {
+     "date": "2026-10-27",
+     "value": 1.3328
+    },
+    {
+     "date": "2026-10-28",
+     "value": 1.3288
+    },
+    {
+     "date": "2026-10-29",
+     "value": 1.3317
+    },
+    {
+     "date": "2026-10-30",
+     "value": 1.3399
+    },
+    {
+     "date": "2026-11-02",
+     "value": 1.3419
+    }
+   ]
+  },
+  "ltro_ecb": {
+   "source": "BCE, estado financiero semanal (ECB Data Portal)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
+   "obs": [
+    {
+     "date": "2026-09-18",
+     "value": 14.305
+    },
+    {
+     "date": "2026-09-25",
+     "value": 14.305
+    },
+    {
+     "date": "2026-10-02",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-09",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-16",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-23",
+     "value": 16.192
+    }
+   ]
+  },
+  "mro_ecb": {
+   "source": "BCE, estado financiero semanal (ECB Data Portal)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
+   "obs": [
+    {
+     "date": "2026-09-18",
+     "value": 14.892
+    },
+    {
+     "date": "2026-09-25",
+     "value": 14.557
+    },
+    {
+     "date": "2026-10-02",
+     "value": 21.905
+    },
+    {
+     "date": "2026-10-09",
+     "value": 18.084
+    },
+    {
+     "date": "2026-10-16",
+     "value": 18.51
+    },
+    {
+     "date": "2026-10-23",
+     "value": 19.253
+    }
+   ]
+  },
+  "oas_em": {
+   "source": "FRED (BAMLEMCBPIOAS)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLEMCBPIOAS",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 160.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 163.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 163.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 173.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 172.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 174.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 173.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 170.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 173.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 181.0
+    }
+   ]
+  },
+  "oas_em_hg": {
+   "source": "FRED (BAMLEMIBHGCRPIOAS)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLEMIBHGCRPIOAS",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 92.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 94.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 94.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 102.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 101.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 102.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 100.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 98.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 100.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 105.0
+    }
+   ]
+  },
+  "oas_em_hy": {
+   "source": "FRED (BAMLEMHBHYCRPIOAS)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLEMHBHYCRPIOAS",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 346.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 351.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 349.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 365.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 364.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 371.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 369.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 366.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 374.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 388.0
+    }
+   ]
+  },
+  "oas_eur_hy": {
+   "source": "FRED (BAMLHE00EHYIOAS)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLHE00EHYIOAS",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 331.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 342.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 338.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 354.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 364.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 363.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 362.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 349.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 348.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 359.0
+    }
+   ]
+  },
+  "oas_us_a": {
+   "source": "FRED (BAMLC0A3CA)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLC0A3CA",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 73.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 73.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 73.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 75.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 76.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 75.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 73.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 72.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 74.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 78.0
+    }
+   ]
+  },
+  "oas_us_aa": {
+   "source": "FRED (BAMLC0A2CAA)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLC0A2CAA",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 63.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 63.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 63.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 65.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 67.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 66.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 63.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 62.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 65.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 70.0
+    }
+   ]
+  },
+  "oas_us_b": {
+   "source": "FRED (BAMLH0A2HYB)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 336.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 338.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 332.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 346.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 343.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 336.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 322.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 318.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 332.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 360.0
+    }
+   ]
+  },
+  "oas_us_bb": {
+   "source": "FRED (BAMLH0A1HYBB)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLH0A1HYBB",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 200.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 202.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 198.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 210.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 206.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 198.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 187.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 184.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 194.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 209.0
+    }
+   ]
+  },
+  "oas_us_bbb": {
+   "source": "FRED (BAMLC0A4CBBB)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLC0A4CBBB",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 108.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 108.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 109.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 111.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 113.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 112.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 109.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 107.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 110.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 116.0
+    }
+   ]
+  },
+  "oas_us_hy": {
+   "source": "FRED (BAMLH0A0HYM2)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 329.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 333.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 327.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 340.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 338.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 330.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 318.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 314.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 326.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 344.0
+    }
+   ]
+  },
+  "oas_us_ig": {
+   "source": "FRED (BAMLC0A0CM)",
+   "source_url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 87.0
+    },
+    {
+     "date": "2026-10-20",
+     "value": 87.0
+    },
+    {
+     "date": "2026-10-21",
+     "value": 88.0
+    },
+    {
+     "date": "2026-10-22",
+     "value": 89.0
+    },
+    {
+     "date": "2026-10-23",
+     "value": 91.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 90.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 88.0
+    },
+    {
+     "date": "2026-10-28",
+     "value": 86.0
+    },
+    {
+     "date": "2026-10-29",
+     "value": 89.0
+    },
+    {
+     "date": "2026-10-30",
+     "value": 94.0
+    }
+   ]
+  },
+  "reserves_us": {
+   "source": "FRED (WRESBAL)",
+   "source_url": "https://fred.stlouisfed.org/series/WRESBAL",
+   "obs": [
+    {
+     "date": "2026-08-26",
+     "value": 2924.94
+    },
+    {
+     "date": "2026-09-02",
+     "value": 2894.53
+    },
+    {
+     "date": "2026-09-09",
+     "value": 2991.31
+    },
+    {
+     "date": "2026-09-16",
+     "value": 3013.79
+    },
+    {
+     "date": "2026-09-23",
+     "value": 2930.19
+    },
+    {
+     "date": "2026-09-30",
+     "value": 2948.09
+    },
+    {
+     "date": "2026-10-07",
+     "value": 3029.66
+    },
+    {
+     "date": "2026-10-14",
+     "value": 3022.14
+    },
+    {
+     "date": "2026-10-21",
+     "value": 2962.61
+    },
+    {
+     "date": "2026-10-28",
+     "value": 2893.77
+    }
+   ]
+  },
+  "rrp_us": {
+   "source": "Federal Reserve Bank of New York (API de operaciones)",
+   "source_url": "https://www.newyorkfed.org/markets/desk-operations/reverse-repo",
+   "obs": [
+    {
+     "date": "2026-10-28",
+     "value": 0.176
+    },
+    {
+     "date": "2026-10-29",
+     "value": 0.353
+    },
+    {
+     "date": "2026-10-30",
+     "value": 4.375
+    },
+    {
+     "date": "2026-11-02",
+     "value": 5.087
+    }
+   ]
+  },
+  "sofr": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 3.87
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.9
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.92
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.93
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.95
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.94
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.94
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.95
+    }
+   ]
+  },
+  "sofr_avg_30d": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
+   "obs": [
+    {
+     "date": "2026-10-20",
+     "value": 3.88586
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.88686
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.88787
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.88887
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.89253
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.89355
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.89522
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.89656
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.89857
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.90524
+    }
+   ]
+  },
+  "sofr_avg_90d": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
+   "obs": [
+    {
+     "date": "2026-10-20",
+     "value": 3.74448
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.74739
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.75008
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.75301
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.76242
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.76556
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.76892
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.77217
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.77532
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.78518
+    }
+   ]
+  },
+  "srf_fed": {
+   "source": "Federal Reserve Bank of New York (API de operaciones)",
+   "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
+   "obs": [
+    {
+     "date": "2026-10-28",
+     "value": 0.006
+    },
+    {
+     "date": "2026-10-29",
+     "value": 0.031
+    },
+    {
+     "date": "2026-10-30",
+     "value": 0.0
+    },
+    {
+     "date": "2026-11-02",
+     "value": 0.002
+    }
+   ]
+  },
+  "tbill_us_1y": {
+   "source": "FRED (DTB1YR)",
+   "source_url": "https://fred.stlouisfed.org/series/DTB1YR",
+   "obs": [
+    {
+     "date": "2026-10-16",
+     "value": 4.24
+    },
+    {
+     "date": "2026-10-19",
+     "value": 4.27
+    },
+    {
+     "date": "2026-10-20",
+     "value": 4.28
+    },
+    {
+     "date": "2026-10-21",
+     "value": 4.29
+    },
+    {
+     "date": "2026-10-22",
+     "value": 4.2
+    },
+    {
+     "date": "2026-10-23",
+     "value": 4.22
+    },
+    {
+     "date": "2026-10-26",
+     "value": 4.26
+    },
+    {
+     "date": "2026-10-27",
+     "value": 4.3
+    },
+    {
+     "date": "2026-10-28",
+     "value": 4.27
+    },
+    {
+     "date": "2026-10-29",
+     "value": 4.22
+    }
+   ]
+  },
+  "tbill_us_3m": {
+   "source": "FRED (DTB3)",
+   "source_url": "https://fred.stlouisfed.org/series/DTB3",
+   "obs": [
+    {
+     "date": "2026-10-16",
+     "value": 4.08
+    },
+    {
+     "date": "2026-10-19",
+     "value": 4.1
+    },
+    {
+     "date": "2026-10-20",
+     "value": 4.08
+    },
+    {
+     "date": "2026-10-21",
+     "value": 4.07
+    },
+    {
+     "date": "2026-10-22",
+     "value": 4.04
+    },
+    {
+     "date": "2026-10-23",
+     "value": 4.04
+    },
+    {
+     "date": "2026-10-26",
+     "value": 4.05
+    },
+    {
+     "date": "2026-10-27",
+     "value": 4.05
+    },
+    {
+     "date": "2026-10-28",
+     "value": 4.01
+    },
+    {
+     "date": "2026-10-29",
+     "value": 4.0
+    }
+   ]
+  },
+  "tbill_us_6m": {
+   "source": "FRED (DTB6)",
+   "source_url": "https://fred.stlouisfed.org/series/DTB6",
+   "obs": [
+    {
+     "date": "2026-10-16",
+     "value": 4.2
+    },
+    {
+     "date": "2026-10-19",
+     "value": 4.23
+    },
+    {
+     "date": "2026-10-20",
+     "value": 4.22
+    },
+    {
+     "date": "2026-10-21",
+     "value": 4.21
+    },
+    {
+     "date": "2026-10-22",
+     "value": 4.16
+    },
+    {
+     "date": "2026-10-23",
+     "value": 4.17
+    },
+    {
+     "date": "2026-10-26",
+     "value": 4.21
+    },
+    {
+     "date": "2026-10-27",
+     "value": 4.21
+    },
+    {
+     "date": "2026-10-28",
+     "value": 4.18
+    },
+    {
+     "date": "2026-10-29",
+     "value": 4.15
+    }
+   ]
+  },
+  "tga_us": {
+   "source": "FRED (WTREGEN)",
+   "source_url": "https://fred.stlouisfed.org/series/WTREGEN",
+   "obs": [
+    {
+     "date": "2026-08-26",
+     "value": 950.736
+    },
+    {
+     "date": "2026-09-02",
+     "value": 967.935
+    },
+    {
+     "date": "2026-09-09",
+     "value": 883.335
+    },
+    {
+     "date": "2026-09-16",
+     "value": 877.028
+    },
+    {
+     "date": "2026-09-23",
+     "value": 977.084
+    },
+    {
+     "date": "2026-09-30",
+     "value": 948.674
+    },
+    {
+     "date": "2026-10-07",
+     "value": 880.253
+    },
+    {
+     "date": "2026-10-14",
+     "value": 883.373
+    },
+    {
+     "date": "2026-10-21",
+     "value": 952.002
+    },
+    {
+     "date": "2026-10-28",
+     "value": 999.727
+    }
+   ]
+  },
+  "usdbrl": {
+   "source": "BCE, tipos de referencia (cruce EUR/BRL ÷ EUR/USD)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2026-10-20",
+     "value": 5.0235
+    },
+    {
+     "date": "2026-10-21",
+     "value": 5.0233
+    },
+    {
+     "date": "2026-10-22",
+     "value": 5.049
+    },
+    {
+     "date": "2026-10-23",
+     "value": 5.0465
+    },
+    {
+     "date": "2026-10-26",
+     "value": 5.5884
+    },
+    {
+     "date": "2026-10-27",
+     "value": 5.3474
+    },
+    {
+     "date": "2026-10-28",
+     "value": 5.3271
+    },
+    {
+     "date": "2026-10-29",
+     "value": 5.3516
+    },
+    {
+     "date": "2026-10-30",
+     "value": 5.4325
+    },
+    {
+     "date": "2026-11-02",
+     "value": 5.4378
+    }
+   ]
+  },
+  "usdmxn": {
+   "source": "BCE, tipos de referencia (cruce EUR/MXN ÷ EUR/USD)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2026-10-20",
+     "value": 18.5215
+    },
+    {
+     "date": "2026-10-21",
+     "value": 18.4825
+    },
+    {
+     "date": "2026-10-22",
+     "value": 18.7608
+    },
+    {
+     "date": "2026-10-23",
+     "value": 18.7819
+    },
+    {
+     "date": "2026-10-26",
+     "value": 18.6156
+    },
+    {
+     "date": "2026-10-27",
+     "value": 18.6368
+    },
+    {
+     "date": "2026-10-28",
+     "value": 18.6307
+    },
+    {
+     "date": "2026-10-29",
+     "value": 18.7476
+    },
+    {
+     "date": "2026-10-30",
+     "value": 18.9077
+    },
+    {
+     "date": "2026-11-02",
+     "value": 18.72
+    }
+   ]
+  },
+  "y10_us": {
+   "source": "FRED (DGS10)",
+   "source_url": "https://fred.stlouisfed.org/series/DGS10",
+   "obs": [
+    {
+     "date": "2026-10-16",
+     "value": 5.09
+    },
+    {
+     "date": "2026-10-19",
+     "value": 5.15
+    },
+    {
+     "date": "2026-10-20",
+     "value": 5.12
+    },
+    {
+     "date": "2026-10-21",
+     "value": 5.13
+    },
+    {
+     "date": "2026-10-22",
+     "value": 4.96
+    },
+    {
+     "date": "2026-10-23",
+     "value": 5.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 5.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 4.99
+    },
+    {
+     "date": "2026-10-28",
+     "value": 5.05
+    },
+    {
+     "date": "2026-10-29",
+     "value": 4.98
+    }
+   ]
+  }
+ }
+}

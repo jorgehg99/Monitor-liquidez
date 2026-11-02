@@ -1,0 +1,47 @@
+name: Datos de mercado
+
+# Horas en UTC (Madrid = UTC+1 en invierno, UTC+2 en verano).
+# Evitan las ventanas en que Claude actualiza la web (8:20, 11:20, 15:20, 18:20 y 22:20 de Madrid).
+on:
+  schedule:
+    - cron: "5 6,9,12,13,16,19,20 * * 1-5"
+    - cron: "40 22 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: datos-mercado
+  cancel-in-progress: false
+
+jobs:
+  datos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Descargar, reconstruir y publicar
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASSWORD }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in 1 2 3; do
+            python3 fetch_market.py
+            bash actualiza_web.sh
+            git add mercado/auto.json index.html datos.enc 2>/dev/null || true
+            if git diff --cached --quiet; then echo "Nada que publicar"; exit 0; fi
+            git commit -q -m "Datos automáticos $(TZ=Europe/Madrid date '+%Y-%m-%d %H:%M') (hora de Madrid)"
+            if git push origin HEAD:main; then exit 0; fi
+            echo "Push rechazado: repito sobre la última versión"
+            git fetch -q origin main && git reset -q --hard origin/main
+          done
+          exit 1

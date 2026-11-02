@@ -1,0 +1,35 @@
+name: Limpieza mensual del historial
+
+# El día 1 de cada mes a las 3:00 UTC (fuera de las actualizaciones) deja el repositorio
+# con un único commit: la web y los scripts actuales. Las versiones antiguas de la web
+# cifrada se descartan para que el repositorio no crezca sin límite.
+on:
+  schedule:
+    - cron: "0 3 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: datos-mercado
+  cancel-in-progress: false
+
+jobs:
+  limpieza:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Reiniciar el historial con la versión actual
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          SHA=$(git rev-parse --short HEAD)
+          git checkout -q --orphan limpio
+          git add -A
+          git commit -q -m "Limpieza mensual del historial ($(TZ=Europe/Madrid date '+%Y-%m-%d'); versión ${SHA})"
+          git push --force origin limpio:main
+          echo "Historial reiniciado sobre ${SHA}"
