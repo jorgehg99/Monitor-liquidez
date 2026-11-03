@@ -1480,9 +1480,9 @@ table.rt td.l,table.rt th.l{text-align:left}table.rt td{vertical-align:top}
 .read.auto{border-left-color:var(--warn)}.read.auto h4{color:var(--warn)}
 .nt-bar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}.nt-bar .like{text-decoration:none}
 .nota{background:#fff;color:#1b2430;border-radius:6px;padding:18px 20px;font:14px/1.5 Calibri,Arial,sans-serif;max-width:860px}.nota h2{font-size:19px;margin:4px 0 10px;color:#0b2e4f}.nota h3{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#1f5f9e;border-bottom:1px solid #d9e2ec;padding-bottom:3px;margin:16px 0 6px}
-.nota a{color:#1f5f9e}.nt-k{font-size:12px;letter-spacing:.12em;color:#1f5f9e;font-weight:700}.nt-d{font-size:12px;color:#5b6b7d}.nota ol,.nota ul{margin:4px 0 4px 20px;padding:0}.nota li{margin-bottom:4px}.nt-t{border-collapse:collapse;font-size:13px;margin:4px 0}.nt-t th,.nt-t td{border:1px solid #d9e2ec;padding:3px 8px;color:#1b2430;text-transform:none;letter-spacing:0}.nt-t th{background:#eef3f8;font-weight:600}.nt-s{font-size:11.5px;color:#5b6b7d}
+.nota a{color:#1f5f9e}.nt-k{font-size:12px;letter-spacing:.12em;color:#1f5f9e;font-weight:700}.nt-d{font-size:12px;color:#5b6b7d}.nota ol,.nota ul{margin:4px 0 4px 20px;padding:0}.nota li{margin-bottom:4px}.nt-t{border-collapse:collapse;font-size:13px;margin:4px 0}.nt-t th,.nt-t td{border:1px solid #d9e2ec;padding:3px 8px;color:#1b2430;text-transform:none;letter-spacing:0;text-align:left;font-family:Calibri,Arial,sans-serif;font-size:13px;white-space:normal}.nt-t th{background:#eef3f8;font-weight:600}.nt-s{font-size:11.5px;color:#5b6b7d}
 table.mk tr.blk td{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;padding-top:10px}
-.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,380px),1fr));gap:8px}.bk{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:9px 11px;min-width:0}.bk .mc{font-size:12.5px;line-height:1.45;margin:6px 0;color:var(--fg)}.bk table td{font-size:12px}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,380px),1fr));gap:8px}.bk{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:9px 11px;min-width:0}.bk .mc{font-size:12.5px;line-height:1.45;margin:6px 0;color:var(--fg)}.bk table td{font-size:12px;white-space:normal;text-align:left;font-family:inherit;vertical-align:top}.bk table td:first-child{width:38%;color:var(--muted)}
 .ctip{position:absolute;pointer-events:none;z-index:40;background:var(--panel2);border:1px solid var(--line2);border-radius:4px;padding:6px 8px;font-size:12px;font-family:var(--mono);box-shadow:0 3px 12px rgba(0,0,0,.3);white-space:nowrap}.ctip b{display:block;font-family:inherit;margin-bottom:2px}.ctip i{display:inline-block;width:8px;height:8px;margin-right:5px;border-radius:2px}
 .chart .cl{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
 .egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:6px}.emp{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:4px;padding:8px 10px;min-width:0}
@@ -1574,7 +1574,7 @@ function show(id,scroll,sub){tabs.forEach(function(b){var t=b.getAttribute('data
  if(scroll)window.scrollTo(0,0);}
 tabs.forEach(function(b){b.addEventListener('click',function(){show(b.getAttribute('data-tab'),true);});});
 [].slice.call(document.querySelectorAll('[data-next]')).forEach(function(b){b.addEventListener('click',function(){showSub(cur.tab,b.getAttribute('data-next'),true);});});
-function fromHash(sc){var hh=location.hash.slice(1).split('/');show(tabs.some(function(b){return b.getAttribute('data-tab')===hh[0];})?hh[0]:'pulso',sc,hh[1]);}
+function fromHash(sc){var hh=location.hash.slice(1).split('/');show(tabs.some(function(b){return b.getAttribute('data-tab')===hh[0];})?hh[0]:'intel',sc,hh[1]);}
 fromHash(false);window.addEventListener('hashchange',function(){fromHash(true);});
 /* tema */
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
@@ -1866,7 +1866,7 @@ def eventos_html():
         tag = {"+": "Entrada de caja", "-": "Salida / necesidad de caja", "refi": "Refinanciación"}.get(d, "Evento")
         meta = " · ".join(esc(v) for v in (x.get("country"), x.get("event_type"), (f'evento {fdate(x.get("event_date"))}' if x.get("event_date") else None)) if v)
         return (f'<article class="emp {cls}"><div class="top"><b>{esc(x.get("company"))} | {esc(x.get("amount") or tag)}</b><span class="date">{esc(fdate(x.get("published")))}</span></div><div class="em">{tag} · {meta}</div>'
-                f'<p>{esc(x.get("text"))}</p>' + (f'<p class="nx">Caja: {esc(x.get("cash_balance"))}</p>' if x.get("cash_balance") else "")
+                f'<p>{esc(x.get("text"))}</p>' + (f'<p class="nx">{esc(x.get("cash_balance"))}</p>' if x.get("cash_balance") else "")
                 + (f'<p><i>Implicación cash management: {esc(x.get("implication"))}</i></p>' if x.get("implication") else "") + f'<div class="el">{src_link(x.get("url"), x.get("source"))}</div></article>')
     new = [x for x in items if days_old(x.get("published")) <= 3]
     old = [x for x in items if days_old(x.get("published")) > 3]
