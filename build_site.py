@@ -30,6 +30,7 @@ def load(name, default):
 # Datos automáticos (GitHub Actions → mercado/auto.json): se fusionan solo si son más recientes
 AUTO_FILE = pathlib.Path(__file__).resolve().parent / "mercado" / "auto.json"
 AUTO_UPDATED = []
+AUTO_SINCE = set()
 
 def merge_auto():
     try:
@@ -71,6 +72,16 @@ def merge_auto():
             h = {"id": r["id"], "month": last["date"][:7], "date": last["date"], "value": last["value"]}
             hist.append(h)
             hidx[k] = h
+    if MODE == "build" and os.environ.get("GITHUB_ACTIONS") == "true":
+        # Indicadores que GitHub Actions ha actualizado desde la última actualización de Claude
+        mp = DATA / "auto_meta.json"
+        try:
+            prev_ids = json.loads(mp.read_text()).get("ids", [])
+        except Exception:
+            prev_ids = []
+        AUTO_SINCE.update(prev_ids)
+        AUTO_SINCE.update(AUTO_UPDATED)
+        mp.write_text(json.dumps({"ids": sorted(AUTO_SINCE)}))
     if AUTO_UPDATED:
         (DATA / "ultimo.json").write_text(json.dumps(ult, ensure_ascii=False, indent=1))
         (DATA / "historico.json").write_text(json.dumps(hist, ensure_ascii=False, indent=1))
@@ -466,6 +477,20 @@ def card(r, extra=""):
     read = ""
     if r.get("comment"):
         read = f'<div class="read"><h4>Lectura para liquidez y cash management</h4><p>{esc(r["comment"])}</p><small>Análisis generado por Claude con los datos de esta página; no es una recomendación.</small></div>'
+    if r["id"] in AUTO_SINCE or r["id"] in AUTO_UPDATED:
+        v, pv = num(r.get("value")), num(r.get("prev_value"))
+        u = r.get("unit") or ""
+        d = (v - pv) if v is not None and pv is not None else None
+        if d is not None and u in ("%", "% a/a", "% de activos"):
+            chg = f'{"+" if d > 0 else ""}{fnum(d * 100, 1)} pb' if u == "%" else f'{"+" if d > 0 else ""}{fnum(d, 1)} pp'
+        elif d is not None:
+            chg = f'{"+" if d > 0 else ""}{fnum(d, int(r.get("decimals") or 2))} {u}'.strip()
+        else:
+            chg = ""
+        auto = (f'<div class="read auto"><h4>Dato nuevo (descarga automática)</h4><p>{esc(r.get("name"))}: {fnum(v, int(r.get("decimals") or 2))} {esc(u)} ({"dato del" if len(str(r.get("date"))) == 10 else "dato de"} {esc(fdate(r.get("date")))})'
+                + (f', {chg} frente al dato anterior ({esc(fdate(r.get("prev_date")))})' if chg else "") + f'. Fuente: {esc(r.get("source") or "")}.</p>'
+                + ('<small>La lectura de abajo es de la última actualización de Claude y se renovará en la próxima.</small>' if read else '<small>Claude añadirá la lectura en la próxima actualización.</small>') + '</div>')
+        read = auto + read
     basis = {"monthly-average": "Media mensual", "y/y": "Tasa interanual de cada mes"}.get(r.get("basis"), "Cierre de cada mes")
     return f'''<details class="card" id="c-{esc(r["id"])}" data-id="{esc(r["id"])}"><summary>
 <div class="top"><span class="code">{esc(r.get("short") or r["id"])}</span><span class="date">{fresh_dot(r)}{esc(fdate(r.get("date")))}<button type="button" class="star" data-fav="{esc(r["id"])}" aria-pressed="false" aria-label="Añadir a Mi vista">☆</button></span></div>
@@ -722,6 +747,20 @@ def paises_box():
     return ('<section id="paises"><div class="sh"><h2>Los cuatro países en 10 segundos</h2><p>Prima de riesgo a 10 años y su cambio diario; el color combina el nivel (percentil de 3 años) y el movimiento del día. Toca un país para ir a su radar.</p></div>'
             f'<div class="paises">{"".join(cells)}</div></section>')
 
+def csv_link():
+    import urllib.parse
+    dec = lambda v: "" if num(v) is None else str(num(v)).replace(".", ",")
+    rows = [["Indicador", "Grupo", "País", "Fecha", "Valor", "Unidad", "Fecha anterior", "Valor anterior", "Fuente", "Enlace"]]
+    for r in sorted(U, key=lambda r: (str(r.get("group")), float(r.get("order") or 0))):
+        rows.append([r.get("name") or r["id"], r.get("group") or "", r.get("country") or "", r.get("date") or "", dec(r.get("value")), r.get("unit") or "",
+                     r.get("prev_date") or "", dec(r.get("prev_value")), r.get("source") or "", r.get("source_url") or ""])
+    def cell(x):
+        x = str(x)
+        return '"' + x.replace('"', '""') + '"' if any(c in x for c in ';"\n') else x
+    txt = "\ufeff" + "\r\n".join(";".join(cell(c) for c in row) for row in rows)
+    return (f'<a class="csv" download="monitor-liquidez-{TODAY.isoformat()}.csv" href="data:text/csv;charset=utf-8,{urllib.parse.quote(txt)}">'
+            '⬇ Descargar todos los indicadores (CSV para Excel)</a>')
+
 def status_box():
     if not FRESH:
         return ""
@@ -731,7 +770,7 @@ def status_box():
     more = f'<details class="more"><summary>Ver los {len(STALE)} pendientes</summary><ul class="notes">{rows}</ul></details>' if STALE else ""
     return (f'<section id="estado"><div class="sh"><h2>Estado de los datos</h2><p>Indicadores diarios con el último dato que su fuente ya ha publicado a las {NOW.strftime("%H:%M")} (hora de Madrid). '
             'El €STR, el SONIA y el SOFR de un día se publican al día hábil siguiente.</p></div>'
-            f'<div class="st {cls}"><b>{ok}/{n}</b> al día <span class="lg"><i class="fr ok"></i> último dato publicado · <i class="fr late"></i> pendiente</span></div>{more}</section>')
+            f'<div class="st {cls}"><b>{ok}/{n}</b> al día <span class="lg"><i class="fr ok"></i> último dato publicado · <i class="fr late"></i> pendiente</span></div>{more}<p>{csv_link()}</p></section>')
 
 SP_PULSO = [
     ("resumen", "Resumen", seg_banner() + paises_box() + resumen_box() + status_box() + stress_box() + movers_box()),
@@ -1417,6 +1456,8 @@ nav button:focus-visible,.zoom:focus-visible,.zm button:focus-visible{outline:2p
 .pais.warn{border-left-color:var(--warn)}.pais.bad{border-left-color:var(--down)}.pais .lv{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.pais.bad .lv{color:var(--down)}.pais.warn .lv{color:var(--warn)}
 .pais .pv{margin:4px 0 2px}.gn2{font-family:var(--mono);font-size:24px;font-weight:600}.pais .ph{font-size:12.5px;line-height:1.4;margin:4px 0 0;color:var(--fg)}.pais .pn{font-size:12px;color:var(--down);margin:4px 0 0}
 table.rt td.l,table.rt th.l{text-align:left}table.rt td{vertical-align:top}
+.csv{display:inline-block;margin-top:6px;font-size:12.5px;border:1px solid var(--line2);border-radius:14px;padding:5px 11px;text-decoration:none}
+.read.auto{border-left-color:var(--warn)}.read.auto h4{color:var(--warn)}
 .ctip{position:absolute;pointer-events:none;z-index:40;background:var(--panel2);border:1px solid var(--line2);border-radius:4px;padding:6px 8px;font-size:12px;font-family:var(--mono);box-shadow:0 3px 12px rgba(0,0,0,.3);white-space:nowrap}.ctip b{display:block;font-family:inherit;margin-bottom:2px}.ctip i{display:inline-block;width:8px;height:8px;margin-right:5px;border-radius:2px}
 .chart .cl{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
 .egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:6px}.emp{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:4px;padding:8px 10px;min-width:0}
