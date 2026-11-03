@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-03T07:08:38+00:00",
+ "generated": "2026-11-03T09:59:11+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -9,7 +9,7 @@
   "FRED: ok (+200)",
   "FRED tipos oficiales de la Fed: ok (+15)",
   "IPC EE. UU.: ok (+34)",
-  "BCE tipos oficiales: ok (+15)",
+  "BCE tipos oficiales: ERROR TimeoutError: The read operation timed out",
   "BCE tipos bancarios y depósitos: ok (+28)",
   "Eurostat: ok (+209)",
   "Banco de Portugal: ok (+56)",
@@ -17,7 +17,7 @@
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
   "Banco de España: ok (+42)",
-  "Bank of England: ok (+25)"
+  "Bank of England: ok (+27)"
  ],
  "series": {
   "boe_bank_rate": {
@@ -74,6 +74,10 @@
     },
     {
      "date": "2026-10-30",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-02",
      "value": 3.75
     }
    ]
@@ -857,10 +861,6 @@
    "source_url": "https://www.bde.es/webbe/es/estadisticas/compartido/datos/csv/be1907.csv",
    "obs": [
     {
-     "date": "2025-07",
-     "value": 1.622
-    },
-    {
      "date": "2025-08",
      "value": 1.625
     },
@@ -911,6 +911,10 @@
     {
      "date": "2026-08",
      "value": 2.016
+    },
+    {
+     "date": "2026-09",
+     "value": 2.256
     }
    ]
   },
@@ -918,10 +922,6 @@
    "source": "Banco de España (Boletín Estadístico, cap. 19)",
    "source_url": "https://www.bde.es/webbe/es/estadisticas/compartido/datos/csv/be1907.csv",
    "obs": [
-    {
-     "date": "2025-07",
-     "value": 1.752
-    },
     {
      "date": "2025-08",
      "value": 1.828
@@ -973,6 +973,10 @@
     {
      "date": "2026-08",
      "value": 2.137
+    },
+    {
+     "date": "2026-09",
+     "value": 2.447
     }
    ]
   },
@@ -1153,58 +1157,6 @@
     {
      "date": "2026-09-16",
      "value": 2.5
-    }
-   ]
-  },
-  "ecb_mlf": {
-   "source": "BCE (ECB Data Portal)",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
-   "obs": [
-    {
-     "date": "2025-03-12",
-     "value": 2.9
-    },
-    {
-     "date": "2025-04-23",
-     "value": 2.65
-    },
-    {
-     "date": "2025-06-11",
-     "value": 2.4
-    },
-    {
-     "date": "2026-06-17",
-     "value": 2.65
-    },
-    {
-     "date": "2026-09-16",
-     "value": 2.9
-    }
-   ]
-  },
-  "ecb_mro": {
-   "source": "BCE (ECB Data Portal)",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
-   "obs": [
-    {
-     "date": "2025-03-12",
-     "value": 2.65
-    },
-    {
-     "date": "2025-04-23",
-     "value": 2.4
-    },
-    {
-     "date": "2025-06-11",
-     "value": 2.15
-    },
-    {
-     "date": "2026-06-17",
-     "value": 2.4
-    },
-    {
-     "date": "2026-09-16",
-     "value": 2.65
     }
    ]
   },
@@ -1781,10 +1733,6 @@
    "source_url": "https://www.bde.es/webbe/es/estadisticas/compartido/datos/csv/be1903.csv",
    "obs": [
     {
-     "date": "2025-07",
-     "value": 3.272
-    },
-    {
      "date": "2025-08",
      "value": 3.243
     },
@@ -1835,6 +1783,10 @@
     {
      "date": "2026-08",
      "value": 3.568
+    },
+    {
+     "date": "2026-09",
+     "value": 3.698
     }
    ]
   },
@@ -2785,6 +2737,10 @@
     {
      "date": "2026-10-29",
      "value": 3.7352
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.7348
     }
    ]
   },
@@ -3285,6 +3241,58 @@
     {
      "date": "2026-10-30",
      "value": 4.94
+    }
+   ]
+  },
+  "ecb_mlf": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2025-03-12",
+     "value": 2.9
+    },
+    {
+     "date": "2025-04-23",
+     "value": 2.65
+    },
+    {
+     "date": "2025-06-11",
+     "value": 2.4
+    },
+    {
+     "date": "2026-06-17",
+     "value": 2.65
+    },
+    {
+     "date": "2026-09-16",
+     "value": 2.9
+    }
+   ]
+  },
+  "ecb_mro": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2025-03-12",
+     "value": 2.65
+    },
+    {
+     "date": "2025-04-23",
+     "value": 2.4
+    },
+    {
+     "date": "2025-06-11",
+     "value": 2.15
+    },
+    {
+     "date": "2026-06-17",
+     "value": 2.4
+    },
+    {
+     "date": "2026-09-16",
+     "value": 2.65
     }
    ]
   }
