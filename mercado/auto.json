@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-03T19:55:34+00:00",
+ "generated": "2026-11-03T20:49:49+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -12,8 +12,7 @@
   "BCE tipos oficiales: ok (+45)",
   "BCE curva AAA: ok (+30)",
   "BCE tipos bancarios y depósitos: ok (+30)",
-  "  Eurostat core_ea: ERROR <urlopen error [Errno 104] Connection reset by peer>",
-  "Eurostat: ok (+193)",
+  "Eurostat: ok (+209)",
   "Banco de Portugal: ok (+56)",
   "  BdE loan_rate_nfc_es: columna 11 «dn_1ti2t0144 2806196 be_19_3.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. crédito total porcentaje mensual _ _»",
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
@@ -239,6 +238,76 @@
     {
      "date": "2026-08",
      "value": 2.6
+    },
+    {
+     "date": "2026-09",
+     "value": 2.5
+    }
+   ]
+  },
+  "core_ea": {
+   "source": "Eurostat (IPCA)",
+   "source_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_minr?geo=EA&unit=RCH_A&coicop18=TOT_X_NRG_FOOD&lang=EN",
+   "obs": [
+    {
+     "date": "2025-06",
+     "value": 2.3
+    },
+    {
+     "date": "2025-07",
+     "value": 2.3
+    },
+    {
+     "date": "2025-08",
+     "value": 2.3
+    },
+    {
+     "date": "2025-09",
+     "value": 2.4
+    },
+    {
+     "date": "2025-10",
+     "value": 2.4
+    },
+    {
+     "date": "2025-11",
+     "value": 2.4
+    },
+    {
+     "date": "2025-12",
+     "value": 2.3
+    },
+    {
+     "date": "2026-01",
+     "value": 2.2
+    },
+    {
+     "date": "2026-02",
+     "value": 2.4
+    },
+    {
+     "date": "2026-03",
+     "value": 2.3
+    },
+    {
+     "date": "2026-04",
+     "value": 2.2
+    },
+    {
+     "date": "2026-05",
+     "value": 2.6
+    },
+    {
+     "date": "2026-06",
+     "value": 2.4
+    },
+    {
+     "date": "2026-07",
+     "value": 2.5
+    },
+    {
+     "date": "2026-08",
+     "value": 2.4
     },
     {
      "date": "2026-09",
