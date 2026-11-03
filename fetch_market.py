@@ -79,7 +79,7 @@ ECB = "https://data-api.ecb.europa.eu/service/data/"
 
 
 def ecb_csv(flow_key, n=15):
-    t = get(ECB + flow_key, {"lastNObservations": n, "format": "csvdata"})
+    t = get(ECB + flow_key, {"lastNObservations": max(n, 15), "format": "csvdata"})
     return list(csv.DictReader(io.StringIO(t)))
 
 
@@ -121,7 +121,7 @@ def ecb_ilm():
 # ---------- FRED ----------
 FRED = {
     # id: (serie, factor, decimales)
-    "y10_us": ("DGS10", 1, 3), "tbill_us_3m": ("DTB3", 1, 2), "tbill_us_6m": ("DTB6", 1, 2), "tbill_us_1y": ("DTB1YR", 1, 2),
+    "y10_us": ("DGS10", 1, 3), "y2_us": ("DGS2", 1, 3), "tbill_us_3m": ("DTB3", 1, 2), "tbill_us_6m": ("DTB6", 1, 2), "tbill_us_1y": ("DTB1YR", 1, 2),
     "breakeven_10y_us": ("T10YIE", 1, 2), "brent_spot": ("DCOILBRENTEU", 1, 2),
     "oas_us_aa": ("BAMLC0A2CAA", 100, 0), "oas_us_a": ("BAMLC0A3CA", 100, 0), "oas_us_bbb": ("BAMLC0A4CBBB", 100, 0),
     "oas_us_bb": ("BAMLH0A1HYBB", 100, 0), "oas_us_b": ("BAMLH0A2HYB", 100, 0), "oas_us_ig": ("BAMLC0A0CM", 100, 0),
@@ -216,6 +216,13 @@ def ecb_mir():
         except Exception as e:
             LOG.append(f"  BCE {key}: ERROR {e}")
     # Depósitos de empresas (BSI): la tasa interanual oficial no está en la API pública con una clave estable; se deja a Claude.
+
+def ecb_yc():
+    for sid, key in (("y2_eur_aaa", "YC/B.U2.EUR.4F.G_N_A.SV_C_YM.SR_2Y"), ("y10_eur_aaa", "YC/B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y")):
+        for r in ecb_csv(key, 12):
+            if r.get("OBS_VALUE"):
+                put(sid, r["TIME_PERIOD"], r["OBS_VALUE"], "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)", "https://data.ecb.europa.eu/data/datasets/YC/" + key.replace("/", "."), 3)
+
 
 def ecb_key_rates():
     for sid, key in (("ecb_dfr", "FM/B.U2.EUR.4F.KR.DFR.LEV"), ("ecb_mro", "FM/B.U2.EUR.4F.KR.MRR_FR.LEV"), ("ecb_mlf", "FM/B.U2.EUR.4F.KR.MLFR.LEV")):
@@ -344,6 +351,7 @@ def main():
     step("FRED tipos oficiales de la Fed", fed_policy)
     step("IPC EE. UU.", us_cpi)
     step("BCE tipos oficiales", ecb_key_rates)
+    step("BCE curva AAA", ecb_yc)
     step("BCE tipos bancarios y depósitos", ecb_mir)
     step("Eurostat", eurostat_all)
     step("Banco de Portugal", bpstat)
@@ -351,7 +359,7 @@ def main():
     step("Bank of England", boe)
     out = {"generated": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), "log": LOG, "series": {}}
     for sid, s in sorted(SER.items()):
-        obs = sorted(s["obs"].items())[-14:]
+        obs = sorted(s["obs"].items())[-30:]
         out["series"][sid] = {"source": s["source"], "source_url": s["source_url"], "obs": [{"date": d, "value": v} for d, v in obs]}
     old = {}
     if OUT.exists():
