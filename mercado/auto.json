@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-04T10:04:16+00:00",
+ "generated": "2026-11-04T13:04:14+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -18,9 +18,71 @@
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
   "Banco de España: ok (+42)",
-  "Bank of England: ERROR RuntimeError: respuesta inesperada: <!DOCTYPE html>\r <html lang=\"en\" class=\"no-js\">\r     <head>\r     <meta charset=\"utf-8\">\r     <meta http-equiv=\"Content-t"
+  "Bank of England: ok (+27)"
  ],
  "series": {
+  "boe_bank_rate": {
+   "source": "Bank of England (base de datos)",
+   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
+   "obs": [
+    {
+     "date": "2026-10-15",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-16",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-19",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.75
+    }
+   ]
+  },
   "breakeven_10y_us": {
    "source": "FRED (T10YIE)",
    "source_url": "https://fred.stlouisfed.org/series/T10YIE",
@@ -1728,10 +1790,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARL",
    "obs": [
     {
-     "date": "2026-10-30",
-     "value": 3.75
-    },
-    {
      "date": "2026-10-31",
      "value": 3.75
     },
@@ -1745,6 +1803,10 @@
     },
     {
      "date": "2026-11-03",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-04",
      "value": 3.75
     }
    ]
@@ -1754,10 +1816,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
    "obs": [
     {
-     "date": "2026-10-30",
-     "value": 4.0
-    },
-    {
      "date": "2026-10-31",
      "value": 4.0
     },
@@ -1771,6 +1829,10 @@
     },
     {
      "date": "2026-11-03",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-04",
      "value": 4.0
     }
    ]
@@ -3040,10 +3102,6 @@
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr",
    "obs": [
     {
-     "date": "2026-10-20",
-     "value": 3.88
-    },
-    {
      "date": "2026-10-21",
      "value": 3.88
     },
@@ -3078,6 +3136,10 @@
     {
      "date": "2026-11-02",
      "value": 3.95
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.97
     }
    ]
   },
@@ -3085,10 +3147,6 @@
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
    "obs": [
-    {
-     "date": "2026-10-21",
-     "value": 3.88686
-    },
     {
      "date": "2026-10-22",
      "value": 3.88787
@@ -3124,6 +3182,10 @@
     {
      "date": "2026-11-03",
      "value": 3.90759
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.9106
     }
    ]
   },
@@ -3131,10 +3193,6 @@
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
    "obs": [
-    {
-     "date": "2026-10-21",
-     "value": 3.74739
-    },
     {
      "date": "2026-10-22",
      "value": 3.75008
@@ -3170,6 +3228,68 @@
     {
      "date": "2026-11-03",
      "value": 3.78843
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.79213
+    }
+   ]
+  },
+  "sonia": {
+   "source": "Bank of England (base de datos)",
+   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
+   "obs": [
+    {
+     "date": "2026-10-15",
+     "value": 3.7335
+    },
+    {
+     "date": "2026-10-16",
+     "value": 3.7344
+    },
+    {
+     "date": "2026-10-19",
+     "value": 3.7337
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.734
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.734
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.7345
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.7338
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.7328
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.734
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.7338
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.7352
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.7348
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.7352
     }
    ]
   },
@@ -3656,10 +3776,6 @@
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y",
    "obs": [
     {
-     "date": "2026-10-13",
-     "value": 3.492
-    },
-    {
      "date": "2026-10-14",
      "value": 3.511
     },
@@ -3714,6 +3830,10 @@
     {
      "date": "2026-11-02",
      "value": 3.327
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.347
     }
    ]
   },
@@ -3767,10 +3887,6 @@
    "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_2Y",
    "obs": [
-    {
-     "date": "2026-10-13",
-     "value": 3.082
-    },
     {
      "date": "2026-10-14",
      "value": 3.089
@@ -3826,6 +3942,10 @@
     {
      "date": "2026-11-02",
      "value": 2.994
+    },
+    {
+     "date": "2026-11-03",
+     "value": 2.987
     }
    ]
   },
@@ -3872,118 +3992,6 @@
     {
      "date": "2026-11-02",
      "value": 4.59
-    }
-   ]
-  },
-  "boe_bank_rate": {
-   "source": "Bank of England (base de datos)",
-   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
-   "obs": [
-    {
-     "date": "2026-10-15",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-16",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-19",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-20",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-21",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-22",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-23",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-26",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.75
-    },
-    {
-     "date": "2026-11-02",
-     "value": 3.75
-    }
-   ]
-  },
-  "sonia": {
-   "source": "Bank of England (base de datos)",
-   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
-   "obs": [
-    {
-     "date": "2026-10-15",
-     "value": 3.7335
-    },
-    {
-     "date": "2026-10-16",
-     "value": 3.7344
-    },
-    {
-     "date": "2026-10-19",
-     "value": 3.7337
-    },
-    {
-     "date": "2026-10-20",
-     "value": 3.734
-    },
-    {
-     "date": "2026-10-21",
-     "value": 3.734
-    },
-    {
-     "date": "2026-10-22",
-     "value": 3.7345
-    },
-    {
-     "date": "2026-10-23",
-     "value": 3.7338
-    },
-    {
-     "date": "2026-10-26",
-     "value": 3.7328
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.734
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.7338
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.7352
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.7348
     }
    ]
   }
