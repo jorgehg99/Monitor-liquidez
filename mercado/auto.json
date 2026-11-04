@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-04T07:13:39+00:00",
+ "generated": "2026-11-04T10:04:16+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -12,73 +12,15 @@
   "BCE tipos oficiales: ok (+45)",
   "BCE curva AAA: ok (+30)",
   "BCE tipos bancarios y depósitos: ok (+30)",
-  "Eurostat: ok (+209)",
+  "Eurostat: ok (+218)",
   "Banco de Portugal: ok (+56)",
   "  BdE loan_rate_nfc_es: columna 11 «dn_1ti2t0144 2806196 be_19_3.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. crédito total porcentaje mensual _ _»",
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
   "Banco de España: ok (+42)",
-  "Bank of England: ok (+25)"
+  "Bank of England: ERROR RuntimeError: respuesta inesperada: <!DOCTYPE html>\r <html lang=\"en\" class=\"no-js\">\r     <head>\r     <meta charset=\"utf-8\">\r     <meta http-equiv=\"Content-t"
  ],
  "series": {
-  "boe_bank_rate": {
-   "source": "Bank of England (base de datos)",
-   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
-   "obs": [
-    {
-     "date": "2026-10-15",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-16",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-19",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-20",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-21",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-22",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-23",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-26",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.75
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.75
-    },
-    {
-     "date": "2026-11-02",
-     "value": 3.75
-    }
-   ]
-  },
   "breakeven_10y_us": {
    "source": "FRED (T10YIE)",
    "source_url": "https://fred.stlouisfed.org/series/T10YIE",
@@ -238,6 +180,10 @@
     {
      "date": "2026-09",
      "value": 2.5
+    },
+    {
+     "date": "2026-10",
+     "value": 2.3
     }
    ]
   },
@@ -307,6 +253,10 @@
     },
     {
      "date": "2026-09",
+     "value": 2.5
+    },
+    {
+     "date": "2026-10",
      "value": 2.5
     }
    ]
@@ -378,6 +328,10 @@
     {
      "date": "2026-09",
      "value": 1.8
+    },
+    {
+     "date": "2026-10",
+     "value": 2.0
     }
    ]
   },
@@ -448,6 +402,10 @@
     {
      "date": "2026-09",
      "value": 2.9
+    },
+    {
+     "date": "2026-10",
+     "value": 3.0
     }
    ]
   },
@@ -518,6 +476,10 @@
     {
      "date": "2026-09",
      "value": 2.9
+    },
+    {
+     "date": "2026-10",
+     "value": 3.1
     }
    ]
   },
@@ -662,6 +624,10 @@
     {
      "date": "2026-09",
      "value": 3.8
+    },
+    {
+     "date": "2026-10",
+     "value": 4.0
     }
    ]
   },
@@ -732,6 +698,10 @@
     {
      "date": "2026-09",
      "value": 3.4
+    },
+    {
+     "date": "2026-10",
+     "value": 3.8
     }
    ]
   },
@@ -802,6 +772,10 @@
     {
      "date": "2026-09",
      "value": 3.0
+    },
+    {
+     "date": "2026-10",
+     "value": 3.3
     }
    ]
   },
@@ -872,6 +846,10 @@
     {
      "date": "2026-09",
      "value": 3.6
+    },
+    {
+     "date": "2026-10",
+     "value": 3.9
     }
    ]
   },
@@ -3195,60 +3173,6 @@
     }
    ]
   },
-  "sonia": {
-   "source": "Bank of England (base de datos)",
-   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
-   "obs": [
-    {
-     "date": "2026-10-15",
-     "value": 3.7335
-    },
-    {
-     "date": "2026-10-16",
-     "value": 3.7344
-    },
-    {
-     "date": "2026-10-19",
-     "value": 3.7337
-    },
-    {
-     "date": "2026-10-20",
-     "value": 3.734
-    },
-    {
-     "date": "2026-10-21",
-     "value": 3.734
-    },
-    {
-     "date": "2026-10-22",
-     "value": 3.7345
-    },
-    {
-     "date": "2026-10-23",
-     "value": 3.7338
-    },
-    {
-     "date": "2026-10-26",
-     "value": 3.7328
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.734
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.7338
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.7352
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.7348
-    }
-   ]
-  },
   "srf_fed": {
    "source": "Federal Reserve Bank of New York (API de operaciones)",
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
@@ -3948,6 +3872,118 @@
     {
      "date": "2026-11-02",
      "value": 4.59
+    }
+   ]
+  },
+  "boe_bank_rate": {
+   "source": "Bank of England (base de datos)",
+   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
+   "obs": [
+    {
+     "date": "2026-10-15",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-16",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-19",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.75
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.75
+    }
+   ]
+  },
+  "sonia": {
+   "source": "Bank of England (base de datos)",
+   "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
+   "obs": [
+    {
+     "date": "2026-10-15",
+     "value": 3.7335
+    },
+    {
+     "date": "2026-10-16",
+     "value": 3.7344
+    },
+    {
+     "date": "2026-10-19",
+     "value": 3.7337
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.734
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.734
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.7345
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.7338
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.7328
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.734
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.7338
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.7352
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.7348
     }
    ]
   }
