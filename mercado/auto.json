@@ -1,16 +1,16 @@
 {
- "generated": "2026-11-04T20:54:44+00:00",
+ "generated": "2026-11-04T23:20:25+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
-  "BCE balance semanal: ok (+45)",
+  "BCE balance semanal: ERROR HTTPError: HTTP Error 504: Gateway Time-out",
   "FRED: ok (+210)",
   "FRED tipos oficiales de la Fed: ok (+15)",
   "IPC EE. UU.: ok (+34)",
   "BCE tipos oficiales: ok (+45)",
-  "BCE curva AAA: ERROR HTTPError: HTTP Error 504: Gateway Time-out",
+  "BCE curva AAA: ok (+30)",
   "BCE tipos bancarios y depósitos: ok (+30)",
   "Eurostat: ok (+218)",
   "Banco de Portugal: ok (+56)",
@@ -88,10 +88,6 @@
    "source_url": "https://fred.stlouisfed.org/series/T10YIE",
    "obs": [
     {
-     "date": "2026-10-21",
-     "value": 2.37
-    },
-    {
      "date": "2026-10-22",
      "value": 2.32
     },
@@ -126,6 +122,10 @@
     {
      "date": "2026-11-03",
      "value": 2.3
+    },
+    {
+     "date": "2026-11-04",
+     "value": 2.26
     }
    ]
   },
@@ -2124,10 +2124,6 @@
    "source_url": "https://fred.stlouisfed.org/series/IORB",
    "obs": [
     {
-     "date": "2026-10-31",
-     "value": 3.9
-    },
-    {
      "date": "2026-11-01",
      "value": 3.9
     },
@@ -2141,6 +2137,10 @@
     },
     {
      "date": "2026-11-04",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-05",
      "value": 3.9
     }
    ]
@@ -2388,138 +2388,6 @@
     {
      "date": "2026-09",
      "value": 4.25
-    }
-   ]
-  },
-  "ltro_ecb": {
-   "source": "BCE, estado financiero semanal (ECB Data Portal)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
-   "obs": [
-    {
-     "date": "2026-07-24",
-     "value": 13.636
-    },
-    {
-     "date": "2026-07-31",
-     "value": 14.23
-    },
-    {
-     "date": "2026-08-07",
-     "value": 14.23
-    },
-    {
-     "date": "2026-08-14",
-     "value": 14.23
-    },
-    {
-     "date": "2026-08-21",
-     "value": 14.23
-    },
-    {
-     "date": "2026-08-28",
-     "value": 14.305
-    },
-    {
-     "date": "2026-09-04",
-     "value": 14.305
-    },
-    {
-     "date": "2026-09-11",
-     "value": 14.305
-    },
-    {
-     "date": "2026-09-18",
-     "value": 14.305
-    },
-    {
-     "date": "2026-09-25",
-     "value": 14.305
-    },
-    {
-     "date": "2026-10-02",
-     "value": 16.192
-    },
-    {
-     "date": "2026-10-09",
-     "value": 16.192
-    },
-    {
-     "date": "2026-10-16",
-     "value": 16.192
-    },
-    {
-     "date": "2026-10-23",
-     "value": 16.192
-    },
-    {
-     "date": "2026-10-30",
-     "value": 21.524
-    }
-   ]
-  },
-  "mro_ecb": {
-   "source": "BCE, estado financiero semanal (ECB Data Portal)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
-   "obs": [
-    {
-     "date": "2026-07-24",
-     "value": 17.355
-    },
-    {
-     "date": "2026-07-31",
-     "value": 21.939
-    },
-    {
-     "date": "2026-08-07",
-     "value": 15.862
-    },
-    {
-     "date": "2026-08-14",
-     "value": 16.494
-    },
-    {
-     "date": "2026-08-21",
-     "value": 16.709
-    },
-    {
-     "date": "2026-08-28",
-     "value": 18.005
-    },
-    {
-     "date": "2026-09-04",
-     "value": 13.866
-    },
-    {
-     "date": "2026-09-11",
-     "value": 12.241
-    },
-    {
-     "date": "2026-09-18",
-     "value": 14.892
-    },
-    {
-     "date": "2026-09-25",
-     "value": 14.557
-    },
-    {
-     "date": "2026-10-02",
-     "value": 21.905
-    },
-    {
-     "date": "2026-10-09",
-     "value": 18.084
-    },
-    {
-     "date": "2026-10-16",
-     "value": 18.51
-    },
-    {
-     "date": "2026-10-23",
-     "value": 19.253
-    },
-    {
-     "date": "2026-10-30",
-     "value": 27.048
     }
    ]
   },
@@ -3320,10 +3188,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DTB1YR",
    "obs": [
     {
-     "date": "2026-10-20",
-     "value": 4.28
-    },
-    {
      "date": "2026-10-21",
      "value": 4.29
     },
@@ -3358,6 +3222,10 @@
     {
      "date": "2026-11-02",
      "value": 4.18
+    },
+    {
+     "date": "2026-11-03",
+     "value": 4.2
     }
    ]
   },
@@ -3365,10 +3233,6 @@
    "source": "FRED (DTB3)",
    "source_url": "https://fred.stlouisfed.org/series/DTB3",
    "obs": [
-    {
-     "date": "2026-10-20",
-     "value": 4.08
-    },
     {
      "date": "2026-10-21",
      "value": 4.07
@@ -3404,6 +3268,10 @@
     {
      "date": "2026-11-02",
      "value": 4.03
+    },
+    {
+     "date": "2026-11-03",
+     "value": 4.03
     }
    ]
   },
@@ -3411,10 +3279,6 @@
    "source": "FRED (DTB6)",
    "source_url": "https://fred.stlouisfed.org/series/DTB6",
    "obs": [
-    {
-     "date": "2026-10-20",
-     "value": 4.22
-    },
     {
      "date": "2026-10-21",
      "value": 4.21
@@ -3450,6 +3314,10 @@
     {
      "date": "2026-11-02",
      "value": 4.14
+    },
+    {
+     "date": "2026-11-03",
+     "value": 4.15
     }
    ]
   },
@@ -3771,14 +3639,76 @@
     }
    ]
   },
+  "y10_eur_aaa": {
+   "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y",
+   "obs": [
+    {
+     "date": "2026-10-14",
+     "value": 3.511
+    },
+    {
+     "date": "2026-10-15",
+     "value": 3.39
+    },
+    {
+     "date": "2026-10-16",
+     "value": 3.444
+    },
+    {
+     "date": "2026-10-19",
+     "value": 3.469
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.44
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.429
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.384
+    },
+    {
+     "date": "2026-10-23",
+     "value": 3.369
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.374
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.371
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.393
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.373
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.365
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.327
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.347
+    }
+   ]
+  },
   "y10_us": {
    "source": "FRED (DGS10)",
    "source_url": "https://fred.stlouisfed.org/series/DGS10",
    "obs": [
-    {
-     "date": "2026-10-20",
-     "value": 5.12
-    },
     {
      "date": "2026-10-21",
      "value": 5.13
@@ -3814,52 +3744,10 @@
     {
      "date": "2026-11-02",
      "value": 4.91
-    }
-   ]
-  },
-  "y2_us": {
-   "source": "FRED (DGS2)",
-   "source_url": "https://fred.stlouisfed.org/series/DGS2",
-   "obs": [
-    {
-     "date": "2026-10-20",
-     "value": 4.79
     },
     {
-     "date": "2026-10-21",
-     "value": 4.81
-    },
-    {
-     "date": "2026-10-22",
-     "value": 4.65
-    },
-    {
-     "date": "2026-10-23",
-     "value": 4.69
-    },
-    {
-     "date": "2026-10-26",
-     "value": 4.68
-    },
-    {
-     "date": "2026-10-27",
-     "value": 4.7
-    },
-    {
-     "date": "2026-10-28",
-     "value": 4.67
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.61
-    },
-    {
-     "date": "2026-10-30",
-     "value": 4.56
-    },
-    {
-     "date": "2026-11-02",
-     "value": 4.59
+     "date": "2026-11-03",
+     "value": 4.95
     }
    ]
   },
@@ -3929,69 +3817,181 @@
     }
    ]
   },
-  "y10_eur_aaa": {
-   "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y",
+  "y2_us": {
+   "source": "FRED (DGS2)",
+   "source_url": "https://fred.stlouisfed.org/series/DGS2",
    "obs": [
     {
-     "date": "2026-10-14",
-     "value": 3.511
-    },
-    {
-     "date": "2026-10-15",
-     "value": 3.39
-    },
-    {
-     "date": "2026-10-16",
-     "value": 3.444
-    },
-    {
-     "date": "2026-10-19",
-     "value": 3.469
-    },
-    {
-     "date": "2026-10-20",
-     "value": 3.44
-    },
-    {
      "date": "2026-10-21",
-     "value": 3.429
+     "value": 4.81
     },
     {
      "date": "2026-10-22",
-     "value": 3.384
+     "value": 4.65
     },
     {
      "date": "2026-10-23",
-     "value": 3.369
+     "value": 4.69
     },
     {
      "date": "2026-10-26",
-     "value": 3.374
+     "value": 4.68
     },
     {
      "date": "2026-10-27",
-     "value": 3.371
+     "value": 4.7
     },
     {
      "date": "2026-10-28",
-     "value": 3.393
+     "value": 4.67
     },
     {
      "date": "2026-10-29",
-     "value": 3.373
+     "value": 4.61
     },
     {
      "date": "2026-10-30",
-     "value": 3.365
+     "value": 4.56
     },
     {
      "date": "2026-11-02",
-     "value": 3.327
+     "value": 4.59
     },
     {
      "date": "2026-11-03",
-     "value": 3.347
+     "value": 4.61
+    }
+   ]
+  },
+  "ltro_ecb": {
+   "source": "BCE, estado financiero semanal (ECB Data Portal)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
+   "obs": [
+    {
+     "date": "2026-07-24",
+     "value": 13.636
+    },
+    {
+     "date": "2026-07-31",
+     "value": 14.23
+    },
+    {
+     "date": "2026-08-07",
+     "value": 14.23
+    },
+    {
+     "date": "2026-08-14",
+     "value": 14.23
+    },
+    {
+     "date": "2026-08-21",
+     "value": 14.23
+    },
+    {
+     "date": "2026-08-28",
+     "value": 14.305
+    },
+    {
+     "date": "2026-09-04",
+     "value": 14.305
+    },
+    {
+     "date": "2026-09-11",
+     "value": 14.305
+    },
+    {
+     "date": "2026-09-18",
+     "value": 14.305
+    },
+    {
+     "date": "2026-09-25",
+     "value": 14.305
+    },
+    {
+     "date": "2026-10-02",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-09",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-16",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-23",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-30",
+     "value": 21.524
+    }
+   ]
+  },
+  "mro_ecb": {
+   "source": "BCE, estado financiero semanal (ECB Data Portal)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
+   "obs": [
+    {
+     "date": "2026-07-24",
+     "value": 17.355
+    },
+    {
+     "date": "2026-07-31",
+     "value": 21.939
+    },
+    {
+     "date": "2026-08-07",
+     "value": 15.862
+    },
+    {
+     "date": "2026-08-14",
+     "value": 16.494
+    },
+    {
+     "date": "2026-08-21",
+     "value": 16.709
+    },
+    {
+     "date": "2026-08-28",
+     "value": 18.005
+    },
+    {
+     "date": "2026-09-04",
+     "value": 13.866
+    },
+    {
+     "date": "2026-09-11",
+     "value": 12.241
+    },
+    {
+     "date": "2026-09-18",
+     "value": 14.892
+    },
+    {
+     "date": "2026-09-25",
+     "value": 14.557
+    },
+    {
+     "date": "2026-10-02",
+     "value": 21.905
+    },
+    {
+     "date": "2026-10-09",
+     "value": 18.084
+    },
+    {
+     "date": "2026-10-16",
+     "value": 18.51
+    },
+    {
+     "date": "2026-10-23",
+     "value": 19.253
+    },
+    {
+     "date": "2026-10-30",
+     "value": 27.048
     }
    ]
   }
