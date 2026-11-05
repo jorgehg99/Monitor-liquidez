@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-05T10:05:59+00:00",
+ "generated": "2026-11-05T13:10:32+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -9,17 +9,16 @@
   "FRED: ok (+210)",
   "FRED tipos oficiales de la Fed: ok (+15)",
   "IPC EE. UU.: ok (+34)",
-  "BCE tipos oficiales: ERROR HTTPError: HTTP Error 504: Gateway Time-out",
-  "BCE curva AAA: ERROR HTTPError: HTTP Error 504: Gateway Time-out",
-  "  BCE MIR/M.NL.B.L22.F.R.A.2240.EUR.N: ERROR HTTP Error 504: Gateway Time-out",
-  "BCE tipos bancarios y depósitos: ok (+15)",
+  "BCE tipos oficiales: ok (+45)",
+  "BCE curva AAA: ok (+30)",
+  "BCE tipos bancarios y depósitos: ok (+30)",
   "Eurostat: ok (+218)",
   "Banco de Portugal: ok (+56)",
   "  BdE loan_rate_nfc_es: columna 11 «dn_1ti2t0144 2806196 be_19_3.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. crédito total porcentaje mensual _ _»",
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
   "Banco de España: ok (+42)",
-  "Bank of England: ok (+27)"
+  "Bank of England: ok (+28)"
  ],
  "series": {
   "boe_bank_rate": {
@@ -81,6 +80,10 @@
     {
      "date": "2026-11-04",
      "value": 3.75
+    },
+    {
+     "date": "2026-11-05",
+     "value": 4.0
     }
    ]
   },
@@ -1114,6 +1117,72 @@
     }
    ]
   },
+  "dep_rate_nl": {
+   "source": "BCE MIR (depósitos a plazo nuevos de empresas, hasta 1 año)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/MIR/MIR.M.NL.B.L22.F.R.A.2240.EUR.N",
+   "obs": [
+    {
+     "date": "2025-07",
+     "value": 1.82
+    },
+    {
+     "date": "2025-08",
+     "value": 1.81
+    },
+    {
+     "date": "2025-09",
+     "value": 1.81
+    },
+    {
+     "date": "2025-10",
+     "value": 1.82
+    },
+    {
+     "date": "2025-11",
+     "value": 1.84
+    },
+    {
+     "date": "2025-12",
+     "value": 1.83
+    },
+    {
+     "date": "2026-01",
+     "value": 1.87
+    },
+    {
+     "date": "2026-02",
+     "value": 1.87
+    },
+    {
+     "date": "2026-03",
+     "value": 1.94
+    },
+    {
+     "date": "2026-04",
+     "value": 1.97
+    },
+    {
+     "date": "2026-05",
+     "value": 2.0
+    },
+    {
+     "date": "2026-06",
+     "value": 2.19
+    },
+    {
+     "date": "2026-07",
+     "value": 2.21
+    },
+    {
+     "date": "2026-08",
+     "value": 2.25
+    },
+    {
+     "date": "2026-09",
+     "value": 2.4
+    }
+   ]
+  },
   "dep_rate_pt": {
    "source": "Banco de Portugal (BPstat)",
    "source_url": "https://bpstat.bportugal.pt/data/v1/domains/21/datasets/ec7b2a0f066656833f1013b3a2f9f189?lang=EN&series_ids=12519736",
@@ -1364,6 +1433,138 @@
     }
    ]
   },
+  "ecb_mlf": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2023-03-22",
+     "value": 3.75
+    },
+    {
+     "date": "2023-05-10",
+     "value": 4.0
+    },
+    {
+     "date": "2023-06-21",
+     "value": 4.25
+    },
+    {
+     "date": "2023-08-02",
+     "value": 4.5
+    },
+    {
+     "date": "2023-09-20",
+     "value": 4.75
+    },
+    {
+     "date": "2024-06-12",
+     "value": 4.5
+    },
+    {
+     "date": "2024-09-18",
+     "value": 3.9
+    },
+    {
+     "date": "2024-10-23",
+     "value": 3.65
+    },
+    {
+     "date": "2024-12-18",
+     "value": 3.4
+    },
+    {
+     "date": "2025-02-05",
+     "value": 3.15
+    },
+    {
+     "date": "2025-03-12",
+     "value": 2.9
+    },
+    {
+     "date": "2025-04-23",
+     "value": 2.65
+    },
+    {
+     "date": "2025-06-11",
+     "value": 2.4
+    },
+    {
+     "date": "2026-06-17",
+     "value": 2.65
+    },
+    {
+     "date": "2026-09-16",
+     "value": 2.9
+    }
+   ]
+  },
+  "ecb_mro": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2023-03-22",
+     "value": 3.5
+    },
+    {
+     "date": "2023-05-10",
+     "value": 3.75
+    },
+    {
+     "date": "2023-06-21",
+     "value": 4.0
+    },
+    {
+     "date": "2023-08-02",
+     "value": 4.25
+    },
+    {
+     "date": "2023-09-20",
+     "value": 4.5
+    },
+    {
+     "date": "2024-06-12",
+     "value": 4.25
+    },
+    {
+     "date": "2024-09-18",
+     "value": 3.65
+    },
+    {
+     "date": "2024-10-23",
+     "value": 3.4
+    },
+    {
+     "date": "2024-12-18",
+     "value": 3.15
+    },
+    {
+     "date": "2025-02-05",
+     "value": 2.9
+    },
+    {
+     "date": "2025-03-12",
+     "value": 2.65
+    },
+    {
+     "date": "2025-04-23",
+     "value": 2.4
+    },
+    {
+     "date": "2025-06-11",
+     "value": 2.15
+    },
+    {
+     "date": "2026-06-17",
+     "value": 2.4
+    },
+    {
+     "date": "2026-09-16",
+     "value": 2.65
+    }
+   ]
+  },
   "effr": {
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
@@ -1593,10 +1794,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARL",
    "obs": [
     {
-     "date": "2026-10-31",
-     "value": 3.75
-    },
-    {
      "date": "2026-11-01",
      "value": 3.75
     },
@@ -1610,6 +1807,10 @@
     },
     {
      "date": "2026-11-04",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-05",
      "value": 3.75
     }
    ]
@@ -1619,10 +1820,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
    "obs": [
     {
-     "date": "2026-10-31",
-     "value": 4.0
-    },
-    {
      "date": "2026-11-01",
      "value": 4.0
     },
@@ -1636,6 +1833,10 @@
     },
     {
      "date": "2026-11-04",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-05",
      "value": 4.0
     }
    ]
@@ -2905,10 +3106,6 @@
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr",
    "obs": [
     {
-     "date": "2026-10-21",
-     "value": 3.88
-    },
-    {
      "date": "2026-10-22",
      "value": 3.9
     },
@@ -2943,6 +3140,10 @@
     {
      "date": "2026-11-03",
      "value": 3.97
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.94
     }
    ]
   },
@@ -2950,10 +3151,6 @@
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
    "obs": [
-    {
-     "date": "2026-10-22",
-     "value": 3.88787
-    },
     {
      "date": "2026-10-23",
      "value": 3.88887
@@ -2989,6 +3186,10 @@
     {
      "date": "2026-11-04",
      "value": 3.9106
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.91227
     }
    ]
   },
@@ -2996,10 +3197,6 @@
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
    "obs": [
-    {
-     "date": "2026-10-22",
-     "value": 3.75008
-    },
     {
      "date": "2026-10-23",
      "value": 3.75301
@@ -3035,6 +3232,10 @@
     {
      "date": "2026-11-04",
      "value": 3.79213
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.79539
     }
    ]
   },
@@ -3574,304 +3775,10 @@
     }
    ]
   },
-  "y10_us": {
-   "source": "FRED (DGS10)",
-   "source_url": "https://fred.stlouisfed.org/series/DGS10",
-   "obs": [
-    {
-     "date": "2026-10-21",
-     "value": 5.13
-    },
-    {
-     "date": "2026-10-22",
-     "value": 4.96
-    },
-    {
-     "date": "2026-10-23",
-     "value": 5.0
-    },
-    {
-     "date": "2026-10-26",
-     "value": 5.0
-    },
-    {
-     "date": "2026-10-27",
-     "value": 4.99
-    },
-    {
-     "date": "2026-10-28",
-     "value": 5.05
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.98
-    },
-    {
-     "date": "2026-10-30",
-     "value": 4.94
-    },
-    {
-     "date": "2026-11-02",
-     "value": 4.91
-    },
-    {
-     "date": "2026-11-03",
-     "value": 4.95
-    }
-   ]
-  },
-  "y2_us": {
-   "source": "FRED (DGS2)",
-   "source_url": "https://fred.stlouisfed.org/series/DGS2",
-   "obs": [
-    {
-     "date": "2026-10-21",
-     "value": 4.81
-    },
-    {
-     "date": "2026-10-22",
-     "value": 4.65
-    },
-    {
-     "date": "2026-10-23",
-     "value": 4.69
-    },
-    {
-     "date": "2026-10-26",
-     "value": 4.68
-    },
-    {
-     "date": "2026-10-27",
-     "value": 4.7
-    },
-    {
-     "date": "2026-10-28",
-     "value": 4.67
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.61
-    },
-    {
-     "date": "2026-10-30",
-     "value": 4.56
-    },
-    {
-     "date": "2026-11-02",
-     "value": 4.59
-    },
-    {
-     "date": "2026-11-03",
-     "value": 4.61
-    }
-   ]
-  },
-  "y2_eur_aaa": {
-   "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_2Y",
-   "obs": [
-    {
-     "date": "2026-10-14",
-     "value": 3.089
-    },
-    {
-     "date": "2026-10-15",
-     "value": 2.993
-    },
-    {
-     "date": "2026-10-16",
-     "value": 3.03
-    },
-    {
-     "date": "2026-10-19",
-     "value": 3.053
-    },
-    {
-     "date": "2026-10-20",
-     "value": 3.028
-    },
-    {
-     "date": "2026-10-21",
-     "value": 3.028
-    },
-    {
-     "date": "2026-10-22",
-     "value": 3.007
-    },
-    {
-     "date": "2026-10-23",
-     "value": 2.983
-    },
-    {
-     "date": "2026-10-26",
-     "value": 3.025
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.015
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.06
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.008
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.005
-    },
-    {
-     "date": "2026-11-02",
-     "value": 2.994
-    },
-    {
-     "date": "2026-11-03",
-     "value": 2.987
-    }
-   ]
-  },
-  "ecb_mlf": {
-   "source": "BCE (ECB Data Portal)",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
-   "obs": [
-    {
-     "date": "2023-03-22",
-     "value": 3.75
-    },
-    {
-     "date": "2023-05-10",
-     "value": 4.0
-    },
-    {
-     "date": "2023-06-21",
-     "value": 4.25
-    },
-    {
-     "date": "2023-08-02",
-     "value": 4.5
-    },
-    {
-     "date": "2023-09-20",
-     "value": 4.75
-    },
-    {
-     "date": "2024-06-12",
-     "value": 4.5
-    },
-    {
-     "date": "2024-09-18",
-     "value": 3.9
-    },
-    {
-     "date": "2024-10-23",
-     "value": 3.65
-    },
-    {
-     "date": "2024-12-18",
-     "value": 3.4
-    },
-    {
-     "date": "2025-02-05",
-     "value": 3.15
-    },
-    {
-     "date": "2025-03-12",
-     "value": 2.9
-    },
-    {
-     "date": "2025-04-23",
-     "value": 2.65
-    },
-    {
-     "date": "2025-06-11",
-     "value": 2.4
-    },
-    {
-     "date": "2026-06-17",
-     "value": 2.65
-    },
-    {
-     "date": "2026-09-16",
-     "value": 2.9
-    }
-   ]
-  },
-  "ecb_mro": {
-   "source": "BCE (ECB Data Portal)",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
-   "obs": [
-    {
-     "date": "2023-03-22",
-     "value": 3.5
-    },
-    {
-     "date": "2023-05-10",
-     "value": 3.75
-    },
-    {
-     "date": "2023-06-21",
-     "value": 4.0
-    },
-    {
-     "date": "2023-08-02",
-     "value": 4.25
-    },
-    {
-     "date": "2023-09-20",
-     "value": 4.5
-    },
-    {
-     "date": "2024-06-12",
-     "value": 4.25
-    },
-    {
-     "date": "2024-09-18",
-     "value": 3.65
-    },
-    {
-     "date": "2024-10-23",
-     "value": 3.4
-    },
-    {
-     "date": "2024-12-18",
-     "value": 3.15
-    },
-    {
-     "date": "2025-02-05",
-     "value": 2.9
-    },
-    {
-     "date": "2025-03-12",
-     "value": 2.65
-    },
-    {
-     "date": "2025-04-23",
-     "value": 2.4
-    },
-    {
-     "date": "2025-06-11",
-     "value": 2.15
-    },
-    {
-     "date": "2026-06-17",
-     "value": 2.4
-    },
-    {
-     "date": "2026-09-16",
-     "value": 2.65
-    }
-   ]
-  },
   "y10_eur_aaa": {
    "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y",
    "obs": [
-    {
-     "date": "2026-10-14",
-     "value": 3.511
-    },
     {
      "date": "2026-10-15",
      "value": 3.39
@@ -3927,6 +3834,168 @@
     {
      "date": "2026-11-03",
      "value": 3.347
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.34
+    }
+   ]
+  },
+  "y10_us": {
+   "source": "FRED (DGS10)",
+   "source_url": "https://fred.stlouisfed.org/series/DGS10",
+   "obs": [
+    {
+     "date": "2026-10-21",
+     "value": 5.13
+    },
+    {
+     "date": "2026-10-22",
+     "value": 4.96
+    },
+    {
+     "date": "2026-10-23",
+     "value": 5.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 5.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 4.99
+    },
+    {
+     "date": "2026-10-28",
+     "value": 5.05
+    },
+    {
+     "date": "2026-10-29",
+     "value": 4.98
+    },
+    {
+     "date": "2026-10-30",
+     "value": 4.94
+    },
+    {
+     "date": "2026-11-02",
+     "value": 4.91
+    },
+    {
+     "date": "2026-11-03",
+     "value": 4.95
+    }
+   ]
+  },
+  "y2_eur_aaa": {
+   "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_2Y",
+   "obs": [
+    {
+     "date": "2026-10-15",
+     "value": 2.993
+    },
+    {
+     "date": "2026-10-16",
+     "value": 3.03
+    },
+    {
+     "date": "2026-10-19",
+     "value": 3.053
+    },
+    {
+     "date": "2026-10-20",
+     "value": 3.028
+    },
+    {
+     "date": "2026-10-21",
+     "value": 3.028
+    },
+    {
+     "date": "2026-10-22",
+     "value": 3.007
+    },
+    {
+     "date": "2026-10-23",
+     "value": 2.983
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.025
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.015
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.06
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.008
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.005
+    },
+    {
+     "date": "2026-11-02",
+     "value": 2.994
+    },
+    {
+     "date": "2026-11-03",
+     "value": 2.987
+    },
+    {
+     "date": "2026-11-04",
+     "value": 2.998
+    }
+   ]
+  },
+  "y2_us": {
+   "source": "FRED (DGS2)",
+   "source_url": "https://fred.stlouisfed.org/series/DGS2",
+   "obs": [
+    {
+     "date": "2026-10-21",
+     "value": 4.81
+    },
+    {
+     "date": "2026-10-22",
+     "value": 4.65
+    },
+    {
+     "date": "2026-10-23",
+     "value": 4.69
+    },
+    {
+     "date": "2026-10-26",
+     "value": 4.68
+    },
+    {
+     "date": "2026-10-27",
+     "value": 4.7
+    },
+    {
+     "date": "2026-10-28",
+     "value": 4.67
+    },
+    {
+     "date": "2026-10-29",
+     "value": 4.61
+    },
+    {
+     "date": "2026-10-30",
+     "value": 4.56
+    },
+    {
+     "date": "2026-11-02",
+     "value": 4.59
+    },
+    {
+     "date": "2026-11-03",
+     "value": 4.61
     }
    ]
   }
