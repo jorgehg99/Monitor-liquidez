@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-05T19:55:41+00:00",
+ "generated": "2026-11-05T23:20:07+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -92,10 +92,6 @@
    "source_url": "https://fred.stlouisfed.org/series/T10YIE",
    "obs": [
     {
-     "date": "2026-10-22",
-     "value": 2.32
-    },
-    {
      "date": "2026-10-23",
      "value": 2.34
     },
@@ -130,6 +126,10 @@
     {
      "date": "2026-11-04",
      "value": 2.26
+    },
+    {
+     "date": "2026-11-05",
+     "value": 2.24
     }
    ]
   },
@@ -1748,10 +1748,6 @@
    "source_url": "https://fred.stlouisfed.org/series/WALCL",
    "obs": [
     {
-     "date": "2026-08-26",
-     "value": 6730.912
-    },
-    {
      "date": "2026-09-02",
      "value": 6737.204
     },
@@ -1786,6 +1782,10 @@
     {
      "date": "2026-10-28",
      "value": 6745.635
+    },
+    {
+     "date": "2026-11-04",
+     "value": 6748.145
     }
    ]
   },
@@ -2128,10 +2128,6 @@
    "source_url": "https://fred.stlouisfed.org/series/IORB",
    "obs": [
     {
-     "date": "2026-11-01",
-     "value": 3.9
-    },
-    {
      "date": "2026-11-02",
      "value": 3.9
     },
@@ -2145,6 +2141,10 @@
     },
     {
      "date": "2026-11-05",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-06",
      "value": 3.9
     }
    ]
@@ -3038,10 +3038,6 @@
    "source_url": "https://fred.stlouisfed.org/series/WRESBAL",
    "obs": [
     {
-     "date": "2026-08-26",
-     "value": 2924.94
-    },
-    {
      "date": "2026-09-02",
      "value": 2894.53
     },
@@ -3076,6 +3072,10 @@
     {
      "date": "2026-10-28",
      "value": 2893.77
+    },
+    {
+     "date": "2026-11-04",
+     "value": 2930.09
     }
    ]
   },
@@ -3324,10 +3324,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DTB1YR",
    "obs": [
     {
-     "date": "2026-10-21",
-     "value": 4.29
-    },
-    {
      "date": "2026-10-22",
      "value": 4.2
     },
@@ -3362,6 +3358,10 @@
     {
      "date": "2026-11-03",
      "value": 4.2
+    },
+    {
+     "date": "2026-11-04",
+     "value": 4.19
     }
    ]
   },
@@ -3369,10 +3369,6 @@
    "source": "FRED (DTB3)",
    "source_url": "https://fred.stlouisfed.org/series/DTB3",
    "obs": [
-    {
-     "date": "2026-10-21",
-     "value": 4.07
-    },
     {
      "date": "2026-10-22",
      "value": 4.04
@@ -3408,6 +3404,10 @@
     {
      "date": "2026-11-03",
      "value": 4.03
+    },
+    {
+     "date": "2026-11-04",
+     "value": 4.03
     }
    ]
   },
@@ -3415,10 +3415,6 @@
    "source": "FRED (DTB6)",
    "source_url": "https://fred.stlouisfed.org/series/DTB6",
    "obs": [
-    {
-     "date": "2026-10-21",
-     "value": 4.21
-    },
     {
      "date": "2026-10-22",
      "value": 4.16
@@ -3454,6 +3450,10 @@
     {
      "date": "2026-11-03",
      "value": 4.15
+    },
+    {
+     "date": "2026-11-04",
+     "value": 4.14
     }
    ]
   },
@@ -3461,10 +3461,6 @@
    "source": "FRED (WTREGEN)",
    "source_url": "https://fred.stlouisfed.org/series/WTREGEN",
    "obs": [
-    {
-     "date": "2026-08-26",
-     "value": 950.736
-    },
     {
      "date": "2026-09-02",
      "value": 967.935
@@ -3500,6 +3496,10 @@
     {
      "date": "2026-10-28",
      "value": 999.727
+    },
+    {
+     "date": "2026-11-04",
+     "value": 957.175
     }
    ]
   },
@@ -3846,10 +3846,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DGS10",
    "obs": [
     {
-     "date": "2026-10-21",
-     "value": 5.13
-    },
-    {
      "date": "2026-10-22",
      "value": 4.96
     },
@@ -3884,6 +3880,10 @@
     {
      "date": "2026-11-03",
      "value": 4.95
+    },
+    {
+     "date": "2026-11-04",
+     "value": 4.9
     }
    ]
   },
@@ -3958,10 +3958,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DGS2",
    "obs": [
     {
-     "date": "2026-10-21",
-     "value": 4.81
-    },
-    {
      "date": "2026-10-22",
      "value": 4.65
     },
@@ -3996,6 +3992,10 @@
     {
      "date": "2026-11-03",
      "value": 4.61
+    },
+    {
+     "date": "2026-11-04",
+     "value": 4.58
     }
    ]
   }
