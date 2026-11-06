@@ -1,8 +1,8 @@
 {
- "generated": "2026-11-06T19:53:56+00:00",
+ "generated": "2026-11-06T23:15:26+00:00",
  "log": [
-  "NY Fed tipos: ok (+40)",
-  "NY Fed operaciones: ok (+8)",
+  "NY Fed tipos: ERROR JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+  "NY Fed operaciones: ERROR JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+45)",
@@ -88,10 +88,6 @@
    "source_url": "https://fred.stlouisfed.org/series/T10YIE",
    "obs": [
     {
-     "date": "2026-10-23",
-     "value": 2.34
-    },
-    {
      "date": "2026-10-26",
      "value": 2.34
     },
@@ -126,6 +122,10 @@
     {
      "date": "2026-11-05",
      "value": 2.24
+    },
+    {
+     "date": "2026-11-06",
+     "value": 2.23
     }
    ]
   },
@@ -1561,52 +1561,6 @@
     }
    ]
   },
-  "effr": {
-   "source": "Federal Reserve Bank of New York (API)",
-   "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
-   "obs": [
-    {
-     "date": "2026-10-23",
-     "value": 3.88
-    },
-    {
-     "date": "2026-10-26",
-     "value": 3.88
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.88
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.88
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.88
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.88
-    },
-    {
-     "date": "2026-11-02",
-     "value": 3.88
-    },
-    {
-     "date": "2026-11-03",
-     "value": 3.88
-    },
-    {
-     "date": "2026-11-04",
-     "value": 3.88
-    },
-    {
-     "date": "2026-11-05",
-     "value": 3.88
-    }
-   ]
-  },
   "estr": {
    "source": "BCE (ECB Data Portal)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/EST/EST.B.EU000A2X2A25.WT",
@@ -2124,23 +2078,23 @@
    "source_url": "https://fred.stlouisfed.org/series/IORB",
    "obs": [
     {
-     "date": "2026-11-02",
-     "value": 3.9
-    },
-    {
-     "date": "2026-11-03",
-     "value": 3.9
-    },
-    {
-     "date": "2026-11-04",
-     "value": 3.9
-    },
-    {
      "date": "2026-11-05",
      "value": 3.9
     },
     {
      "date": "2026-11-06",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-07",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-08",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-09",
      "value": 3.9
     }
    ]
@@ -3075,166 +3029,6 @@
     }
    ]
   },
-  "rrp_us": {
-   "source": "Federal Reserve Bank of New York (API de operaciones)",
-   "source_url": "https://www.newyorkfed.org/markets/desk-operations/reverse-repo",
-   "obs": [
-    {
-     "date": "2026-11-03",
-     "value": 0.427
-    },
-    {
-     "date": "2026-11-04",
-     "value": 0.225
-    },
-    {
-     "date": "2026-11-05",
-     "value": 0.125
-    },
-    {
-     "date": "2026-11-06",
-     "value": 0.15
-    }
-   ]
-  },
-  "sofr": {
-   "source": "Federal Reserve Bank of New York (API)",
-   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr",
-   "obs": [
-    {
-     "date": "2026-10-23",
-     "value": 3.92
-    },
-    {
-     "date": "2026-10-26",
-     "value": 3.93
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.95
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.94
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.94
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.95
-    },
-    {
-     "date": "2026-11-02",
-     "value": 3.95
-    },
-    {
-     "date": "2026-11-03",
-     "value": 3.97
-    },
-    {
-     "date": "2026-11-04",
-     "value": 3.94
-    },
-    {
-     "date": "2026-11-05",
-     "value": 3.92
-    }
-   ]
-  },
-  "sofr_avg_30d": {
-   "source": "Federal Reserve Bank of New York (API)",
-   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
-   "obs": [
-    {
-     "date": "2026-10-26",
-     "value": 3.89253
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.89355
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.89522
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.89656
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.89857
-    },
-    {
-     "date": "2026-11-02",
-     "value": 3.90524
-    },
-    {
-     "date": "2026-11-03",
-     "value": 3.90759
-    },
-    {
-     "date": "2026-11-04",
-     "value": 3.9106
-    },
-    {
-     "date": "2026-11-05",
-     "value": 3.91227
-    },
-    {
-     "date": "2026-11-06",
-     "value": 3.91294
-    }
-   ]
-  },
-  "sofr_avg_90d": {
-   "source": "Federal Reserve Bank of New York (API)",
-   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
-   "obs": [
-    {
-     "date": "2026-10-26",
-     "value": 3.76242
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.76556
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.76892
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.77217
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.77532
-    },
-    {
-     "date": "2026-11-02",
-     "value": 3.78518
-    },
-    {
-     "date": "2026-11-03",
-     "value": 3.78843
-    },
-    {
-     "date": "2026-11-04",
-     "value": 3.79213
-    },
-    {
-     "date": "2026-11-05",
-     "value": 3.79539
-    },
-    {
-     "date": "2026-11-06",
-     "value": 3.79876
-    }
-   ]
-  },
   "sonia": {
    "source": "Bank of England (base de datos)",
    "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
@@ -3293,36 +3087,10 @@
     }
    ]
   },
-  "srf_fed": {
-   "source": "Federal Reserve Bank of New York (API de operaciones)",
-   "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
-   "obs": [
-    {
-     "date": "2026-11-03",
-     "value": 0.005
-    },
-    {
-     "date": "2026-11-04",
-     "value": 0.0
-    },
-    {
-     "date": "2026-11-05",
-     "value": 0.0
-    },
-    {
-     "date": "2026-11-06",
-     "value": 0.0
-    }
-   ]
-  },
   "tbill_us_1y": {
    "source": "FRED (DTB1YR)",
    "source_url": "https://fred.stlouisfed.org/series/DTB1YR",
    "obs": [
-    {
-     "date": "2026-10-22",
-     "value": 4.2
-    },
     {
      "date": "2026-10-23",
      "value": 4.22
@@ -3358,6 +3126,10 @@
     {
      "date": "2026-11-04",
      "value": 4.19
+    },
+    {
+     "date": "2026-11-05",
+     "value": 4.09
     }
    ]
   },
@@ -3365,10 +3137,6 @@
    "source": "FRED (DTB3)",
    "source_url": "https://fred.stlouisfed.org/series/DTB3",
    "obs": [
-    {
-     "date": "2026-10-22",
-     "value": 4.04
-    },
     {
      "date": "2026-10-23",
      "value": 4.04
@@ -3404,6 +3172,10 @@
     {
      "date": "2026-11-04",
      "value": 4.03
+    },
+    {
+     "date": "2026-11-05",
+     "value": 4.0
     }
    ]
   },
@@ -3411,10 +3183,6 @@
    "source": "FRED (DTB6)",
    "source_url": "https://fred.stlouisfed.org/series/DTB6",
    "obs": [
-    {
-     "date": "2026-10-22",
-     "value": 4.16
-    },
     {
      "date": "2026-10-23",
      "value": 4.17
@@ -3450,6 +3218,10 @@
     {
      "date": "2026-11-04",
      "value": 4.14
+    },
+    {
+     "date": "2026-11-05",
+     "value": 4.08
     }
    ]
   },
@@ -3842,10 +3614,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DGS10",
    "obs": [
     {
-     "date": "2026-10-22",
-     "value": 4.96
-    },
-    {
      "date": "2026-10-23",
      "value": 5.0
     },
@@ -3880,6 +3648,10 @@
     {
      "date": "2026-11-04",
      "value": 4.9
+    },
+    {
+     "date": "2026-11-05",
+     "value": 4.84
     }
    ]
   },
@@ -3954,10 +3726,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DGS2",
    "obs": [
     {
-     "date": "2026-10-22",
-     "value": 4.65
-    },
-    {
      "date": "2026-10-23",
      "value": 4.69
     },
@@ -3992,6 +3760,238 @@
     {
      "date": "2026-11-04",
      "value": 4.58
+    },
+    {
+     "date": "2026-11-05",
+     "value": 4.46
+    }
+   ]
+  },
+  "effr": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
+   "obs": [
+    {
+     "date": "2026-10-23",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.88
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.88
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.88
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.88
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.88
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.88
+    }
+   ]
+  },
+  "rrp_us": {
+   "source": "Federal Reserve Bank of New York (API de operaciones)",
+   "source_url": "https://www.newyorkfed.org/markets/desk-operations/reverse-repo",
+   "obs": [
+    {
+     "date": "2026-11-03",
+     "value": 0.427
+    },
+    {
+     "date": "2026-11-04",
+     "value": 0.225
+    },
+    {
+     "date": "2026-11-05",
+     "value": 0.125
+    },
+    {
+     "date": "2026-11-06",
+     "value": 0.15
+    }
+   ]
+  },
+  "sofr": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr",
+   "obs": [
+    {
+     "date": "2026-10-23",
+     "value": 3.92
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.93
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.95
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.94
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.94
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.95
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.95
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.97
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.94
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.92
+    }
+   ]
+  },
+  "sofr_avg_30d": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
+   "obs": [
+    {
+     "date": "2026-10-26",
+     "value": 3.89253
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.89355
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.89522
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.89656
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.89857
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.90524
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.90759
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.9106
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.91227
+    },
+    {
+     "date": "2026-11-06",
+     "value": 3.91294
+    }
+   ]
+  },
+  "sofr_avg_90d": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
+   "obs": [
+    {
+     "date": "2026-10-26",
+     "value": 3.76242
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.76556
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.76892
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.77217
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.77532
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.78518
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.78843
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.79213
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.79539
+    },
+    {
+     "date": "2026-11-06",
+     "value": 3.79876
+    }
+   ]
+  },
+  "srf_fed": {
+   "source": "Federal Reserve Bank of New York (API de operaciones)",
+   "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
+   "obs": [
+    {
+     "date": "2026-11-03",
+     "value": 0.005
+    },
+    {
+     "date": "2026-11-04",
+     "value": 0.0
+    },
+    {
+     "date": "2026-11-05",
+     "value": 0.0
+    },
+    {
+     "date": "2026-11-06",
+     "value": 0.0
     }
    ]
   }
