@@ -1,8 +1,8 @@
 {
- "generated": "2026-11-06T13:03:07+00:00",
+ "generated": "2026-11-06T14:20:01+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
-  "NY Fed operaciones: ok (+8)",
+  "NY Fed operaciones: ok (+9)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+45)",
@@ -1566,10 +1566,6 @@
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
    "obs": [
     {
-     "date": "2026-10-22",
-     "value": 3.88
-    },
-    {
      "date": "2026-10-23",
      "value": 3.88
     },
@@ -1603,6 +1599,10 @@
     },
     {
      "date": "2026-11-04",
+     "value": 3.88
+    },
+    {
+     "date": "2026-11-05",
      "value": 3.88
     }
    ]
@@ -3299,7 +3299,7 @@
    "obs": [
     {
      "date": "2026-11-02",
-     "value": 0.002
+     "value": 0.0
     },
     {
      "date": "2026-11-03",
@@ -3311,6 +3311,10 @@
     },
     {
      "date": "2026-11-05",
+     "value": 0.0
+    },
+    {
+     "date": "2026-11-06",
      "value": 0.0
     }
    ]
