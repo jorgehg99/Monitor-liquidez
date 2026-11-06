@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-06T07:15:19+00:00",
+ "generated": "2026-11-06T10:04:23+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -18,7 +18,7 @@
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
   "Banco de España: ok (+42)",
-  "Bank of England: ok (+26)"
+  "Bank of England: ok (+27)"
  ],
  "series": {
   "boe_bank_rate": {
@@ -3286,6 +3286,10 @@
     {
      "date": "2026-11-03",
      "value": 3.7342
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.7335
     }
    ]
   },
