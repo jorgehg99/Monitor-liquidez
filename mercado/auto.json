@@ -1,15 +1,15 @@
 {
- "generated": "2026-11-06T23:15:26+00:00",
+ "generated": "2026-11-09T07:29:54+00:00",
  "log": [
-  "NY Fed tipos: ERROR JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
-  "NY Fed operaciones: ERROR JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+  "NY Fed tipos: ok (+40)",
+  "NY Fed operaciones: ok (+8)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+45)",
   "FRED: ok (+210)",
   "FRED tipos oficiales de la Fed: ok (+15)",
   "IPC EE. UU.: ok (+34)",
-  "BCE tipos oficiales: ok (+45)",
+  "BCE tipos oficiales: ERROR HTTPError: HTTP Error 504: Gateway Time-out",
   "BCE curva AAA: ok (+30)",
   "BCE tipos bancarios y depósitos: ok (+30)",
   "Eurostat: ok (+218)",
@@ -18,17 +18,13 @@
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
   "Banco de España: ok (+42)",
-  "Bank of England: ok (+27)"
+  "Bank of England: ok (+25)"
  ],
  "series": {
   "boe_bank_rate": {
    "source": "Bank of England (base de datos)",
    "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
    "obs": [
-    {
-     "date": "2026-10-19",
-     "value": 3.75
-    },
     {
      "date": "2026-10-20",
      "value": 3.75
@@ -1363,201 +1359,49 @@
     }
    ]
   },
-  "ecb_dfr": {
-   "source": "BCE (ECB Data Portal)",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
+  "effr": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
    "obs": [
     {
-     "date": "2023-03-22",
-     "value": 3.0
+     "date": "2026-10-23",
+     "value": 3.88
     },
     {
-     "date": "2023-05-10",
-     "value": 3.25
+     "date": "2026-10-26",
+     "value": 3.88
     },
     {
-     "date": "2023-06-21",
-     "value": 3.5
+     "date": "2026-10-27",
+     "value": 3.88
     },
     {
-     "date": "2023-08-02",
-     "value": 3.75
+     "date": "2026-10-28",
+     "value": 3.88
     },
     {
-     "date": "2023-09-20",
-     "value": 4.0
+     "date": "2026-10-29",
+     "value": 3.88
     },
     {
-     "date": "2024-06-12",
-     "value": 3.75
+     "date": "2026-10-30",
+     "value": 3.88
     },
     {
-     "date": "2024-09-18",
-     "value": 3.5
+     "date": "2026-11-02",
+     "value": 3.88
     },
     {
-     "date": "2024-10-23",
-     "value": 3.25
+     "date": "2026-11-03",
+     "value": 3.88
     },
     {
-     "date": "2024-12-18",
-     "value": 3.0
+     "date": "2026-11-04",
+     "value": 3.88
     },
     {
-     "date": "2025-02-05",
-     "value": 2.75
-    },
-    {
-     "date": "2025-03-12",
-     "value": 2.5
-    },
-    {
-     "date": "2025-04-23",
-     "value": 2.25
-    },
-    {
-     "date": "2025-06-11",
-     "value": 2.0
-    },
-    {
-     "date": "2026-06-17",
-     "value": 2.25
-    },
-    {
-     "date": "2026-09-16",
-     "value": 2.5
-    }
-   ]
-  },
-  "ecb_mlf": {
-   "source": "BCE (ECB Data Portal)",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
-   "obs": [
-    {
-     "date": "2023-03-22",
-     "value": 3.75
-    },
-    {
-     "date": "2023-05-10",
-     "value": 4.0
-    },
-    {
-     "date": "2023-06-21",
-     "value": 4.25
-    },
-    {
-     "date": "2023-08-02",
-     "value": 4.5
-    },
-    {
-     "date": "2023-09-20",
-     "value": 4.75
-    },
-    {
-     "date": "2024-06-12",
-     "value": 4.5
-    },
-    {
-     "date": "2024-09-18",
-     "value": 3.9
-    },
-    {
-     "date": "2024-10-23",
-     "value": 3.65
-    },
-    {
-     "date": "2024-12-18",
-     "value": 3.4
-    },
-    {
-     "date": "2025-02-05",
-     "value": 3.15
-    },
-    {
-     "date": "2025-03-12",
-     "value": 2.9
-    },
-    {
-     "date": "2025-04-23",
-     "value": 2.65
-    },
-    {
-     "date": "2025-06-11",
-     "value": 2.4
-    },
-    {
-     "date": "2026-06-17",
-     "value": 2.65
-    },
-    {
-     "date": "2026-09-16",
-     "value": 2.9
-    }
-   ]
-  },
-  "ecb_mro": {
-   "source": "BCE (ECB Data Portal)",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
-   "obs": [
-    {
-     "date": "2023-03-22",
-     "value": 3.5
-    },
-    {
-     "date": "2023-05-10",
-     "value": 3.75
-    },
-    {
-     "date": "2023-06-21",
-     "value": 4.0
-    },
-    {
-     "date": "2023-08-02",
-     "value": 4.25
-    },
-    {
-     "date": "2023-09-20",
-     "value": 4.5
-    },
-    {
-     "date": "2024-06-12",
-     "value": 4.25
-    },
-    {
-     "date": "2024-09-18",
-     "value": 3.65
-    },
-    {
-     "date": "2024-10-23",
-     "value": 3.4
-    },
-    {
-     "date": "2024-12-18",
-     "value": 3.15
-    },
-    {
-     "date": "2025-02-05",
-     "value": 2.9
-    },
-    {
-     "date": "2025-03-12",
-     "value": 2.65
-    },
-    {
-     "date": "2025-04-23",
-     "value": 2.4
-    },
-    {
-     "date": "2025-06-11",
-     "value": 2.15
-    },
-    {
-     "date": "2026-06-17",
-     "value": 2.4
-    },
-    {
-     "date": "2026-09-16",
-     "value": 2.65
+     "date": "2026-11-05",
+     "value": 3.88
     }
    ]
   },
@@ -1565,10 +1409,6 @@
    "source": "BCE (ECB Data Portal)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/EST/EST.B.EU000A2X2A25.WT",
    "obs": [
-    {
-     "date": "2026-10-16",
-     "value": 2.441
-    },
     {
      "date": "2026-10-19",
      "value": 2.441
@@ -1624,6 +1464,10 @@
     {
      "date": "2026-11-05",
      "value": 2.442
+    },
+    {
+     "date": "2026-11-06",
+     "value": 2.443
     }
    ]
   },
@@ -1744,14 +1588,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARL",
    "obs": [
     {
-     "date": "2026-11-02",
-     "value": 3.75
-    },
-    {
-     "date": "2026-11-03",
-     "value": 3.75
-    },
-    {
      "date": "2026-11-04",
      "value": 3.75
     },
@@ -1761,6 +1597,14 @@
     },
     {
      "date": "2026-11-06",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-07",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-08",
      "value": 3.75
     }
    ]
@@ -1770,14 +1614,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
    "obs": [
     {
-     "date": "2026-11-02",
-     "value": 4.0
-    },
-    {
-     "date": "2026-11-03",
-     "value": 4.0
-    },
-    {
      "date": "2026-11-04",
      "value": 4.0
     },
@@ -1787,6 +1623,14 @@
     },
     {
      "date": "2026-11-06",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-07",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-08",
      "value": 4.0
     }
    ]
@@ -3029,14 +2873,170 @@
     }
    ]
   },
+  "rrp_us": {
+   "source": "Federal Reserve Bank of New York (API de operaciones)",
+   "source_url": "https://www.newyorkfed.org/markets/desk-operations/reverse-repo",
+   "obs": [
+    {
+     "date": "2026-11-03",
+     "value": 0.427
+    },
+    {
+     "date": "2026-11-04",
+     "value": 0.225
+    },
+    {
+     "date": "2026-11-05",
+     "value": 0.125
+    },
+    {
+     "date": "2026-11-06",
+     "value": 0.15
+    }
+   ]
+  },
+  "sofr": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr",
+   "obs": [
+    {
+     "date": "2026-10-23",
+     "value": 3.92
+    },
+    {
+     "date": "2026-10-26",
+     "value": 3.93
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.95
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.94
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.94
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.95
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.95
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.97
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.94
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.92
+    }
+   ]
+  },
+  "sofr_avg_30d": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
+   "obs": [
+    {
+     "date": "2026-10-26",
+     "value": 3.89253
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.89355
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.89522
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.89656
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.89857
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.90524
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.90759
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.9106
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.91227
+    },
+    {
+     "date": "2026-11-06",
+     "value": 3.91294
+    }
+   ]
+  },
+  "sofr_avg_90d": {
+   "source": "Federal Reserve Bank of New York (API)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
+   "obs": [
+    {
+     "date": "2026-10-26",
+     "value": 3.76242
+    },
+    {
+     "date": "2026-10-27",
+     "value": 3.76556
+    },
+    {
+     "date": "2026-10-28",
+     "value": 3.76892
+    },
+    {
+     "date": "2026-10-29",
+     "value": 3.77217
+    },
+    {
+     "date": "2026-10-30",
+     "value": 3.77532
+    },
+    {
+     "date": "2026-11-02",
+     "value": 3.78518
+    },
+    {
+     "date": "2026-11-03",
+     "value": 3.78843
+    },
+    {
+     "date": "2026-11-04",
+     "value": 3.79213
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.79539
+    },
+    {
+     "date": "2026-11-06",
+     "value": 3.79876
+    }
+   ]
+  },
   "sonia": {
    "source": "Bank of England (base de datos)",
    "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
    "obs": [
-    {
-     "date": "2026-10-19",
-     "value": 3.7337
-    },
     {
      "date": "2026-10-20",
      "value": 3.734
@@ -3084,6 +3084,28 @@
     {
      "date": "2026-11-04",
      "value": 3.7335
+    }
+   ]
+  },
+  "srf_fed": {
+   "source": "Federal Reserve Bank of New York (API de operaciones)",
+   "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
+   "obs": [
+    {
+     "date": "2026-11-03",
+     "value": 0.005
+    },
+    {
+     "date": "2026-11-04",
+     "value": 0.0
+    },
+    {
+     "date": "2026-11-05",
+     "value": 0.0
+    },
+    {
+     "date": "2026-11-06",
+     "value": 0.0
     }
    ]
   },
@@ -3767,231 +3789,201 @@
     }
    ]
   },
-  "effr": {
-   "source": "Federal Reserve Bank of New York (API)",
-   "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
+  "ecb_dfr": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
    "obs": [
     {
-     "date": "2026-10-23",
-     "value": 3.88
+     "date": "2023-03-22",
+     "value": 3.0
     },
     {
-     "date": "2026-10-26",
-     "value": 3.88
+     "date": "2023-05-10",
+     "value": 3.25
     },
     {
-     "date": "2026-10-27",
-     "value": 3.88
+     "date": "2023-06-21",
+     "value": 3.5
     },
     {
-     "date": "2026-10-28",
-     "value": 3.88
+     "date": "2023-08-02",
+     "value": 3.75
     },
     {
-     "date": "2026-10-29",
-     "value": 3.88
+     "date": "2023-09-20",
+     "value": 4.0
     },
     {
-     "date": "2026-10-30",
-     "value": 3.88
+     "date": "2024-06-12",
+     "value": 3.75
     },
     {
-     "date": "2026-11-02",
-     "value": 3.88
+     "date": "2024-09-18",
+     "value": 3.5
     },
     {
-     "date": "2026-11-03",
-     "value": 3.88
+     "date": "2024-10-23",
+     "value": 3.25
     },
     {
-     "date": "2026-11-04",
-     "value": 3.88
+     "date": "2024-12-18",
+     "value": 3.0
     },
     {
-     "date": "2026-11-05",
-     "value": 3.88
+     "date": "2025-02-05",
+     "value": 2.75
+    },
+    {
+     "date": "2025-03-12",
+     "value": 2.5
+    },
+    {
+     "date": "2025-04-23",
+     "value": 2.25
+    },
+    {
+     "date": "2025-06-11",
+     "value": 2.0
+    },
+    {
+     "date": "2026-06-17",
+     "value": 2.25
+    },
+    {
+     "date": "2026-09-16",
+     "value": 2.5
     }
    ]
   },
-  "rrp_us": {
-   "source": "Federal Reserve Bank of New York (API de operaciones)",
-   "source_url": "https://www.newyorkfed.org/markets/desk-operations/reverse-repo",
+  "ecb_mlf": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
    "obs": [
     {
-     "date": "2026-11-03",
-     "value": 0.427
+     "date": "2023-03-22",
+     "value": 3.75
     },
     {
-     "date": "2026-11-04",
-     "value": 0.225
+     "date": "2023-05-10",
+     "value": 4.0
     },
     {
-     "date": "2026-11-05",
-     "value": 0.125
+     "date": "2023-06-21",
+     "value": 4.25
     },
     {
-     "date": "2026-11-06",
-     "value": 0.15
+     "date": "2023-08-02",
+     "value": 4.5
+    },
+    {
+     "date": "2023-09-20",
+     "value": 4.75
+    },
+    {
+     "date": "2024-06-12",
+     "value": 4.5
+    },
+    {
+     "date": "2024-09-18",
+     "value": 3.9
+    },
+    {
+     "date": "2024-10-23",
+     "value": 3.65
+    },
+    {
+     "date": "2024-12-18",
+     "value": 3.4
+    },
+    {
+     "date": "2025-02-05",
+     "value": 3.15
+    },
+    {
+     "date": "2025-03-12",
+     "value": 2.9
+    },
+    {
+     "date": "2025-04-23",
+     "value": 2.65
+    },
+    {
+     "date": "2025-06-11",
+     "value": 2.4
+    },
+    {
+     "date": "2026-06-17",
+     "value": 2.65
+    },
+    {
+     "date": "2026-09-16",
+     "value": 2.9
     }
    ]
   },
-  "sofr": {
-   "source": "Federal Reserve Bank of New York (API)",
-   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr",
+  "ecb_mro": {
+   "source": "BCE (ECB Data Portal)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
    "obs": [
     {
-     "date": "2026-10-23",
-     "value": 3.92
+     "date": "2023-03-22",
+     "value": 3.5
     },
     {
-     "date": "2026-10-26",
-     "value": 3.93
+     "date": "2023-05-10",
+     "value": 3.75
     },
     {
-     "date": "2026-10-27",
-     "value": 3.95
+     "date": "2023-06-21",
+     "value": 4.0
     },
     {
-     "date": "2026-10-28",
-     "value": 3.94
+     "date": "2023-08-02",
+     "value": 4.25
     },
     {
-     "date": "2026-10-29",
-     "value": 3.94
+     "date": "2023-09-20",
+     "value": 4.5
     },
     {
-     "date": "2026-10-30",
-     "value": 3.95
+     "date": "2024-06-12",
+     "value": 4.25
     },
     {
-     "date": "2026-11-02",
-     "value": 3.95
+     "date": "2024-09-18",
+     "value": 3.65
     },
     {
-     "date": "2026-11-03",
-     "value": 3.97
+     "date": "2024-10-23",
+     "value": 3.4
     },
     {
-     "date": "2026-11-04",
-     "value": 3.94
+     "date": "2024-12-18",
+     "value": 3.15
     },
     {
-     "date": "2026-11-05",
-     "value": 3.92
-    }
-   ]
-  },
-  "sofr_avg_30d": {
-   "source": "Federal Reserve Bank of New York (API)",
-   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
-   "obs": [
-    {
-     "date": "2026-10-26",
-     "value": 3.89253
+     "date": "2025-02-05",
+     "value": 2.9
     },
     {
-     "date": "2026-10-27",
-     "value": 3.89355
+     "date": "2025-03-12",
+     "value": 2.65
     },
     {
-     "date": "2026-10-28",
-     "value": 3.89522
+     "date": "2025-04-23",
+     "value": 2.4
     },
     {
-     "date": "2026-10-29",
-     "value": 3.89656
+     "date": "2025-06-11",
+     "value": 2.15
     },
     {
-     "date": "2026-10-30",
-     "value": 3.89857
+     "date": "2026-06-17",
+     "value": 2.4
     },
     {
-     "date": "2026-11-02",
-     "value": 3.90524
-    },
-    {
-     "date": "2026-11-03",
-     "value": 3.90759
-    },
-    {
-     "date": "2026-11-04",
-     "value": 3.9106
-    },
-    {
-     "date": "2026-11-05",
-     "value": 3.91227
-    },
-    {
-     "date": "2026-11-06",
-     "value": 3.91294
-    }
-   ]
-  },
-  "sofr_avg_90d": {
-   "source": "Federal Reserve Bank of New York (API)",
-   "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
-   "obs": [
-    {
-     "date": "2026-10-26",
-     "value": 3.76242
-    },
-    {
-     "date": "2026-10-27",
-     "value": 3.76556
-    },
-    {
-     "date": "2026-10-28",
-     "value": 3.76892
-    },
-    {
-     "date": "2026-10-29",
-     "value": 3.77217
-    },
-    {
-     "date": "2026-10-30",
-     "value": 3.77532
-    },
-    {
-     "date": "2026-11-02",
-     "value": 3.78518
-    },
-    {
-     "date": "2026-11-03",
-     "value": 3.78843
-    },
-    {
-     "date": "2026-11-04",
-     "value": 3.79213
-    },
-    {
-     "date": "2026-11-05",
-     "value": 3.79539
-    },
-    {
-     "date": "2026-11-06",
-     "value": 3.79876
-    }
-   ]
-  },
-  "srf_fed": {
-   "source": "Federal Reserve Bank of New York (API de operaciones)",
-   "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
-   "obs": [
-    {
-     "date": "2026-11-03",
-     "value": 0.005
-    },
-    {
-     "date": "2026-11-04",
-     "value": 0.0
-    },
-    {
-     "date": "2026-11-05",
-     "value": 0.0
-    },
-    {
-     "date": "2026-11-06",
-     "value": 0.0
+     "date": "2026-09-16",
+     "value": 2.65
     }
    ]
   }
