@@ -1,24 +1,25 @@
 {
- "generated": "2026-11-09T07:29:54+00:00",
+ "generated": "2026-11-09T10:03:32+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
   "BCE €STR: ok (+15)",
-  "BCE divisas: ok (+75)",
-  "BCE balance semanal: ok (+45)",
+  "BCE divisas: ERROR HTTPError: HTTP Error 504: Gateway Time-out",
+  "BCE balance semanal: ERROR HTTPError: HTTP Error 504: Gateway Time-out",
   "FRED: ok (+210)",
   "FRED tipos oficiales de la Fed: ok (+15)",
   "IPC EE. UU.: ok (+34)",
   "BCE tipos oficiales: ERROR HTTPError: HTTP Error 504: Gateway Time-out",
-  "BCE curva AAA: ok (+30)",
-  "BCE tipos bancarios y depósitos: ok (+30)",
+  "BCE curva AAA: ERROR HTTPError: HTTP Error 504: Gateway Time-out",
+  "  BCE MIR/M.NL.B.L22.F.R.A.2240.EUR.N: ERROR HTTP Error 504: Gateway Time-out",
+  "BCE tipos bancarios y depósitos: ok (+15)",
   "Eurostat: ok (+218)",
   "Banco de Portugal: ok (+56)",
   "  BdE loan_rate_nfc_es: columna 11 «dn_1ti2t0144 2806196 be_19_3.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. crédito total porcentaje mensual _ _»",
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
   "Banco de España: ok (+42)",
-  "Bank of England: ok (+25)"
+  "Bank of England: ok (+27)"
  ],
  "series": {
   "boe_bank_rate": {
@@ -75,6 +76,10 @@
     },
     {
      "date": "2026-11-05",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-06",
      "value": 4.0
     }
    ]
@@ -1109,72 +1114,6 @@
     }
    ]
   },
-  "dep_rate_nl": {
-   "source": "BCE MIR (depósitos a plazo nuevos de empresas, hasta 1 año)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/MIR/MIR.M.NL.B.L22.F.R.A.2240.EUR.N",
-   "obs": [
-    {
-     "date": "2025-07",
-     "value": 1.82
-    },
-    {
-     "date": "2025-08",
-     "value": 1.81
-    },
-    {
-     "date": "2025-09",
-     "value": 1.81
-    },
-    {
-     "date": "2025-10",
-     "value": 1.82
-    },
-    {
-     "date": "2025-11",
-     "value": 1.84
-    },
-    {
-     "date": "2025-12",
-     "value": 1.83
-    },
-    {
-     "date": "2026-01",
-     "value": 1.87
-    },
-    {
-     "date": "2026-02",
-     "value": 1.87
-    },
-    {
-     "date": "2026-03",
-     "value": 1.94
-    },
-    {
-     "date": "2026-04",
-     "value": 1.97
-    },
-    {
-     "date": "2026-05",
-     "value": 2.0
-    },
-    {
-     "date": "2026-06",
-     "value": 2.19
-    },
-    {
-     "date": "2026-07",
-     "value": 2.21
-    },
-    {
-     "date": "2026-08",
-     "value": 2.25
-    },
-    {
-     "date": "2026-09",
-     "value": 2.4
-    }
-   ]
-  },
   "dep_rate_pt": {
    "source": "Banco de Portugal (BPstat)",
    "source_url": "https://bpstat.bportugal.pt/data/v1/domains/21/datasets/ec7b2a0f066656833f1013b3a2f9f189?lang=EN&series_ids=12519736",
@@ -1293,72 +1232,6 @@
     }
    ]
   },
-  "dfr_recourse_ecb": {
-   "source": "BCE, estado financiero semanal (ECB Data Portal)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
-   "obs": [
-    {
-     "date": "2026-07-24",
-     "value": 1995.433
-    },
-    {
-     "date": "2026-07-31",
-     "value": 1966.816
-    },
-    {
-     "date": "2026-08-07",
-     "value": 1981.262
-    },
-    {
-     "date": "2026-08-14",
-     "value": 2004.376
-    },
-    {
-     "date": "2026-08-21",
-     "value": 2003.004
-    },
-    {
-     "date": "2026-08-28",
-     "value": 2005.87
-    },
-    {
-     "date": "2026-09-04",
-     "value": 2005.194
-    },
-    {
-     "date": "2026-09-11",
-     "value": 1962.749
-    },
-    {
-     "date": "2026-09-18",
-     "value": 1955.874
-    },
-    {
-     "date": "2026-09-25",
-     "value": 1956.554
-    },
-    {
-     "date": "2026-10-02",
-     "value": 1959.733
-    },
-    {
-     "date": "2026-10-09",
-     "value": 1954.655
-    },
-    {
-     "date": "2026-10-16",
-     "value": 1962.19
-    },
-    {
-     "date": "2026-10-23",
-     "value": 1943.141
-    },
-    {
-     "date": "2026-10-30",
-     "value": 1899.463
-    }
-   ]
-  },
   "effr": {
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
@@ -1471,72 +1344,6 @@
     }
    ]
   },
-  "eurusd": {
-   "source": "BCE, tipos de referencia",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
-   "obs": [
-    {
-     "date": "2026-10-19",
-     "value": 1.1225
-    },
-    {
-     "date": "2026-10-20",
-     "value": 1.1215
-    },
-    {
-     "date": "2026-10-21",
-     "value": 1.1234
-    },
-    {
-     "date": "2026-10-22",
-     "value": 1.1205
-    },
-    {
-     "date": "2026-10-23",
-     "value": 1.1193
-    },
-    {
-     "date": "2026-10-26",
-     "value": 1.1188
-    },
-    {
-     "date": "2026-10-27",
-     "value": 1.115
-    },
-    {
-     "date": "2026-10-28",
-     "value": 1.1133
-    },
-    {
-     "date": "2026-10-29",
-     "value": 1.113
-    },
-    {
-     "date": "2026-10-30",
-     "value": 1.1172
-    },
-    {
-     "date": "2026-11-02",
-     "value": 1.1216
-    },
-    {
-     "date": "2026-11-03",
-     "value": 1.1179
-    },
-    {
-     "date": "2026-11-04",
-     "value": 1.1267
-    },
-    {
-     "date": "2026-11-05",
-     "value": 1.1224
-    },
-    {
-     "date": "2026-11-06",
-     "value": 1.1165
-    }
-   ]
-  },
   "fed_assets": {
    "source": "FRED (WALCL)",
    "source_url": "https://fred.stlouisfed.org/series/WALCL",
@@ -1632,138 +1439,6 @@
     {
      "date": "2026-11-08",
      "value": 4.0
-    }
-   ]
-  },
-  "gbpeur": {
-   "source": "BCE, tipos de referencia (inverso de EUR/GBP)",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
-   "obs": [
-    {
-     "date": "2026-10-19",
-     "value": 1.1876
-    },
-    {
-     "date": "2026-10-20",
-     "value": 1.1901
-    },
-    {
-     "date": "2026-10-21",
-     "value": 1.193
-    },
-    {
-     "date": "2026-10-22",
-     "value": 1.1937
-    },
-    {
-     "date": "2026-10-23",
-     "value": 1.1943
-    },
-    {
-     "date": "2026-10-26",
-     "value": 1.193
-    },
-    {
-     "date": "2026-10-27",
-     "value": 1.1953
-    },
-    {
-     "date": "2026-10-28",
-     "value": 1.1935
-    },
-    {
-     "date": "2026-10-29",
-     "value": 1.1965
-    },
-    {
-     "date": "2026-10-30",
-     "value": 1.1993
-    },
-    {
-     "date": "2026-11-02",
-     "value": 1.1965
-    },
-    {
-     "date": "2026-11-03",
-     "value": 1.1996
-    },
-    {
-     "date": "2026-11-04",
-     "value": 1.1982
-    },
-    {
-     "date": "2026-11-05",
-     "value": 1.1991
-    },
-    {
-     "date": "2026-11-06",
-     "value": 1.1988
-    }
-   ]
-  },
-  "gbpusd": {
-   "source": "BCE, tipos de referencia (cruce EUR/USD ÷ EUR/GBP)",
-   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
-   "obs": [
-    {
-     "date": "2026-10-19",
-     "value": 1.3331
-    },
-    {
-     "date": "2026-10-20",
-     "value": 1.3347
-    },
-    {
-     "date": "2026-10-21",
-     "value": 1.3402
-    },
-    {
-     "date": "2026-10-22",
-     "value": 1.3376
-    },
-    {
-     "date": "2026-10-23",
-     "value": 1.3368
-    },
-    {
-     "date": "2026-10-26",
-     "value": 1.3348
-    },
-    {
-     "date": "2026-10-27",
-     "value": 1.3328
-    },
-    {
-     "date": "2026-10-28",
-     "value": 1.3288
-    },
-    {
-     "date": "2026-10-29",
-     "value": 1.3317
-    },
-    {
-     "date": "2026-10-30",
-     "value": 1.3399
-    },
-    {
-     "date": "2026-11-02",
-     "value": 1.3419
-    },
-    {
-     "date": "2026-11-03",
-     "value": 1.3411
-    },
-    {
-     "date": "2026-11-04",
-     "value": 1.35
-    },
-    {
-     "date": "2026-11-05",
-     "value": 1.3459
-    },
-    {
-     "date": "2026-11-06",
-     "value": 1.3385
     }
    ]
   },
@@ -2186,138 +1861,6 @@
     {
      "date": "2026-09",
      "value": 4.25
-    }
-   ]
-  },
-  "ltro_ecb": {
-   "source": "BCE, estado financiero semanal (ECB Data Portal)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
-   "obs": [
-    {
-     "date": "2026-07-24",
-     "value": 13.636
-    },
-    {
-     "date": "2026-07-31",
-     "value": 14.23
-    },
-    {
-     "date": "2026-08-07",
-     "value": 14.23
-    },
-    {
-     "date": "2026-08-14",
-     "value": 14.23
-    },
-    {
-     "date": "2026-08-21",
-     "value": 14.23
-    },
-    {
-     "date": "2026-08-28",
-     "value": 14.305
-    },
-    {
-     "date": "2026-09-04",
-     "value": 14.305
-    },
-    {
-     "date": "2026-09-11",
-     "value": 14.305
-    },
-    {
-     "date": "2026-09-18",
-     "value": 14.305
-    },
-    {
-     "date": "2026-09-25",
-     "value": 14.305
-    },
-    {
-     "date": "2026-10-02",
-     "value": 16.192
-    },
-    {
-     "date": "2026-10-09",
-     "value": 16.192
-    },
-    {
-     "date": "2026-10-16",
-     "value": 16.192
-    },
-    {
-     "date": "2026-10-23",
-     "value": 16.192
-    },
-    {
-     "date": "2026-10-30",
-     "value": 21.524
-    }
-   ]
-  },
-  "mro_ecb": {
-   "source": "BCE, estado financiero semanal (ECB Data Portal)",
-   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
-   "obs": [
-    {
-     "date": "2026-07-24",
-     "value": 17.355
-    },
-    {
-     "date": "2026-07-31",
-     "value": 21.939
-    },
-    {
-     "date": "2026-08-07",
-     "value": 15.862
-    },
-    {
-     "date": "2026-08-14",
-     "value": 16.494
-    },
-    {
-     "date": "2026-08-21",
-     "value": 16.709
-    },
-    {
-     "date": "2026-08-28",
-     "value": 18.005
-    },
-    {
-     "date": "2026-09-04",
-     "value": 13.866
-    },
-    {
-     "date": "2026-09-11",
-     "value": 12.241
-    },
-    {
-     "date": "2026-09-18",
-     "value": 14.892
-    },
-    {
-     "date": "2026-09-25",
-     "value": 14.557
-    },
-    {
-     "date": "2026-10-02",
-     "value": 21.905
-    },
-    {
-     "date": "2026-10-09",
-     "value": 18.084
-    },
-    {
-     "date": "2026-10-16",
-     "value": 18.51
-    },
-    {
-     "date": "2026-10-23",
-     "value": 19.253
-    },
-    {
-     "date": "2026-10-30",
-     "value": 27.048
     }
    ]
   },
@@ -3084,6 +2627,10 @@
     {
      "date": "2026-11-04",
      "value": 3.7335
+    },
+    {
+     "date": "2026-11-05",
+     "value": 3.9824
     }
    ]
   },
@@ -3433,6 +2980,494 @@
     }
    ]
   },
+  "y10_us": {
+   "source": "FRED (DGS10)",
+   "source_url": "https://fred.stlouisfed.org/series/DGS10",
+   "obs": [
+    {
+     "date": "2026-10-23",
+     "value": 5.0
+    },
+    {
+     "date": "2026-10-26",
+     "value": 5.0
+    },
+    {
+     "date": "2026-10-27",
+     "value": 4.99
+    },
+    {
+     "date": "2026-10-28",
+     "value": 5.05
+    },
+    {
+     "date": "2026-10-29",
+     "value": 4.98
+    },
+    {
+     "date": "2026-10-30",
+     "value": 4.94
+    },
+    {
+     "date": "2026-11-02",
+     "value": 4.91
+    },
+    {
+     "date": "2026-11-03",
+     "value": 4.95
+    },
+    {
+     "date": "2026-11-04",
+     "value": 4.9
+    },
+    {
+     "date": "2026-11-05",
+     "value": 4.84
+    }
+   ]
+  },
+  "y2_us": {
+   "source": "FRED (DGS2)",
+   "source_url": "https://fred.stlouisfed.org/series/DGS2",
+   "obs": [
+    {
+     "date": "2026-10-23",
+     "value": 4.69
+    },
+    {
+     "date": "2026-10-26",
+     "value": 4.68
+    },
+    {
+     "date": "2026-10-27",
+     "value": 4.7
+    },
+    {
+     "date": "2026-10-28",
+     "value": 4.67
+    },
+    {
+     "date": "2026-10-29",
+     "value": 4.61
+    },
+    {
+     "date": "2026-10-30",
+     "value": 4.56
+    },
+    {
+     "date": "2026-11-02",
+     "value": 4.59
+    },
+    {
+     "date": "2026-11-03",
+     "value": 4.61
+    },
+    {
+     "date": "2026-11-04",
+     "value": 4.58
+    },
+    {
+     "date": "2026-11-05",
+     "value": 4.46
+    }
+   ]
+  },
+  "dfr_recourse_ecb": {
+   "source": "BCE, estado financiero semanal (ECB Data Portal)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
+   "obs": [
+    {
+     "date": "2026-07-24",
+     "value": 1995.433
+    },
+    {
+     "date": "2026-07-31",
+     "value": 1966.816
+    },
+    {
+     "date": "2026-08-07",
+     "value": 1981.262
+    },
+    {
+     "date": "2026-08-14",
+     "value": 2004.376
+    },
+    {
+     "date": "2026-08-21",
+     "value": 2003.004
+    },
+    {
+     "date": "2026-08-28",
+     "value": 2005.87
+    },
+    {
+     "date": "2026-09-04",
+     "value": 2005.194
+    },
+    {
+     "date": "2026-09-11",
+     "value": 1962.749
+    },
+    {
+     "date": "2026-09-18",
+     "value": 1955.874
+    },
+    {
+     "date": "2026-09-25",
+     "value": 1956.554
+    },
+    {
+     "date": "2026-10-02",
+     "value": 1959.733
+    },
+    {
+     "date": "2026-10-09",
+     "value": 1954.655
+    },
+    {
+     "date": "2026-10-16",
+     "value": 1962.19
+    },
+    {
+     "date": "2026-10-23",
+     "value": 1943.141
+    },
+    {
+     "date": "2026-10-30",
+     "value": 1899.463
+    }
+   ]
+  },
+  "eurusd": {
+   "source": "BCE, tipos de referencia",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 1.1225
+    },
+    {
+     "date": "2026-10-20",
+     "value": 1.1215
+    },
+    {
+     "date": "2026-10-21",
+     "value": 1.1234
+    },
+    {
+     "date": "2026-10-22",
+     "value": 1.1205
+    },
+    {
+     "date": "2026-10-23",
+     "value": 1.1193
+    },
+    {
+     "date": "2026-10-26",
+     "value": 1.1188
+    },
+    {
+     "date": "2026-10-27",
+     "value": 1.115
+    },
+    {
+     "date": "2026-10-28",
+     "value": 1.1133
+    },
+    {
+     "date": "2026-10-29",
+     "value": 1.113
+    },
+    {
+     "date": "2026-10-30",
+     "value": 1.1172
+    },
+    {
+     "date": "2026-11-02",
+     "value": 1.1216
+    },
+    {
+     "date": "2026-11-03",
+     "value": 1.1179
+    },
+    {
+     "date": "2026-11-04",
+     "value": 1.1267
+    },
+    {
+     "date": "2026-11-05",
+     "value": 1.1224
+    },
+    {
+     "date": "2026-11-06",
+     "value": 1.1165
+    }
+   ]
+  },
+  "gbpeur": {
+   "source": "BCE, tipos de referencia (inverso de EUR/GBP)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 1.1876
+    },
+    {
+     "date": "2026-10-20",
+     "value": 1.1901
+    },
+    {
+     "date": "2026-10-21",
+     "value": 1.193
+    },
+    {
+     "date": "2026-10-22",
+     "value": 1.1937
+    },
+    {
+     "date": "2026-10-23",
+     "value": 1.1943
+    },
+    {
+     "date": "2026-10-26",
+     "value": 1.193
+    },
+    {
+     "date": "2026-10-27",
+     "value": 1.1953
+    },
+    {
+     "date": "2026-10-28",
+     "value": 1.1935
+    },
+    {
+     "date": "2026-10-29",
+     "value": 1.1965
+    },
+    {
+     "date": "2026-10-30",
+     "value": 1.1993
+    },
+    {
+     "date": "2026-11-02",
+     "value": 1.1965
+    },
+    {
+     "date": "2026-11-03",
+     "value": 1.1996
+    },
+    {
+     "date": "2026-11-04",
+     "value": 1.1982
+    },
+    {
+     "date": "2026-11-05",
+     "value": 1.1991
+    },
+    {
+     "date": "2026-11-06",
+     "value": 1.1988
+    }
+   ]
+  },
+  "gbpusd": {
+   "source": "BCE, tipos de referencia (cruce EUR/USD ÷ EUR/GBP)",
+   "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+   "obs": [
+    {
+     "date": "2026-10-19",
+     "value": 1.3331
+    },
+    {
+     "date": "2026-10-20",
+     "value": 1.3347
+    },
+    {
+     "date": "2026-10-21",
+     "value": 1.3402
+    },
+    {
+     "date": "2026-10-22",
+     "value": 1.3376
+    },
+    {
+     "date": "2026-10-23",
+     "value": 1.3368
+    },
+    {
+     "date": "2026-10-26",
+     "value": 1.3348
+    },
+    {
+     "date": "2026-10-27",
+     "value": 1.3328
+    },
+    {
+     "date": "2026-10-28",
+     "value": 1.3288
+    },
+    {
+     "date": "2026-10-29",
+     "value": 1.3317
+    },
+    {
+     "date": "2026-10-30",
+     "value": 1.3399
+    },
+    {
+     "date": "2026-11-02",
+     "value": 1.3419
+    },
+    {
+     "date": "2026-11-03",
+     "value": 1.3411
+    },
+    {
+     "date": "2026-11-04",
+     "value": 1.35
+    },
+    {
+     "date": "2026-11-05",
+     "value": 1.3459
+    },
+    {
+     "date": "2026-11-06",
+     "value": 1.3385
+    }
+   ]
+  },
+  "ltro_ecb": {
+   "source": "BCE, estado financiero semanal (ECB Data Portal)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
+   "obs": [
+    {
+     "date": "2026-07-24",
+     "value": 13.636
+    },
+    {
+     "date": "2026-07-31",
+     "value": 14.23
+    },
+    {
+     "date": "2026-08-07",
+     "value": 14.23
+    },
+    {
+     "date": "2026-08-14",
+     "value": 14.23
+    },
+    {
+     "date": "2026-08-21",
+     "value": 14.23
+    },
+    {
+     "date": "2026-08-28",
+     "value": 14.305
+    },
+    {
+     "date": "2026-09-04",
+     "value": 14.305
+    },
+    {
+     "date": "2026-09-11",
+     "value": 14.305
+    },
+    {
+     "date": "2026-09-18",
+     "value": 14.305
+    },
+    {
+     "date": "2026-09-25",
+     "value": 14.305
+    },
+    {
+     "date": "2026-10-02",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-09",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-16",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-23",
+     "value": 16.192
+    },
+    {
+     "date": "2026-10-30",
+     "value": 21.524
+    }
+   ]
+  },
+  "mro_ecb": {
+   "source": "BCE, estado financiero semanal (ECB Data Portal)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/ILM",
+   "obs": [
+    {
+     "date": "2026-07-24",
+     "value": 17.355
+    },
+    {
+     "date": "2026-07-31",
+     "value": 21.939
+    },
+    {
+     "date": "2026-08-07",
+     "value": 15.862
+    },
+    {
+     "date": "2026-08-14",
+     "value": 16.494
+    },
+    {
+     "date": "2026-08-21",
+     "value": 16.709
+    },
+    {
+     "date": "2026-08-28",
+     "value": 18.005
+    },
+    {
+     "date": "2026-09-04",
+     "value": 13.866
+    },
+    {
+     "date": "2026-09-11",
+     "value": 12.241
+    },
+    {
+     "date": "2026-09-18",
+     "value": 14.892
+    },
+    {
+     "date": "2026-09-25",
+     "value": 14.557
+    },
+    {
+     "date": "2026-10-02",
+     "value": 21.905
+    },
+    {
+     "date": "2026-10-09",
+     "value": 18.084
+    },
+    {
+     "date": "2026-10-16",
+     "value": 18.51
+    },
+    {
+     "date": "2026-10-23",
+     "value": 19.253
+    },
+    {
+     "date": "2026-10-30",
+     "value": 27.048
+    }
+   ]
+  },
   "usdbrl": {
    "source": "BCE, tipos de referencia (cruce EUR/BRL ÷ EUR/USD)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
@@ -3631,52 +3666,6 @@
     }
    ]
   },
-  "y10_us": {
-   "source": "FRED (DGS10)",
-   "source_url": "https://fred.stlouisfed.org/series/DGS10",
-   "obs": [
-    {
-     "date": "2026-10-23",
-     "value": 5.0
-    },
-    {
-     "date": "2026-10-26",
-     "value": 5.0
-    },
-    {
-     "date": "2026-10-27",
-     "value": 4.99
-    },
-    {
-     "date": "2026-10-28",
-     "value": 5.05
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.98
-    },
-    {
-     "date": "2026-10-30",
-     "value": 4.94
-    },
-    {
-     "date": "2026-11-02",
-     "value": 4.91
-    },
-    {
-     "date": "2026-11-03",
-     "value": 4.95
-    },
-    {
-     "date": "2026-11-04",
-     "value": 4.9
-    },
-    {
-     "date": "2026-11-05",
-     "value": 4.84
-    }
-   ]
-  },
   "y2_eur_aaa": {
    "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_2Y",
@@ -3740,52 +3729,6 @@
     {
      "date": "2026-11-05",
      "value": 2.958
-    }
-   ]
-  },
-  "y2_us": {
-   "source": "FRED (DGS2)",
-   "source_url": "https://fred.stlouisfed.org/series/DGS2",
-   "obs": [
-    {
-     "date": "2026-10-23",
-     "value": 4.69
-    },
-    {
-     "date": "2026-10-26",
-     "value": 4.68
-    },
-    {
-     "date": "2026-10-27",
-     "value": 4.7
-    },
-    {
-     "date": "2026-10-28",
-     "value": 4.67
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.61
-    },
-    {
-     "date": "2026-10-30",
-     "value": 4.56
-    },
-    {
-     "date": "2026-11-02",
-     "value": 4.59
-    },
-    {
-     "date": "2026-11-03",
-     "value": 4.61
-    },
-    {
-     "date": "2026-11-04",
-     "value": 4.58
-    },
-    {
-     "date": "2026-11-05",
-     "value": 4.46
     }
    ]
   },
