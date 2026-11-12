@@ -1,8 +1,8 @@
 {
- "generated": "2026-11-12T17:06:13+00:00",
+ "generated": "2026-11-12T19:56:49+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
-  "NY Fed operaciones: ok (+9)",
+  "NY Fed operaciones: ok (+8)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+45)",
@@ -11,8 +11,7 @@
   "IPC EE. UU.: ok (+32)",
   "BCE tipos oficiales: ok (+45)",
   "BCE curva AAA: ok (+30)",
-  "  BCE MIR/M.NL.B.L22.F.R.A.2240.EUR.N: ERROR The read operation timed out",
-  "BCE tipos bancarios y depósitos: ok (+15)",
+  "BCE tipos bancarios y depósitos: ok (+30)",
   "Eurostat: ok (+218)",
   "Banco de Portugal: ok (+56)",
   "  BdE loan_rate_nfc_es: columna 11 «dn_1ti2t0144 2806196 be_19_3.11 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. crédito total porcentaje mensual _ _»",
@@ -1103,6 +1102,72 @@
     {
      "date": "2026-09",
      "value": 2.447
+    }
+   ]
+  },
+  "dep_rate_nl": {
+   "source": "BCE MIR (depósitos a plazo nuevos de empresas, hasta 1 año)",
+   "source_url": "https://data.ecb.europa.eu/data/datasets/MIR/MIR.M.NL.B.L22.F.R.A.2240.EUR.N",
+   "obs": [
+    {
+     "date": "2025-07",
+     "value": 1.82
+    },
+    {
+     "date": "2025-08",
+     "value": 1.81
+    },
+    {
+     "date": "2025-09",
+     "value": 1.81
+    },
+    {
+     "date": "2025-10",
+     "value": 1.82
+    },
+    {
+     "date": "2025-11",
+     "value": 1.84
+    },
+    {
+     "date": "2025-12",
+     "value": 1.83
+    },
+    {
+     "date": "2026-01",
+     "value": 1.87
+    },
+    {
+     "date": "2026-02",
+     "value": 1.87
+    },
+    {
+     "date": "2026-03",
+     "value": 1.94
+    },
+    {
+     "date": "2026-04",
+     "value": 1.97
+    },
+    {
+     "date": "2026-05",
+     "value": 2.0
+    },
+    {
+     "date": "2026-06",
+     "value": 2.19
+    },
+    {
+     "date": "2026-07",
+     "value": 2.21
+    },
+    {
+     "date": "2026-08",
+     "value": 2.25
+    },
+    {
+     "date": "2026-09",
+     "value": 2.4
     }
    ]
   },
@@ -3007,10 +3072,6 @@
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/reverse-repo",
    "obs": [
     {
-     "date": "2026-11-05",
-     "value": 0.125
-    },
-    {
      "date": "2026-11-06",
      "value": 0.15
     },
@@ -3021,6 +3082,10 @@
     {
      "date": "2026-11-10",
      "value": 0.152
+    },
+    {
+     "date": "2026-11-12",
+     "value": 0.25
     }
    ]
   },
@@ -3224,10 +3289,6 @@
    "source": "Federal Reserve Bank of New York (API de operaciones)",
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
    "obs": [
-    {
-     "date": "2026-11-05",
-     "value": 0.0
-    },
     {
      "date": "2026-11-06",
      "value": 0.0
