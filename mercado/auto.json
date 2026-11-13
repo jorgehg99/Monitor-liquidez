@@ -1,8 +1,8 @@
 {
- "generated": "2026-11-13T16:57:30+00:00",
+ "generated": "2026-11-13T19:57:22+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
-  "NY Fed operaciones: ok (+9)",
+  "NY Fed operaciones: ok (+8)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+45)",
@@ -3032,10 +3032,6 @@
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/reverse-repo",
    "obs": [
     {
-     "date": "2026-11-06",
-     "value": 0.15
-    },
-    {
      "date": "2026-11-09",
      "value": 0.252
     },
@@ -3046,6 +3042,10 @@
     {
      "date": "2026-11-12",
      "value": 0.25
+    },
+    {
+     "date": "2026-11-13",
+     "value": 0.325
     }
    ]
   },
@@ -3249,10 +3249,6 @@
    "source": "Federal Reserve Bank of New York (API de operaciones)",
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 0.0
-    },
     {
      "date": "2026-11-09",
      "value": 0.005
