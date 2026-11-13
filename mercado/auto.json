@@ -1,12 +1,12 @@
 {
- "generated": "2026-11-13T19:57:22+00:00",
+ "generated": "2026-11-13T23:17:59+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+45)",
-  "FRED: ok (+209)",
+  "FRED: ok (+204)",
   "FRED tipos oficiales de la Fed: ok (+15)",
   "IPC EE. UU.: ok (+32)",
   "BCE tipos oficiales: ok (+45)",
@@ -88,10 +88,6 @@
    "source_url": "https://fred.stlouisfed.org/series/T10YIE",
    "obs": [
     {
-     "date": "2026-10-30",
-     "value": 2.34
-    },
-    {
      "date": "2026-11-02",
      "value": 2.29
     },
@@ -121,6 +117,10 @@
     },
     {
      "date": "2026-11-12",
+     "value": 2.24
+    },
+    {
+     "date": "2026-11-13",
      "value": 2.24
     }
    ]
@@ -2076,23 +2076,23 @@
    "source_url": "https://fred.stlouisfed.org/series/IORB",
    "obs": [
     {
-     "date": "2026-11-09",
-     "value": 3.9
-    },
-    {
-     "date": "2026-11-10",
-     "value": 3.9
-    },
-    {
-     "date": "2026-11-11",
-     "value": 3.9
-    },
-    {
      "date": "2026-11-12",
      "value": 3.9
     },
     {
      "date": "2026-11-13",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-14",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-15",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-16",
      "value": 3.9
     }
    ]
@@ -3272,14 +3272,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DTB1YR",
    "obs": [
     {
-     "date": "2026-10-28",
-     "value": 4.27
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.22
-    },
-    {
      "date": "2026-10-30",
      "value": 4.17
     },
@@ -3310,6 +3302,10 @@
     {
      "date": "2026-11-10",
      "value": 4.34
+    },
+    {
+     "date": "2026-11-12",
+     "value": 4.43
     }
    ]
   },
@@ -3317,14 +3313,6 @@
    "source": "FRED (DTB3)",
    "source_url": "https://fred.stlouisfed.org/series/DTB3",
    "obs": [
-    {
-     "date": "2026-10-28",
-     "value": 4.01
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.0
-    },
     {
      "date": "2026-10-30",
      "value": 3.99
@@ -3356,6 +3344,10 @@
     {
      "date": "2026-11-10",
      "value": 4.12
+    },
+    {
+     "date": "2026-11-12",
+     "value": 4.14
     }
    ]
   },
@@ -3363,14 +3355,6 @@
    "source": "FRED (DTB6)",
    "source_url": "https://fred.stlouisfed.org/series/DTB6",
    "obs": [
-    {
-     "date": "2026-10-28",
-     "value": 4.18
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.15
-    },
     {
      "date": "2026-10-30",
      "value": 4.11
@@ -3402,6 +3386,10 @@
     {
      "date": "2026-11-10",
      "value": 4.26
+    },
+    {
+     "date": "2026-11-12",
+     "value": 4.3
     }
    ]
   },
@@ -3786,14 +3774,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DGS10",
    "obs": [
     {
-     "date": "2026-10-28",
-     "value": 5.05
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.98
-    },
-    {
      "date": "2026-10-30",
      "value": 4.94
     },
@@ -3824,6 +3804,10 @@
     {
      "date": "2026-11-10",
      "value": 4.98
+    },
+    {
+     "date": "2026-11-12",
+     "value": 5.1
     }
    ]
   },
@@ -3898,14 +3882,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DGS2",
    "obs": [
     {
-     "date": "2026-10-28",
-     "value": 4.67
-    },
-    {
-     "date": "2026-10-29",
-     "value": 4.61
-    },
-    {
      "date": "2026-10-30",
      "value": 4.56
     },
@@ -3936,6 +3912,10 @@
     {
      "date": "2026-11-10",
      "value": 4.73
+    },
+    {
+     "date": "2026-11-12",
+     "value": 4.86
     }
    ]
   }
