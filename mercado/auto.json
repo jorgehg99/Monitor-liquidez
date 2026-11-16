@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-16T15:07:36+00:00",
+ "generated": "2026-11-16T17:16:45+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+9)",
@@ -2480,10 +2480,6 @@
    "source_url": "https://fred.stlouisfed.org/series/BAMLEMCBPIOAS",
    "obs": [
     {
-     "date": "2026-10-30",
-     "value": 181.0
-    },
-    {
      "date": "2026-11-02",
      "value": 181.0
     },
@@ -2508,6 +2504,10 @@
      "value": 180.0
     },
     {
+     "date": "2026-11-10",
+     "value": 172.0
+    },
+    {
      "date": "2026-11-11",
      "value": 172.0
     },
@@ -2525,10 +2525,6 @@
    "source": "FRED (BAMLEMIBHGCRPIOAS)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLEMIBHGCRPIOAS",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 105.0
-    },
     {
      "date": "2026-11-02",
      "value": 104.0
@@ -2554,6 +2550,10 @@
      "value": 102.0
     },
     {
+     "date": "2026-11-10",
+     "value": 96.0
+    },
+    {
      "date": "2026-11-11",
      "value": 96.0
     },
@@ -2571,14 +2571,6 @@
    "source": "FRED (BAMLEMHBHYCRPIOAS)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLEMHBHYCRPIOAS",
    "obs": [
-    {
-     "date": "2026-10-29",
-     "value": 374.0
-    },
-    {
-     "date": "2026-10-30",
-     "value": 388.0
-    },
     {
      "date": "2026-11-02",
      "value": 393.0
@@ -2604,12 +2596,20 @@
      "value": 394.0
     },
     {
+     "date": "2026-11-10",
+     "value": 381.0
+    },
+    {
      "date": "2026-11-11",
      "value": 381.0
     },
     {
      "date": "2026-11-12",
      "value": 370.0
+    },
+    {
+     "date": "2026-11-13",
+     "value": 372.0
     }
    ]
   },
@@ -2617,14 +2617,6 @@
    "source": "FRED (BAMLHE00EHYIOAS)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLHE00EHYIOAS",
    "obs": [
-    {
-     "date": "2026-10-29",
-     "value": 348.0
-    },
-    {
-     "date": "2026-10-30",
-     "value": 359.0
-    },
     {
      "date": "2026-11-02",
      "value": 356.0
@@ -2650,12 +2642,20 @@
      "value": 340.0
     },
     {
+     "date": "2026-11-10",
+     "value": 325.0
+    },
+    {
      "date": "2026-11-11",
      "value": 321.0
     },
     {
      "date": "2026-11-12",
      "value": 323.0
+    },
+    {
+     "date": "2026-11-13",
+     "value": 326.0
     }
    ]
   },
@@ -2663,10 +2663,6 @@
    "source": "FRED (BAMLC0A3CA)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A3CA",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 78.0
-    },
     {
      "date": "2026-11-02",
      "value": 78.0
@@ -2692,6 +2688,10 @@
      "value": 75.0
     },
     {
+     "date": "2026-11-10",
+     "value": 74.0
+    },
+    {
      "date": "2026-11-11",
      "value": 74.0
     },
@@ -2709,10 +2709,6 @@
    "source": "FRED (BAMLC0A2CAA)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A2CAA",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 70.0
-    },
     {
      "date": "2026-11-02",
      "value": 71.0
@@ -2738,6 +2734,10 @@
      "value": 67.0
     },
     {
+     "date": "2026-11-10",
+     "value": 66.0
+    },
+    {
      "date": "2026-11-11",
      "value": 65.0
     },
@@ -2755,10 +2755,6 @@
    "source": "FRED (BAMLH0A2HYB)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 360.0
-    },
     {
      "date": "2026-11-02",
      "value": 363.0
@@ -2784,6 +2780,10 @@
      "value": 350.0
     },
     {
+     "date": "2026-11-10",
+     "value": 347.0
+    },
+    {
      "date": "2026-11-11",
      "value": 347.0
     },
@@ -2801,10 +2801,6 @@
    "source": "FRED (BAMLH0A1HYBB)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLH0A1HYBB",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 209.0
-    },
     {
      "date": "2026-11-02",
      "value": 206.0
@@ -2830,6 +2826,10 @@
      "value": 200.0
     },
     {
+     "date": "2026-11-10",
+     "value": 193.0
+    },
+    {
      "date": "2026-11-11",
      "value": 193.0
     },
@@ -2847,10 +2847,6 @@
    "source": "FRED (BAMLC0A4CBBB)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A4CBBB",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 116.0
-    },
     {
      "date": "2026-11-02",
      "value": 117.0
@@ -2876,6 +2872,10 @@
      "value": 113.0
     },
     {
+     "date": "2026-11-10",
+     "value": 112.0
+    },
+    {
      "date": "2026-11-11",
      "value": 112.0
     },
@@ -2893,10 +2893,6 @@
    "source": "FRED (BAMLH0A0HYM2)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 344.0
-    },
     {
      "date": "2026-11-02",
      "value": 343.0
@@ -2922,6 +2918,10 @@
      "value": 334.0
     },
     {
+     "date": "2026-11-10",
+     "value": 330.0
+    },
+    {
      "date": "2026-11-11",
      "value": 330.0
     },
@@ -2939,10 +2939,6 @@
    "source": "FRED (BAMLC0A0CM)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 94.0
-    },
     {
      "date": "2026-11-02",
      "value": 94.0
@@ -2966,6 +2962,10 @@
     {
      "date": "2026-11-09",
      "value": 91.0
+    },
+    {
+     "date": "2026-11-10",
+     "value": 90.0
     },
     {
      "date": "2026-11-11",
