@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-18T10:06:00+00:00",
+ "generated": "2026-11-18T13:15:40+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -1742,10 +1742,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARL",
    "obs": [
     {
-     "date": "2026-11-13",
-     "value": 3.75
-    },
-    {
      "date": "2026-11-14",
      "value": 3.75
     },
@@ -1759,6 +1755,10 @@
     },
     {
      "date": "2026-11-17",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-18",
      "value": 3.75
     }
    ]
@@ -1768,10 +1768,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
    "obs": [
     {
-     "date": "2026-11-13",
-     "value": 4.0
-    },
-    {
      "date": "2026-11-14",
      "value": 4.0
     },
@@ -1785,6 +1781,10 @@
     },
     {
      "date": "2026-11-17",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-18",
      "value": 4.0
     }
    ]
@@ -3054,10 +3054,6 @@
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr",
    "obs": [
     {
-     "date": "2026-11-02",
-     "value": 3.95
-    },
-    {
      "date": "2026-11-03",
      "value": 3.97
     },
@@ -3092,6 +3088,10 @@
     {
      "date": "2026-11-16",
      "value": 3.93
+    },
+    {
+     "date": "2026-11-17",
+     "value": 3.92
     }
    ]
   },
@@ -3099,10 +3099,6 @@
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
    "obs": [
-    {
-     "date": "2026-11-03",
-     "value": 3.90759
-    },
     {
      "date": "2026-11-04",
      "value": 3.9106
@@ -3138,6 +3134,10 @@
     {
      "date": "2026-11-17",
      "value": 3.91999
+    },
+    {
+     "date": "2026-11-18",
+     "value": 3.92133
     }
    ]
   },
@@ -3145,10 +3145,6 @@
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
    "obs": [
-    {
-     "date": "2026-11-03",
-     "value": 3.78843
-    },
     {
      "date": "2026-11-04",
      "value": 3.79213
@@ -3184,6 +3180,10 @@
     {
      "date": "2026-11-17",
      "value": 3.83172
+    },
+    {
+     "date": "2026-11-18",
+     "value": 3.83508
     }
    ]
   },
@@ -3708,10 +3708,6 @@
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y",
    "obs": [
     {
-     "date": "2026-10-27",
-     "value": 3.371
-    },
-    {
      "date": "2026-10-28",
      "value": 3.393
     },
@@ -3766,6 +3762,10 @@
     {
      "date": "2026-11-16",
      "value": 3.422
+    },
+    {
+     "date": "2026-11-17",
+     "value": 3.425
     }
    ]
   },
@@ -3815,10 +3815,6 @@
    "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_2Y",
    "obs": [
-    {
-     "date": "2026-10-27",
-     "value": 3.015
-    },
     {
      "date": "2026-10-28",
      "value": 3.06
@@ -3874,6 +3870,10 @@
     {
      "date": "2026-11-16",
      "value": 3.109
+    },
+    {
+     "date": "2026-11-17",
+     "value": 3.093
     }
    ]
   },
