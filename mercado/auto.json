@@ -1,8 +1,8 @@
 {
- "generated": "2026-11-21T00:46:50+00:00",
+ "generated": "2026-11-23T17:57:21+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
-  "NY Fed operaciones: ok (+8)",
+  "NY Fed operaciones: ok (+9)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+45)",
@@ -25,10 +25,6 @@
    "source": "Bank of England (base de datos)",
    "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
    "obs": [
-    {
-     "date": "2026-11-02",
-     "value": 3.75
-    },
     {
      "date": "2026-11-03",
      "value": 3.75
@@ -79,6 +75,10 @@
     },
     {
      "date": "2026-11-19",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-20",
      "value": 4.0
     }
    ]
@@ -1518,10 +1518,6 @@
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
    "obs": [
     {
-     "date": "2026-11-05",
-     "value": 3.88
-    },
-    {
      "date": "2026-11-06",
      "value": 3.88
     },
@@ -1556,6 +1552,10 @@
     {
      "date": "2026-11-19",
      "value": 3.88
+    },
+    {
+     "date": "2026-11-20",
+     "value": 3.88
     }
    ]
   },
@@ -1563,10 +1563,6 @@
    "source": "BCE (ECB Data Portal)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/EST/EST.B.EU000A2X2A25.WT",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 2.44
-    },
     {
      "date": "2026-11-02",
      "value": 2.441
@@ -1622,6 +1618,10 @@
     {
      "date": "2026-11-19",
      "value": 2.441
+    },
+    {
+     "date": "2026-11-20",
+     "value": 2.444
     }
    ]
   },
@@ -1629,10 +1629,6 @@
    "source": "BCE, tipos de referencia",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
-    {
-     "date": "2026-11-02",
-     "value": 1.1216
-    },
     {
      "date": "2026-11-03",
      "value": 1.1179
@@ -1688,6 +1684,10 @@
     {
      "date": "2026-11-20",
      "value": 1.099
+    },
+    {
+     "date": "2026-11-23",
+     "value": 1.0939
     }
    ]
   },
@@ -1742,23 +1742,23 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARL",
    "obs": [
     {
-     "date": "2026-11-16",
-     "value": 3.75
-    },
-    {
-     "date": "2026-11-17",
-     "value": 3.75
-    },
-    {
-     "date": "2026-11-18",
-     "value": 3.75
-    },
-    {
      "date": "2026-11-19",
      "value": 3.75
     },
     {
      "date": "2026-11-20",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-21",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-22",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-23",
      "value": 3.75
     }
    ]
@@ -1768,23 +1768,23 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
    "obs": [
     {
-     "date": "2026-11-16",
-     "value": 4.0
-    },
-    {
-     "date": "2026-11-17",
-     "value": 4.0
-    },
-    {
-     "date": "2026-11-18",
-     "value": 4.0
-    },
-    {
      "date": "2026-11-19",
      "value": 4.0
     },
     {
      "date": "2026-11-20",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-21",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-22",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-23",
      "value": 4.0
     }
    ]
@@ -1793,10 +1793,6 @@
    "source": "BCE, tipos de referencia (inverso de EUR/GBP)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
-    {
-     "date": "2026-11-02",
-     "value": 1.1965
-    },
     {
      "date": "2026-11-03",
      "value": 1.1996
@@ -1852,6 +1848,10 @@
     {
      "date": "2026-11-20",
      "value": 1.1942
+    },
+    {
+     "date": "2026-11-23",
+     "value": 1.1951
     }
    ]
   },
@@ -1859,10 +1859,6 @@
    "source": "BCE, tipos de referencia (cruce EUR/USD ÷ EUR/GBP)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
-    {
-     "date": "2026-11-02",
-     "value": 1.3419
-    },
     {
      "date": "2026-11-03",
      "value": 1.3411
@@ -1918,6 +1914,10 @@
     {
      "date": "2026-11-20",
      "value": 1.3125
+    },
+    {
+     "date": "2026-11-23",
+     "value": 1.3074
     }
    ]
   },
@@ -2480,10 +2480,6 @@
    "source_url": "https://fred.stlouisfed.org/series/BAMLEMCBPIOAS",
    "obs": [
     {
-     "date": "2026-11-06",
-     "value": 182.0
-    },
-    {
      "date": "2026-11-09",
      "value": 180.0
     },
@@ -2518,6 +2514,10 @@
     {
      "date": "2026-11-19",
      "value": 184.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 198.0
     }
    ]
   },
@@ -2525,10 +2525,6 @@
    "source": "FRED (BAMLEMIBHGCRPIOAS)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLEMIBHGCRPIOAS",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 103.0
-    },
     {
      "date": "2026-11-09",
      "value": 102.0
@@ -2564,6 +2560,10 @@
     {
      "date": "2026-11-19",
      "value": 104.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 112.0
     }
    ]
   },
@@ -2571,10 +2571,6 @@
    "source": "FRED (BAMLEMHBHYCRPIOAS)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLEMHBHYCRPIOAS",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 397.0
-    },
     {
      "date": "2026-11-09",
      "value": 394.0
@@ -2610,6 +2606,10 @@
     {
      "date": "2026-11-19",
      "value": 405.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 435.0
     }
    ]
   },
@@ -2617,10 +2617,6 @@
    "source": "FRED (BAMLHE00EHYIOAS)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLHE00EHYIOAS",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 349.0
-    },
     {
      "date": "2026-11-09",
      "value": 340.0
@@ -2656,6 +2652,10 @@
     {
      "date": "2026-11-19",
      "value": 337.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 354.0
     }
    ]
   },
@@ -2663,10 +2663,6 @@
    "source": "FRED (BAMLC0A3CA)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A3CA",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 77.0
-    },
     {
      "date": "2026-11-09",
      "value": 75.0
@@ -2702,6 +2698,10 @@
     {
      "date": "2026-11-19",
      "value": 78.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 81.0
     }
    ]
   },
@@ -2709,10 +2709,6 @@
    "source": "FRED (BAMLC0A2CAA)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A2CAA",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 69.0
-    },
     {
      "date": "2026-11-09",
      "value": 67.0
@@ -2748,6 +2744,10 @@
     {
      "date": "2026-11-19",
      "value": 68.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 72.0
     }
    ]
   },
@@ -2755,10 +2755,6 @@
    "source": "FRED (BAMLH0A2HYB)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 361.0
-    },
     {
      "date": "2026-11-09",
      "value": 350.0
@@ -2794,6 +2790,10 @@
     {
      "date": "2026-11-19",
      "value": 380.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 408.0
     }
    ]
   },
@@ -2801,10 +2801,6 @@
    "source": "FRED (BAMLH0A1HYBB)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLH0A1HYBB",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 208.0
-    },
     {
      "date": "2026-11-09",
      "value": 200.0
@@ -2840,6 +2836,10 @@
     {
      "date": "2026-11-19",
      "value": 210.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 229.0
     }
    ]
   },
@@ -2847,10 +2847,6 @@
    "source": "FRED (BAMLC0A4CBBB)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A4CBBB",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 116.0
-    },
     {
      "date": "2026-11-09",
      "value": 113.0
@@ -2886,6 +2882,10 @@
     {
      "date": "2026-11-19",
      "value": 117.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 122.0
     }
    ]
   },
@@ -2893,10 +2893,6 @@
    "source": "FRED (BAMLH0A0HYM2)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 342.0
-    },
     {
      "date": "2026-11-09",
      "value": 334.0
@@ -2932,6 +2928,10 @@
     {
      "date": "2026-11-19",
      "value": 352.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 376.0
     }
    ]
   },
@@ -2939,10 +2939,6 @@
    "source": "FRED (BAMLC0A0CM)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 93.0
-    },
     {
      "date": "2026-11-09",
      "value": 91.0
@@ -2978,6 +2974,10 @@
     {
      "date": "2026-11-19",
      "value": 94.0
+    },
+    {
+     "date": "2026-11-20",
+     "value": 98.0
     }
    ]
   },
@@ -3054,10 +3054,6 @@
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr",
    "obs": [
     {
-     "date": "2026-11-05",
-     "value": 3.92
-    },
-    {
      "date": "2026-11-06",
      "value": 3.89
     },
@@ -3092,6 +3088,10 @@
     {
      "date": "2026-11-19",
      "value": 3.91
+    },
+    {
+     "date": "2026-11-20",
+     "value": 3.92
     }
    ]
   },
@@ -3099,10 +3099,6 @@
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 3.91294
-    },
     {
      "date": "2026-11-09",
      "value": 3.91461
@@ -3138,6 +3134,10 @@
     {
      "date": "2026-11-20",
      "value": 3.92334
+    },
+    {
+     "date": "2026-11-23",
+     "value": 3.92533
     }
    ]
   },
@@ -3145,10 +3145,6 @@
    "source": "Federal Reserve Bank of New York (API)",
    "source_url": "https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index",
    "obs": [
-    {
-     "date": "2026-11-06",
-     "value": 3.79876
-    },
     {
      "date": "2026-11-09",
      "value": 3.80772
@@ -3184,6 +3180,10 @@
     {
      "date": "2026-11-20",
      "value": 3.84103
+    },
+    {
+     "date": "2026-11-23",
+     "value": 3.85011
     }
    ]
   },
@@ -3191,10 +3191,6 @@
    "source": "Bank of England (base de datos)",
    "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
    "obs": [
-    {
-     "date": "2026-11-02",
-     "value": 3.7352
-    },
     {
      "date": "2026-11-03",
      "value": 3.7342
@@ -3242,6 +3238,10 @@
     {
      "date": "2026-11-18",
      "value": 3.984
+    },
+    {
+     "date": "2026-11-19",
+     "value": 3.9841
     }
    ]
   },
@@ -3251,7 +3251,7 @@
    "obs": [
     {
      "date": "2026-11-17",
-     "value": 0.104
+     "value": 0.0
     },
     {
      "date": "2026-11-18",
@@ -3264,6 +3264,10 @@
     {
      "date": "2026-11-20",
      "value": 0.001
+    },
+    {
+     "date": "2026-11-23",
+     "value": 0.0
     }
    ]
   },
@@ -3580,10 +3584,6 @@
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
     {
-     "date": "2026-11-02",
-     "value": 5.4378
-    },
-    {
      "date": "2026-11-03",
      "value": 5.4934
     },
@@ -3638,6 +3638,10 @@
     {
      "date": "2026-11-20",
      "value": 5.938
+    },
+    {
+     "date": "2026-11-23",
+     "value": 5.9979
     }
    ]
   },
@@ -3645,10 +3649,6 @@
    "source": "BCE, tipos de referencia (cruce EUR/MXN ÷ EUR/USD)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
-    {
-     "date": "2026-11-02",
-     "value": 18.72
-    },
     {
      "date": "2026-11-03",
      "value": 18.597
@@ -3704,6 +3704,10 @@
     {
      "date": "2026-11-20",
      "value": 19.0671
+    },
+    {
+     "date": "2026-11-23",
+     "value": 19.2456
     }
    ]
   },
@@ -3711,10 +3715,6 @@
    "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 3.365
-    },
     {
      "date": "2026-11-02",
      "value": 3.327
@@ -3770,6 +3770,10 @@
     {
      "date": "2026-11-19",
      "value": 3.442
+    },
+    {
+     "date": "2026-11-20",
+     "value": 3.361
     }
    ]
   },
@@ -3819,10 +3823,6 @@
    "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_2Y",
    "obs": [
-    {
-     "date": "2026-10-30",
-     "value": 3.005
-    },
     {
      "date": "2026-11-02",
      "value": 2.994
@@ -3878,6 +3878,10 @@
     {
      "date": "2026-11-19",
      "value": 3.125
+    },
+    {
+     "date": "2026-11-20",
+     "value": 3.03
     }
    ]
   },
