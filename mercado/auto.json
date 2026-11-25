@@ -1,8 +1,8 @@
 {
- "generated": "2026-11-24T17:33:56+00:00",
+ "generated": "2026-11-25T03:01:22+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
-  "NY Fed operaciones: ok (+9)",
+  "NY Fed operaciones: ok (+8)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+45)",
@@ -18,17 +18,13 @@
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
   "Banco de España: ok (+42)",
-  "Bank of England: ok (+27)"
+  "Bank of England: ok (+25)"
  ],
  "series": {
   "boe_bank_rate": {
    "source": "Bank of England (base de datos)",
    "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
    "obs": [
-    {
-     "date": "2026-11-04",
-     "value": 3.75
-    },
     {
      "date": "2026-11-05",
      "value": 4.0
@@ -88,10 +84,6 @@
    "source_url": "https://fred.stlouisfed.org/series/T10YIE",
    "obs": [
     {
-     "date": "2026-11-10",
-     "value": 2.2
-    },
-    {
      "date": "2026-11-12",
      "value": 2.24
     },
@@ -122,6 +114,10 @@
     {
      "date": "2026-11-23",
      "value": 2.13
+    },
+    {
+     "date": "2026-11-24",
+     "value": 2.12
     }
    ]
   },
@@ -2076,10 +2072,6 @@
    "source_url": "https://fred.stlouisfed.org/series/IORB",
    "obs": [
     {
-     "date": "2026-11-20",
-     "value": 3.9
-    },
-    {
      "date": "2026-11-21",
      "value": 3.9
     },
@@ -2093,6 +2085,10 @@
     },
     {
      "date": "2026-11-24",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-25",
      "value": 3.9
     }
    ]
@@ -3032,10 +3028,6 @@
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/reverse-repo",
    "obs": [
     {
-     "date": "2026-11-18",
-     "value": 0.331
-    },
-    {
      "date": "2026-11-19",
      "value": 0.405
     },
@@ -3046,6 +3038,10 @@
     {
      "date": "2026-11-23",
      "value": 0.35
+    },
+    {
+     "date": "2026-11-24",
+     "value": 0.301
     }
    ]
   },
@@ -3192,10 +3188,6 @@
    "source_url": "https://www.bankofengland.co.uk/boeapps/database/",
    "obs": [
     {
-     "date": "2026-11-04",
-     "value": 3.7335
-    },
-    {
      "date": "2026-11-05",
      "value": 3.9824
     },
@@ -3250,10 +3242,6 @@
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
    "obs": [
     {
-     "date": "2026-11-18",
-     "value": 0.0
-    },
-    {
      "date": "2026-11-19",
      "value": 0.003
     },
@@ -3267,7 +3255,7 @@
     },
     {
      "date": "2026-11-24",
-     "value": 0.001
+     "value": 0.002
     }
    ]
   },
@@ -3275,10 +3263,6 @@
    "source": "FRED (DTB1YR)",
    "source_url": "https://fred.stlouisfed.org/series/DTB1YR",
    "obs": [
-    {
-     "date": "2026-11-09",
-     "value": 4.18
-    },
     {
      "date": "2026-11-10",
      "value": 4.34
@@ -3310,6 +3294,10 @@
     {
      "date": "2026-11-20",
      "value": 4.3
+    },
+    {
+     "date": "2026-11-23",
+     "value": 4.35
     }
    ]
   },
@@ -3317,10 +3305,6 @@
    "source": "FRED (DTB3)",
    "source_url": "https://fred.stlouisfed.org/series/DTB3",
    "obs": [
-    {
-     "date": "2026-11-09",
-     "value": 4.06
-    },
     {
      "date": "2026-11-10",
      "value": 4.12
@@ -3352,6 +3336,10 @@
     {
      "date": "2026-11-20",
      "value": 4.13
+    },
+    {
+     "date": "2026-11-23",
+     "value": 4.18
     }
    ]
   },
@@ -3359,10 +3347,6 @@
    "source": "FRED (DTB6)",
    "source_url": "https://fred.stlouisfed.org/series/DTB6",
    "obs": [
-    {
-     "date": "2026-11-09",
-     "value": 4.15
-    },
     {
      "date": "2026-11-10",
      "value": 4.26
@@ -3394,6 +3378,10 @@
     {
      "date": "2026-11-20",
      "value": 4.26
+    },
+    {
+     "date": "2026-11-23",
+     "value": 4.33
     }
    ]
   },
@@ -3782,10 +3770,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DGS10",
    "obs": [
     {
-     "date": "2026-11-09",
-     "value": 4.88
-    },
-    {
      "date": "2026-11-10",
      "value": 4.98
     },
@@ -3815,6 +3799,10 @@
     },
     {
      "date": "2026-11-20",
+     "value": 4.92
+    },
+    {
+     "date": "2026-11-23",
      "value": 4.92
     }
    ]
@@ -3890,10 +3878,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DGS2",
    "obs": [
     {
-     "date": "2026-11-09",
-     "value": 4.56
-    },
-    {
      "date": "2026-11-10",
      "value": 4.73
     },
@@ -3923,6 +3907,10 @@
     },
     {
      "date": "2026-11-20",
+     "value": 4.63
+    },
+    {
+     "date": "2026-11-23",
      "value": 4.63
     }
    ]
