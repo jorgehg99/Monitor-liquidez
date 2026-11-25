@@ -485,6 +485,10 @@ def card(r, extra=""):
     if str(r.get("source_url", "")).startswith("https://"):
         src = f'<a href="{esc(r["source_url"])}" target="_blank" rel="noopener">{src}</a>'
     meta = f"<div>Fuente: {src}</div>"
+    fr = FRESH.get(r["id"])
+    if fr:
+        meta += (f'<div>{fresh_dot(r)}Último dato publicado</div>' if fr["ok"] else
+                 f'<div>{fresh_dot(r)}Pendiente: ya debería estar el dato del {esc(fdate(fr["expected"]))}</div>')
     if r.get("next_event"):
         meta += f'<div>{esc(r["next_event"])}</div>'
     if r.get("note"):
@@ -1544,6 +1548,14 @@ ul.tl li::before{content:"";position:absolute;left:-6px;top:11px;width:10px;heig
 .idea.sc{border-top-color:var(--line2)}
 .ask{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}.ask textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:10px;resize:vertical;width:100%}
 .ask-f{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+@media (max-width:700px){.tw{overflow-x:visible}.tw table.stk,.tw table.stk tbody,.tw table.stk tr,.tw table.stk td{display:block;width:100%}.tw table.stk thead{display:none}
+.tw table.stk tr{border-bottom:1px solid var(--line2);padding:6px 0}.tw table.stk tr:last-child{border-bottom:0}
+.tw table.stk td{border:0;padding:3px 10px;white-space:normal;text-align:right;min-width:0;max-width:none;overflow-wrap:anywhere}
+.tw table.stk td[data-label]::before{content:attr(data-label);float:left;margin-right:12px;max-width:48%;text-align:left;color:var(--muted);font-family:var(--sans);font-size:11px;letter-spacing:.03em;text-transform:uppercase}
+.tw table.stk td.lg{text-align:left}.tw table.stk td.lg::before{float:none;display:block;max-width:none;margin:0 0 2px}
+.tw table.stk td:first-child{text-align:left;font-weight:600;font-size:13px}.tw table.stk td:not([data-label]){text-align:left}
+.sigt td.sg small{margin-left:0;max-width:none}.sigt td.sl{max-width:none}.ctip{white-space:normal;max-width:80vw}}
+@media (hover:none){.fr{width:9px;height:9px}}
 @media (orientation:landscape) and (max-height:500px){.zm-chips{max-height:18vh}.zm-hint{display:none}.zm-r{max-height:12vh}.zm-c{min-height:150px}}
 """
 
@@ -1602,7 +1614,16 @@ document.addEventListener('pointerdown',function(e){var s=e.target.closest?e.tar
 /* «Me interesa»: se guarda en el móvil y se envía al formulario de feedback */
 var FB={u:%FBU%,e:%FBE%};
 function lget(k,d){try{return JSON.parse(ls(k)||d);}catch(e){return JSON.parse(d);}}
+/* Tablas: en el móvil cada fila se muestra como una ficha con la etiqueta de cada columna */
+[].slice.call(document.querySelectorAll('.tw table')).forEach(function(t){var hs=[],hr=t.querySelector('thead tr');
+ if(hr)[].slice.call(hr.children).forEach(function(th){var n=+th.getAttribute('colspan')||1;for(var i=0;i<n;i++)hs.push((th.textContent||'').trim());});
+ var seen={},ln='';hs=hs.map(function(h){if(seen[h]&&ln)return ln+' · '+h;seen[h]=1;ln=h;return h;});
+ t.classList.add('stk');
+ [].slice.call(t.querySelectorAll('tr')).forEach(function(tr){if(tr.parentNode.tagName==='THEAD')return;var c=0;
+  [].slice.call(tr.children).forEach(function(td){var n=+td.getAttribute('colspan')||1;if(n===1&&c>0&&hs[c]&&hs[c]!=='—')td.setAttribute('data-label',hs[c]);if((td.textContent||'').trim().length>38)td.classList.add('lg');c+=n;});});});
 var toast=document.getElementById('toast'),tt;
+/* En pantallas táctiles, tocar un elemento con aviso (title) lo muestra, como el ratón en el ordenador */
+document.addEventListener('click',function(e){var el=e.target.closest?e.target.closest('[title]'):null;var tch=('ontouchstart' in window)||(window.matchMedia&&(matchMedia('(hover:none)').matches||matchMedia('(pointer:coarse)').matches));if(!el||!tch)return;var t=el.getAttribute('title');if(!t)return;if(el.closest('summary')){e.preventDefault();}say(t);});
 function say(t){toast.textContent=t;toast.hidden=false;clearTimeout(tt);tt=setTimeout(function(){toast.hidden=true;},2400);}
 function queue(v){var q=lget('mlv-fbq','[]');q.push(v);ls('mlv-fbq',JSON.stringify(q));}
 function post(v){if(!FB.u||!window.fetch){queue(v);return;}try{var fd=new URLSearchParams();fd.append(FB.e,v);fetch(FB.u,{method:'POST',mode:'no-cors',body:fd}).catch(function(){queue(v);});}catch(e){queue(v);}}
