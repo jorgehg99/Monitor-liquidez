@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-26T02:09:27+00:00",
+ "generated": "2026-11-26T16:47:00+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
   "NY Fed operaciones: ok (+8)",
@@ -18,7 +18,7 @@
   "  BdE dep_rate_nfc_es: columna 8 «dn_1ti2t0029 989252 be_19_7.8 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. snf. depósitos a plazo. tipo medio ponderado porcentaje me»",
   "  BdE dep_rate_hh_es: columna 2 «dn_1ti2t0024 989250 be_19_7.2 tipos de interés. nuevas operaciones. entidades de crédito y efc. tedr. hogares e isflsh. depósitos a plazo. tipo medio ponderado »",
   "Banco de España: ok (+42)",
-  "Bank of England: ok (+25)"
+  "Bank of England: ok (+27)"
  ],
  "series": {
   "boe_bank_rate": {
@@ -75,6 +75,10 @@
     },
     {
      "date": "2026-11-24",
+     "value": 4.0
+    },
+    {
+     "date": "2026-11-25",
      "value": 4.0
     }
    ]
@@ -1564,10 +1568,6 @@
    "source_url": "https://data.ecb.europa.eu/data/datasets/EST/EST.B.EU000A2X2A25.WT",
    "obs": [
     {
-     "date": "2026-11-04",
-     "value": 2.442
-    },
-    {
      "date": "2026-11-05",
      "value": 2.442
     },
@@ -1622,6 +1622,10 @@
     {
      "date": "2026-11-24",
      "value": 2.444
+    },
+    {
+     "date": "2026-11-25",
+     "value": 2.444
     }
    ]
   },
@@ -1629,10 +1633,6 @@
    "source": "BCE, tipos de referencia",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
-    {
-     "date": "2026-11-05",
-     "value": 1.1224
-    },
     {
      "date": "2026-11-06",
      "value": 1.1165
@@ -1688,6 +1688,10 @@
     {
      "date": "2026-11-25",
      "value": 1.0935
+    },
+    {
+     "date": "2026-11-26",
+     "value": 1.0975
     }
    ]
   },
@@ -1742,10 +1746,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARL",
    "obs": [
     {
-     "date": "2026-11-21",
-     "value": 3.75
-    },
-    {
      "date": "2026-11-22",
      "value": 3.75
     },
@@ -1759,6 +1759,10 @@
     },
     {
      "date": "2026-11-25",
+     "value": 3.75
+    },
+    {
+     "date": "2026-11-26",
      "value": 3.75
     }
    ]
@@ -1768,10 +1772,6 @@
    "source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
    "obs": [
     {
-     "date": "2026-11-21",
-     "value": 4.0
-    },
-    {
      "date": "2026-11-22",
      "value": 4.0
     },
@@ -1786,6 +1786,10 @@
     {
      "date": "2026-11-25",
      "value": 4.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 4.0
     }
    ]
   },
@@ -1793,10 +1797,6 @@
    "source": "BCE, tipos de referencia (inverso de EUR/GBP)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
-    {
-     "date": "2026-11-05",
-     "value": 1.1991
-    },
     {
      "date": "2026-11-06",
      "value": 1.1988
@@ -1852,6 +1852,10 @@
     {
      "date": "2026-11-25",
      "value": 1.1943
+    },
+    {
+     "date": "2026-11-26",
+     "value": 1.194
     }
    ]
   },
@@ -1859,10 +1863,6 @@
    "source": "BCE, tipos de referencia (cruce EUR/USD ÷ EUR/GBP)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
-    {
-     "date": "2026-11-05",
-     "value": 1.3459
-    },
     {
      "date": "2026-11-06",
      "value": 1.3385
@@ -1918,6 +1918,10 @@
     {
      "date": "2026-11-25",
      "value": 1.306
+    },
+    {
+     "date": "2026-11-26",
+     "value": 1.3104
     }
    ]
   },
@@ -3238,6 +3242,10 @@
     {
      "date": "2026-11-23",
      "value": 3.9847
+    },
+    {
+     "date": "2026-11-24",
+     "value": 3.9861
     }
    ]
   },
@@ -3576,10 +3584,6 @@
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
     {
-     "date": "2026-11-05",
-     "value": 5.4664
-    },
-    {
      "date": "2026-11-06",
      "value": 5.5037
     },
@@ -3634,6 +3638,10 @@
     {
      "date": "2026-11-25",
      "value": 5.9013
+    },
+    {
+     "date": "2026-11-26",
+     "value": 5.7651
     }
    ]
   },
@@ -3641,10 +3649,6 @@
    "source": "BCE, tipos de referencia (cruce EUR/MXN ÷ EUR/USD)",
    "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
    "obs": [
-    {
-     "date": "2026-11-05",
-     "value": 18.5901
-    },
     {
      "date": "2026-11-06",
      "value": 18.7038
@@ -3700,6 +3704,10 @@
     {
      "date": "2026-11-25",
      "value": 19.7002
+    },
+    {
+     "date": "2026-11-26",
+     "value": 19.6713
     }
    ]
   },
@@ -3707,10 +3715,6 @@
    "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_10Y",
    "obs": [
-    {
-     "date": "2026-11-04",
-     "value": 3.34
-    },
     {
      "date": "2026-11-05",
      "value": 3.294
@@ -3766,6 +3770,10 @@
     {
      "date": "2026-11-24",
      "value": 3.312
+    },
+    {
+     "date": "2026-11-25",
+     "value": 3.259
     }
    ]
   },
@@ -3815,10 +3823,6 @@
    "source": "BCE, curva de bonos AAA de la zona euro (rendimiento cupón cero)",
    "source_url": "https://data.ecb.europa.eu/data/datasets/YC/YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_2Y",
    "obs": [
-    {
-     "date": "2026-11-04",
-     "value": 2.998
-    },
     {
      "date": "2026-11-05",
      "value": 2.958
@@ -3874,6 +3878,10 @@
     {
      "date": "2026-11-24",
      "value": 3.017
+    },
+    {
+     "date": "2026-11-25",
+     "value": 2.969
     }
    ]
   },
