@@ -1,12 +1,12 @@
 {
- "generated": "2026-11-27T16:33:02+00:00",
+ "generated": "2026-11-28T01:55:09+00:00",
  "log": [
   "NY Fed tipos: ok (+40)",
-  "NY Fed operaciones: ok (+9)",
+  "NY Fed operaciones: ok (+8)",
   "BCE €STR: ok (+15)",
   "BCE divisas: ok (+75)",
   "BCE balance semanal: ok (+45)",
-  "FRED: ok (+205)",
+  "FRED: ok (+209)",
   "FRED tipos oficiales de la Fed: ok (+15)",
   "IPC EE. UU.: ok (+32)",
   "BCE tipos oficiales: ok (+45)",
@@ -88,14 +88,6 @@
    "source_url": "https://fred.stlouisfed.org/series/T10YIE",
    "obs": [
     {
-     "date": "2026-11-12",
-     "value": 2.24
-    },
-    {
-     "date": "2026-11-13",
-     "value": 2.24
-    },
-    {
      "date": "2026-11-16",
      "value": 2.2
     },
@@ -126,6 +118,10 @@
     {
      "date": "2026-11-25",
      "value": 2.12
+    },
+    {
+     "date": "2026-11-27",
+     "value": 2.15
     }
    ]
   },
@@ -1700,10 +1696,6 @@
    "source_url": "https://fred.stlouisfed.org/series/WALCL",
    "obs": [
     {
-     "date": "2026-09-16",
-     "value": 6746.548
-    },
-    {
      "date": "2026-09-23",
      "value": 6747.704
     },
@@ -1738,6 +1730,10 @@
     {
      "date": "2026-11-18",
      "value": 6741.452
+    },
+    {
+     "date": "2026-11-25",
+     "value": 6732.044
     }
    ]
   },
@@ -2080,23 +2076,23 @@
    "source_url": "https://fred.stlouisfed.org/series/IORB",
    "obs": [
     {
-     "date": "2026-11-23",
-     "value": 3.9
-    },
-    {
-     "date": "2026-11-24",
-     "value": 3.9
-    },
-    {
-     "date": "2026-11-25",
-     "value": 3.9
-    },
-    {
      "date": "2026-11-26",
      "value": 3.9
     },
     {
      "date": "2026-11-27",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-28",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-29",
+     "value": 3.9
+    },
+    {
+     "date": "2026-11-30",
      "value": 3.9
     }
    ]
@@ -2484,14 +2480,6 @@
    "source_url": "https://fred.stlouisfed.org/series/BAMLEMCBPIOAS",
    "obs": [
     {
-     "date": "2026-11-11",
-     "value": 172.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 167.0
-    },
-    {
      "date": "2026-11-13",
      "value": 169.0
     },
@@ -2522,6 +2510,14 @@
     {
      "date": "2026-11-24",
      "value": 197.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 203.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 202.0
     }
    ]
   },
@@ -2529,14 +2525,6 @@
    "source": "FRED (BAMLEMIBHGCRPIOAS)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLEMIBHGCRPIOAS",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 96.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 93.0
-    },
     {
      "date": "2026-11-13",
      "value": 94.0
@@ -2568,6 +2556,14 @@
     {
      "date": "2026-11-24",
      "value": 110.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 113.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 113.0
     }
    ]
   },
@@ -2575,14 +2571,6 @@
    "source": "FRED (BAMLEMHBHYCRPIOAS)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLEMHBHYCRPIOAS",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 381.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 370.0
-    },
     {
      "date": "2026-11-13",
      "value": 372.0
@@ -2614,6 +2602,14 @@
     {
      "date": "2026-11-24",
      "value": 438.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 452.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 452.0
     }
    ]
   },
@@ -2621,14 +2617,6 @@
    "source": "FRED (BAMLHE00EHYIOAS)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLHE00EHYIOAS",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 321.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 323.0
-    },
     {
      "date": "2026-11-13",
      "value": 326.0
@@ -2660,6 +2648,14 @@
     {
      "date": "2026-11-24",
      "value": 356.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 368.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 359.0
     }
    ]
   },
@@ -2667,14 +2663,6 @@
    "source": "FRED (BAMLC0A3CA)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A3CA",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 74.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 73.0
-    },
     {
      "date": "2026-11-13",
      "value": 73.0
@@ -2706,6 +2694,14 @@
     {
      "date": "2026-11-24",
      "value": 81.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 82.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 82.0
     }
    ]
   },
@@ -2713,14 +2709,6 @@
    "source": "FRED (BAMLC0A2CAA)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A2CAA",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 65.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 64.0
-    },
     {
      "date": "2026-11-13",
      "value": 64.0
@@ -2752,6 +2740,14 @@
     {
      "date": "2026-11-24",
      "value": 71.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 72.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 72.0
     }
    ]
   },
@@ -2759,14 +2755,6 @@
    "source": "FRED (BAMLH0A2HYB)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 347.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 339.0
-    },
     {
      "date": "2026-11-13",
      "value": 344.0
@@ -2798,6 +2786,14 @@
     {
      "date": "2026-11-24",
      "value": 405.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 413.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 413.0
     }
    ]
   },
@@ -2805,14 +2801,6 @@
    "source": "FRED (BAMLH0A1HYBB)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLH0A1HYBB",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 193.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 183.0
-    },
     {
      "date": "2026-11-13",
      "value": 186.0
@@ -2844,6 +2832,14 @@
     {
      "date": "2026-11-24",
      "value": 225.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 228.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 228.0
     }
    ]
   },
@@ -2851,14 +2847,6 @@
    "source": "FRED (BAMLC0A4CBBB)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A4CBBB",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 112.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 111.0
-    },
     {
      "date": "2026-11-13",
      "value": 111.0
@@ -2890,6 +2878,14 @@
     {
      "date": "2026-11-24",
      "value": 122.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 124.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 124.0
     }
    ]
   },
@@ -2897,14 +2893,6 @@
    "source": "FRED (BAMLH0A0HYM2)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 330.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 320.0
-    },
     {
      "date": "2026-11-13",
      "value": 323.0
@@ -2936,6 +2924,14 @@
     {
      "date": "2026-11-24",
      "value": 372.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 377.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 377.0
     }
    ]
   },
@@ -2943,14 +2939,6 @@
    "source": "FRED (BAMLC0A0CM)",
    "source_url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
    "obs": [
-    {
-     "date": "2026-11-11",
-     "value": 90.0
-    },
-    {
-     "date": "2026-11-12",
-     "value": 89.0
-    },
     {
      "date": "2026-11-13",
      "value": 89.0
@@ -2982,6 +2970,14 @@
     {
      "date": "2026-11-24",
      "value": 98.0
+    },
+    {
+     "date": "2026-11-25",
+     "value": 99.0
+    },
+    {
+     "date": "2026-11-26",
+     "value": 99.0
     }
    ]
   },
@@ -2989,10 +2985,6 @@
    "source": "FRED (WRESBAL)",
    "source_url": "https://fred.stlouisfed.org/series/WRESBAL",
    "obs": [
-    {
-     "date": "2026-09-16",
-     "value": 3013.79
-    },
     {
      "date": "2026-09-23",
      "value": 2930.19
@@ -3028,6 +3020,10 @@
     {
      "date": "2026-11-18",
      "value": 2979.66
+    },
+    {
+     "date": "2026-11-25",
+     "value": 2963.67
     }
    ]
   },
@@ -3035,10 +3031,6 @@
    "source": "Federal Reserve Bank of New York (API de operaciones)",
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/reverse-repo",
    "obs": [
-    {
-     "date": "2026-11-20",
-     "value": 0.401
-    },
     {
      "date": "2026-11-23",
      "value": 0.35
@@ -3050,6 +3042,10 @@
     {
      "date": "2026-11-25",
      "value": 0.3
+    },
+    {
+     "date": "2026-11-27",
+     "value": 0.35
     }
    ]
   },
@@ -3254,10 +3250,6 @@
    "source_url": "https://www.newyorkfed.org/markets/desk-operations/repo",
    "obs": [
     {
-     "date": "2026-11-20",
-     "value": 0.0
-    },
-    {
      "date": "2026-11-23",
      "value": 0.0
     },
@@ -3314,6 +3306,10 @@
     {
      "date": "2026-11-24",
      "value": 4.38
+    },
+    {
+     "date": "2026-11-25",
+     "value": 4.35
     }
    ]
   },
@@ -3356,6 +3352,10 @@
     {
      "date": "2026-11-24",
      "value": 4.18
+    },
+    {
+     "date": "2026-11-25",
+     "value": 4.16
     }
    ]
   },
@@ -3398,6 +3398,10 @@
     {
      "date": "2026-11-24",
      "value": 4.34
+    },
+    {
+     "date": "2026-11-25",
+     "value": 4.32
     }
    ]
   },
@@ -3405,10 +3409,6 @@
    "source": "FRED (WTREGEN)",
    "source_url": "https://fred.stlouisfed.org/series/WTREGEN",
    "obs": [
-    {
-     "date": "2026-09-16",
-     "value": 877.028
-    },
     {
      "date": "2026-09-23",
      "value": 977.084
@@ -3444,6 +3444,10 @@
     {
      "date": "2026-11-18",
      "value": 916.613
+    },
+    {
+     "date": "2026-11-25",
+     "value": 902.038
     }
    ]
   },
@@ -3820,6 +3824,10 @@
     {
      "date": "2026-11-24",
      "value": 4.91
+    },
+    {
+     "date": "2026-11-25",
+     "value": 4.85
     }
    ]
   },
@@ -3928,6 +3936,10 @@
     {
      "date": "2026-11-24",
      "value": 4.63
+    },
+    {
+     "date": "2026-11-25",
+     "value": 4.61
     }
    ]
   }
