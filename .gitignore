@@ -3,3 +3,4 @@ data/
 !mercado/
 !mercado/auto.json
 __pycache__/
+!instrucciones/umbrales.json
