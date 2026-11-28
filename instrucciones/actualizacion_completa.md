@@ -2,6 +2,12 @@
 
 Estas instrucciones forman parte de la tarea programada «Monitor de liquidez» (8:20, 15:20 y 18:20, Madrid) y las mantiene el propietario del repositorio. La tarea programada indica cuándo leerlas. Las secciones 0, 3 y 7b están en la propia tarea programada.
 
+## Skills obligatorias de esta actualización
+Antes de las secciones 6, 6b, 6c y 6g, lee completos estos dos archivos del repositorio y aplícalos en cada actualización (si la cuenta tiene skills con el mismo nombre, úsalas; si no, lee estos archivos):
+- instrucciones/skills/noticias-cash-management/SKILL.md: filtro, puntuación, reparto sin duplicados entre pestañas, redacción y control de calidad de noticias.json, noticias_regionales.json, eventos_caja.json y notas_bc.json.
+- instrucciones/skills/radar-geografias-liquidez/SKILL.md: fuentes, búsquedas en idioma local, temas de caja y rotación de empresas de España, Portugal, Francia y Países Bajos para la pestaña Europa y empresas.json.
+Si una regla de estas skills choca con este archivo, manda este archivo.
+
 ## 1. Read the current state
 - Artifact action "read" on the dashboard url, then follow the Dashboard type's own instructions (SKILL.md and artifact-type/reference/features.md, section "A file that stays current") for how a file refresh is written.
 - ArtifactData "list" of collection "datasets": docs ultimo, historico, eventos, probabilidades, noticias, noticias_meta, notas_bc, noticias_regionales, resumen, agenda, watchlist, analisis, preferencias, seguimiento, empresas, competencia, ideas_hist, nota, eventos_caja, mmf, riesgos, regulacion (create any that does not exist yet in step 7). Keep each doc's version for if_version.
