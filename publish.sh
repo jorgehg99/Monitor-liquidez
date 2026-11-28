@@ -10,9 +10,10 @@ TMP="$(mktemp -d)"
 BUILD="$(TZ=Europe/Madrid date +%Y%m%d%H%M%S)"
 # Control de calidad: si hay datos rotos (fechas futuras, valores no numéricos…) no se publica
 if ! python3 -I "$HERE/build_site.py" --validate "$DATA" > "$TMP/validacion.json"; then
-  echo "ERROR: control de calidad no superado; no se publica. Detalle:"; cat "$TMP/validacion.json"; rm -rf "$TMP"; exit 2
+  echo "ERROR: control de calidad no superado; no se publica."; [ "${GITHUB_ACTIONS:-}" = "true" ] || cat "$TMP/validacion.json"; rm -rf "$TMP"; exit 2
 fi
-python3 -I -c "import json,sys;w=json.load(open(sys.argv[1]))['avisos'];[print('AVISO:',x) for x in w]" "$TMP/validacion.json"
+# Los registros de GitHub Actions son públicos: allí solo se cuenta el número de avisos, nunca los datos
+python3 -I -c "import json,sys,os;w=json.load(open(sys.argv[1]))['avisos'];print(f'AVISOS: {len(w)}') if os.environ.get('GITHUB_ACTIONS')=='true' else [print('AVISO:',x) for x in w]" "$TMP/validacion.json"
 MLV_BUILD="$BUILD" python3 -I "$HERE/build_site.py" "$DATA" "$TMP"
 # Comprime la página antes de cifrar (lo cifrado ya no se puede comprimir): ~4 veces menos que descargar
 python3 -I - "$TMP/index.html" <<'PY2'

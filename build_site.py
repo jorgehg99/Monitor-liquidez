@@ -10,7 +10,9 @@ import json, sys, html, pathlib, datetime, math, hashlib, os
 
 # Modos: build (por defecto) · --check (indicadores diarios atrasados) · --signals (señales para el análisis)
 ARGS = sys.argv[1:]
-MODE = ARGS.pop(0) if ARGS and ARGS[0] in ("--check", "--signals", "--validate") else "build"
+MODE = ARGS.pop(0) if ARGS and ARGS[0] in ("--check", "--signals", "--validate", "--alerts", "--nota", "--serie") else "build"
+FLAGS_CLI = {a for a in ARGS if a.startswith("--")}
+ARGS = [a for a in ARGS if not a.startswith("--")]
 DATA = pathlib.Path(ARGS[0] if ARGS else "data")
 OUT = pathlib.Path(ARGS[1] if len(ARGS) > 1 else "out")
 if MODE == "build":
@@ -88,7 +90,29 @@ def merge_auto():
         if MODE == "--check":
             print(f"Fusionados de mercado/auto.json ({len(AUTO_UPDATED)}): {', '.join(AUTO_UPDATED)}", file=sys.stderr)
 
-if MODE in ("build", "--check") and os.environ.get("MLV_NO_AUTO") != "1":
+# Archivos que solo viven cifrados en datos.enc (histórico diario, registro de cambios, alertas ya enviadas):
+# si la carpeta de datos no los trae, se recuperan de datos.enc con la contraseña de la web.
+EXTRAS = ("historico_diario.json", "cambios.json", "alertas_estado.json")
+
+def restore_extras():
+    need = [f for f in EXTRAS if not (DATA / f).exists()]
+    enc = pathlib.Path(__file__).resolve().parent / "datos.enc"
+    if not need or not os.environ.get("STATICRYPT_PASSWORD") or not enc.exists() or not DATA.is_dir():
+        return
+    import subprocess, tarfile, io
+    try:
+        raw = subprocess.run(["openssl", "enc", "-d", "-aes-256-cbc", "-pbkdf2", "-iter", "200000", "-pass", "env:STATICRYPT_PASSWORD", "-in", str(enc)],
+                             capture_output=True, check=True).stdout
+        with tarfile.open(fileobj=io.BytesIO(raw), mode="r:gz") as t:
+            names = {pathlib.Path(m.name).name: m for m in t.getmembers() if m.isfile()}
+            for f in need:
+                if f in names:
+                    (DATA / f).write_bytes(t.extractfile(names[f]).read())
+    except Exception as e:
+        print(f"AVISO: no se pudieron recuperar {', '.join(need)} de datos.enc ({type(e).__name__})", file=sys.stderr)
+
+restore_extras()
+if MODE in ("build", "--check", "--alerts", "--nota", "--serie") and os.environ.get("MLV_NO_AUTO") != "1":
     merge_auto()
 
 U = load("ultimo.json", [])
@@ -251,7 +275,7 @@ def prev_bd(d, cal):
 
 # (prefijos de id, calendario, días hábiles de desfase entre fecha del dato y publicación, hora de Madrid a la que suele estar publicado)
 FRESH_RULES = [
-    (("estr", "euribor_estr_3m"), "EU", 1, (8, 15), "el BCE lo publica a las 8:00 del día hábil siguiente"),
+    (("estr", "euribor_estr_"), "EU", 1, (8, 15), "el BCE lo publica a las 8:00 del día hábil siguiente"),
     (("sonia",), "UK", 1, (10, 15), "el Banco de Inglaterra lo publica a las 10:00 del día hábil siguiente"),
     (("sofr", "sofr_avg_", "tgcr", "bgcr"), "US", 1, (14, 15), "la Fed de Nueva York lo publica a las 14:00 del día hábil siguiente"),
     (("effr", "obfr"), "US", 1, (15, 15), "la Fed de Nueva York lo publica a las 15:00 del día hábil siguiente"),
@@ -297,6 +321,233 @@ def freshness(r):
     ok = len(d) == 10 and d >= exp.isoformat()
     return {"ok": ok, "expected": exp.isoformat(), "date": d}
 
+# ------------------------------------------------------------------ histórico diario, indicadores derivados y registro de cambios
+HERE_DIR = pathlib.Path(__file__).resolve().parent
+IS_GHA = os.environ.get("GITHUB_ACTIONS") == "true"
+NOW_S = NOW.strftime("%Y-%m-%dT%H:%M")
+
+def _auto_series():
+    try:
+        return json.loads(AUTO_FILE.read_text())
+    except Exception:
+        return {}
+AUTO_RAW = _auto_series()
+
+# DD: {id: {fecha: valor}} con todas las observaciones diarias conocidas (3 años)
+DD = {}
+def _dd_add(i, d, v):
+    d = str(d or "")
+    v = num(v)
+    if not i or v is None or len(d) != 10 or d[4] != "-":
+        return
+    DD.setdefault(i, {})[d] = v
+for i, pts in (load("historico_diario.json", {}).get("series") or {}).items():
+    for d, v in pts:
+        _dd_add(i, d, v)
+for i, srs in (AUTO_RAW.get("series") or {}).items():
+    for o in srs.get("obs") or []:
+        _dd_add(i, o.get("date"), o.get("value"))
+for h in H:
+    _dd_add(h.get("id"), h.get("date"), h.get("value"))
+for r in U:
+    _dd_add(r.get("id"), r.get("prev_date"), r.get("prev_value"))
+    _dd_add(r.get("id"), r.get("date"), r.get("value"))
+
+def dd_on_or_before(i, d):
+    """Último valor diario de i con fecha <= d (o None)."""
+    s = DD.get(i) or {}
+    ks = [k for k in s if k <= d]
+    if not ks:
+        return None, None
+    k = max(ks)
+    return k, s[k]
+
+# Euribor − €STR a varios plazos, con fixings del mismo día
+DERIVED = [("1w", "1 semana", "1S", 6.1), ("1m", "1 mes", "1M", 6.2), ("6m", "6 meses", "6M", 6.4), ("12m", "12 meses", "12M", 6.5)]
+for code, lab, short, order in DERIVED:
+    i, src = f"euribor_estr_{code}", f"euribor_{code}"
+    if i in BY or src not in DD or "estr" not in DD:
+        continue
+    common = sorted(set(DD[src]) & set(DD["estr"]))
+    if not common:
+        continue
+    ser = {d: round((DD[src][d] - DD["estr"][d]) * 100, 1) for d in common}
+    last = common[-1]
+    prev = common[-2] if len(common) > 1 else None
+    v, pv = ser[last], (ser[prev] if prev else None)
+    row = {"id": i, "name": f"Euribor {lab} − €STR", "short": f"E{short}−€STR", "group": "liq", "order": order, "decimals": 1, "unit": "pb",
+           "country": "Zona euro", "tenor": short, "measure": "spread", "core_id": None, "date": last, "value": v, "prev_date": prev, "prev_value": pv,
+           "basis": "month-end", "source": f"Cálculo: Euribor {lab} − €STR del mismo día", "source_url": (BY.get(src) or {}).get("source_url"),
+           "rating": None, "note": "Diferencia simple entre el fixing y el overnight del mismo día; no es un diferencial OIS. Se calcula sola en cada actualización.",
+           "next_event": None,
+           "comment": (f"Euribor {lab} − €STR: {fnum(v, 1)} pb el {fdate(last)}" + (f", {'+' if v - pv >= 0 else '−'}{fnum(abs(v - pv), 1)} pb frente al {fdate(prev)} ({fnum(pv, 1)} pb)" if pv is not None else "")
+                       + ". Mide cuánto paga el mercado por prestar a ese plazo frente a la vista: cuanto mayor, más incentivo tiene el cliente a pasar caja de la cuenta a la vista a un depósito a ese plazo.")}
+    U.append(row)
+    BY[i] = row
+    DD[i] = ser
+    mon = {}
+    for d in common:
+        mon[d[:7]] = d
+    HIST[i] = {m: (ser[d], d) for m, d in mon.items()}
+
+# Registro de cambios: qué indicadores y bloques han cambiado en cada actualización y quién los cambió
+CAMB = load("cambios.json", {})
+SNAP = dict(CAMB.get("snapshot") or {})
+CLOG = list(CAMB.get("log") or [])
+BLOCK_ASOF = [("Top 10 noticias", NMETA.get("as_of")), ("Hoy en 30 segundos", RESUMEN.get("as_of")), ("Nota diaria", NOTA.get("as_of")),
+              ("Análisis e ideas", ANALISIS.get("as_of")), ("Seguimiento especial", SEG.get("as_of")), ("Radar de empresas", EMP.get("as_of")),
+              ("Banco contra banco", COMP.get("as_of")), ("Eventos de caja", EVCAJA.get("as_of")), ("Fondos monetarios", MMF.get("as_of")),
+              ("Riesgos", RIESGOS.get("as_of")), ("Regulación", REGUL.get("as_of")), ("Watchlist", WATCH.get("as_of") if isinstance(WATCH, dict) else None),
+              ("Agenda", (load("agenda.json", {}) or {}).get("as_of") if isinstance(load("agenda.json", {}), dict) else None)]
+
+def update_changelog():
+    by = "GitHub Actions" if IS_GHA else "Claude"
+    first_run = not SNAP
+    for r in U:
+        cur = [r.get("date"), num(r.get("value"))]
+        old = SNAP.get(r["id"])
+        if old is not None and list(old) != cur and not first_run:
+            CLOG.append({"at": NOW_S, "by": by, "id": r["id"], "name": r.get("name"), "unit": r.get("unit"), "de": old, "a": cur})
+        SNAP[r["id"]] = cur
+    for name, asof in BLOCK_ASOF:
+        k = "bloque:" + name
+        cur = [str(asof or ""), None]
+        old = SNAP.get(k)
+        if old is not None and list(old) != cur and asof and not first_run:
+            CLOG.append({"at": NOW_S, "by": by, "id": k, "name": name, "unit": None, "de": old, "a": cur})
+        SNAP[k] = cur
+    cut = (NOW - datetime.timedelta(days=21)).strftime("%Y-%m-%dT%H:%M")
+    del CLOG[:-1500]
+    CLOG[:] = [x for x in CLOG if x.get("at", "") >= cut]
+
+def save_extras():
+    cut = (TODAY - datetime.timedelta(days=3 * 366 + 31)).isoformat()
+    ser = {i: [[d, v] for d, v in sorted(s.items()) if d >= cut] for i, s in DD.items()}
+    (DATA / "historico_diario.json").write_text(json.dumps({"actualizado": NOW_S, "series": ser}, ensure_ascii=False, separators=(",", ":")))
+    (DATA / "cambios.json").write_text(json.dumps({"snapshot": SNAP, "log": CLOG}, ensure_ascii=False, separators=(",", ":")))
+
+def changes_since(hours=24):
+    """Cambios de indicadores en las últimas `hours` horas: {id: (de, a, último por)}."""
+    cut = (NOW - datetime.timedelta(hours=hours)).strftime("%Y-%m-%dT%H:%M")
+    agg = {}
+    for x in CLOG:
+        if x.get("at", "") < cut or str(x.get("id", "")).startswith("bloque:"):
+            continue
+        a = agg.get(x["id"])
+        agg[x["id"]] = (a[0] if a else x["de"], x["a"], x.get("by"), a[3] if a else x["at"], x["at"])
+    return agg
+
+# Fila del mercado de la nota: siempre calculada con los datos (nunca escrita a mano)
+NOTA_MKT = [("EUR", "estr", "€STR"), ("EUR", "euribor_1m", "Euribor 1M"), ("EUR", "euribor_3m", "Euribor 3M"), ("EUR", "euribor_12m", "Euribor 12M"),
+            ("USD", "sofr", "SOFR"), ("USD", "term_sofr_1m", "Term SOFR 1M"), ("USD", "term_sofr_3m", "Term SOFR 3M"),
+            ("GBP", "sonia", "SONIA"), ("GBP", "boe_bank_rate", "Bank Rate")]
+
+def short_date(d):
+    d = str(d or "")
+    return f"{int(d[8:10])}-{MES[int(d[5:7]) - 1]}" if len(d) == 10 else d
+
+def bp_txt(dv, dec=1):
+    if dv is None:
+        return "—"
+    return ("+" if dv > 0.00001 else ("−" if dv < -0.00001 else "")) + fnum(abs(dv), dec) + " pb"
+
+def week_change(i):
+    r = BY.get(i)
+    if not r or num(r.get("value")) is None or len(str(r.get("date") or "")) != 10:
+        return None, None
+    tgt = (datetime.date.fromisoformat(r["date"]) - datetime.timedelta(days=7)).isoformat()
+    d0, v0 = dd_on_or_before(i, tgt)
+    if d0 is None or (datetime.date.fromisoformat(tgt) - datetime.date.fromisoformat(d0)).days > 4:
+        return None, None
+    mult = 100 if r.get("unit") == "%" else 1
+    return (num(r["value"]) - v0) * mult, d0
+
+def nota_filas():
+    out = []
+    for blk, i, lab in NOTA_MKT:
+        r = BY.get(i)
+        if not r or num(r.get("value")) is None:
+            continue
+        v, pv = num(r.get("value")), num(r.get("prev_value"))
+        dec = min(int(r.get("decimals") or 3), 3)
+        if r.get("group") == "policy":
+            d1 = 0.0
+        else:
+            d1 = (v - pv) * 100 if pv is not None else None
+        dw, d0 = week_change(i)
+        if r.get("group") == "policy" and dw is None:
+            dw = 0.0
+        tgt = (datetime.date.fromisoformat(r["date"]) - datetime.timedelta(days=7)).isoformat() if len(str(r.get("date") or "")) == 10 else None
+        wtxt = bp_txt(dw) + (f" (vs {short_date(d0)})" if d0 and tgt and d0 != tgt else "")
+        lbl = lab + (f" ({short_date(r.get('date'))})" if r.get("group") != "policy" else "")
+        out.append({"bloque": blk, "indicador": lbl, "valor": fnum(v, 2 if r.get("group") == "policy" else dec) + " %", "d1d": bp_txt(d1) if r.get("group") != "policy" else "0 pb",
+                    "d1w": wtxt if r.get("group") != "policy" else "0 pb", "id": i, "fecha": r.get("date")})
+    return out
+
+# Alertas por umbral (instrucciones/umbrales.json)
+def load_thresholds():
+    try:
+        return json.loads((HERE_DIR / "instrucciones" / "umbrales.json").read_text())
+    except Exception:
+        return {"reglas": []}
+
+def eval_alerts():
+    cfg = load_thresholds()
+    out = []
+    for rule in cfg.get("reglas", []):
+        for i in rule.get("ids", []):
+            r = BY.get(i)
+            if not r:
+                continue
+            v, pv = num(r.get("value")), num(r.get("prev_value"))
+            if v is None:
+                continue
+            u = r.get("unit")
+            mult = 100 if u == "%" else 1
+            unit_txt = " pb" if u == "pb" else (" %" if u == "%" else f" {u}")
+            dec = min(int(r.get("decimals") or 2), 3)
+            if rule.get("tipo") == "movimiento" and pv is not None and len(str(r.get("date") or "")) == 10:
+                d = (v - pv) * mult
+                if abs(d) >= float(rule["pb"]) - 1e-9:
+                    out.append({"clave": f"mov:{i}:{r['date']}", "nivel": rule.get("nivel", "media"), "ids": [i],
+                                "texto": f"{r.get('name')}: {bp_txt(d) if u in ('%', 'pb') else (('+' if d > 0 else '−') + fnum(abs(d), dec) + unit_txt)} en un dato ({fnum(pv, dec)}{unit_txt} el {short_date(r.get('prev_date'))} → {fnum(v, dec)}{unit_txt} el {short_date(r.get('date'))}); umbral {fnum(float(rule['pb']), 1)}{' pb' if u in ('%', 'pb') else unit_txt}."})
+            if rule.get("tipo") == "nivel":
+                lim = float(rule["valor"])
+                up = rule.get("sentido", "sube") == "sube"
+                crossed = (v > lim and (pv is None or pv <= lim)) if up else (v < lim and (pv is None or pv >= lim))
+                if crossed:
+                    out.append({"clave": f"niv:{i}:{lim}:{r.get('date')}", "nivel": rule.get("nivel", "alta"), "ids": [i],
+                                "texto": f"{r.get('name')} {'supera' if up else 'baja de'} {fnum(lim, 1)}{unit_txt}: {fnum(v, dec)}{unit_txt} el {short_date(r.get('date'))} (antes {fnum(pv, dec) if pv is not None else '—'})."})
+    mx = cfg.get("atrasados_max")
+    if mx is not None and len(STALE) > int(mx) and not IS_GHA:  # en GitHub Actions es normal que falten los datos que trae Claude
+        out.append({"clave": f"atrasados:{TODAY.isoformat()}", "nivel": "media", "ids": [r["id"] for r, _ in STALE],
+                    "texto": f"{len(STALE)} indicadores diarios sin el último dato publicado: " + ", ".join(sorted(str(r.get("name")) for r, _ in STALE)[:12]) + ("…" if len(STALE) > 12 else "") + "."})
+    if cfg.get("avisar_fuentes_caidas", True):
+        for line in AUTO_RAW.get("log") or []:
+            if "ERROR" in line:
+                src = line.split(":")[0].strip()
+                out.append({"clave": f"fuente:{src}:{TODAY.isoformat()}", "nivel": "media", "ids": [], "texto": f"Fuente automática caída: {line[:160]}"})
+    st = load("alertas_estado.json", {}).get("enviadas") or {}
+    for a in out:
+        a["nueva"] = a["clave"] not in st
+    return out
+
+def mark_alerts(alerts):
+    st = load("alertas_estado.json", {}).get("enviadas") or {}
+    for a in alerts:
+        st.setdefault(a["clave"], NOW_S)
+    cut = (NOW - datetime.timedelta(days=15)).strftime("%Y-%m-%dT%H:%M")
+    st = {k: v for k, v in st.items() if v >= cut}
+    (DATA / "alertas_estado.json").write_text(json.dumps({"enviadas": st}, ensure_ascii=False))
+
+def block_stale(asof):
+    try:
+        d = datetime.date.fromisoformat(str(asof)[:10])
+    except Exception:
+        return False
+    ref = TODAY if is_bd(TODAY, "EU") else prev_bd(TODAY, "EU")
+    return d < prev_bd(ref, "EU")
+
 def validate():
     """Errores que impiden publicar y avisos de datos sospechosos."""
     err, warn = [], []
@@ -330,6 +581,17 @@ def validate():
                 warn.append(f"{name}: url rara en «{str(x.get('headline'))[:50]}»")
             if not x.get("headline"):
                 err.append(f"{name}: noticia sin titular")
+    # La tabla de mercado de la nota se calcula con los datos; avisar si el texto escrito no coincide
+    calc = {f["id"]: f for f in nota_filas()}
+    for f in ((NOTA.get("mercado") or {}).get("filas") or []):
+        lab = str(f.get("indicador") or "")
+        hit = [c for c in calc.values() if lab.split(" (")[0] == c["indicador"].split(" (")[0]]
+        if hit and str(f.get("valor") or "").replace(" ", "") != hit[0]["valor"].replace(" ", ""):
+            warn.append(f"nota: «{lab}» dice {f.get('valor')} y el dato es {hit[0]['valor']} ({fdate(hit[0]['fecha'])}); la web muestra el dato")
+    # Bloques de texto con más de un día hábil de antigüedad
+    for name, asof in BLOCK_ASOF:
+        if asof and block_stale(asof):
+            warn.append(f"{name}: actualizado por última vez el {fdate(str(asof)[:10])}")
     return err, warn
 
 if MODE == "--validate":
@@ -346,6 +608,51 @@ if MODE == "--check":
                       "stale": [{"id": r["id"], "name": r.get("name"), "date": v["date"], "expected": v["expected"], "source": r.get("source"), "source_url": r.get("source_url")} for r, v in STALE]},
                      ensure_ascii=False, indent=1))
     sys.exit(0)
+
+if MODE == "--alerts":
+    AL = eval_alerts()
+    if "--marcar" in FLAGS_CLI:
+        mark_alerts(AL)
+    print(json.dumps({"now_madrid": NOW.strftime("%Y-%m-%d %H:%M"), "nuevas": [a for a in AL if a["nueva"]], "ya_avisadas": [a for a in AL if not a["nueva"]],
+                      "umbrales": "instrucciones/umbrales.json"}, ensure_ascii=False, indent=1))
+    sys.exit(0)
+
+if MODE == "--nota":
+    F = nota_filas()
+    ch = changes_since(26)
+    cambios = []
+    for i, (de, a, by, t0, t1) in ch.items():
+        r = BY.get(i)
+        if not r or de[1] is None or a[1] is None:
+            continue
+        cambios.append({"id": i, "indicador": r.get("name"), "de": de, "a": a, "cambio": bp_txt((a[1] - de[1]) * (100 if r.get("unit") == "%" else 1)) if r.get("unit") in ("%", "pb") else fnum(a[1] - de[1], 2)})
+    print(json.dumps({"now_madrid": NOW.strftime("%Y-%m-%d %H:%M"), "filas": F,
+                      "lineas_correo": [f'{f["indicador"]} {f["valor"]} | Δ1D {f["d1d"]} | Δ1W {f["d1w"]}' for f in F],
+                      "cambios_24h": cambios, "indicadores_atrasados": [r["id"] for r, _ in STALE]}, ensure_ascii=False, indent=1))
+    sys.exit(0)
+
+if MODE == "--serie":
+    ids = (ARGS[1] if len(ARGS) > 1 else "").split(",")
+    d0 = ARGS[2] if len(ARGS) > 2 else (TODAY - datetime.timedelta(days=31)).isoformat()
+    d1 = ARGS[3] if len(ARGS) > 3 else TODAY.isoformat()
+    res = []
+    for i in ids:
+        r = BY.get(i, {})
+        pts = sorted((d, v) for d, v in (DD.get(i) or {}).items() if d0 <= d <= d1)
+        mens = sorted((m, v, d) for m, (v, d) in (HIST.get(i) or {}).items() if d0[:7] <= m <= d1[:7])
+        item = {"id": i, "nombre": r.get("name"), "unidad": r.get("unit"), "desde": d0, "hasta": d1, "datos": pts,
+                "cierres_mensuales": mens, "nota": "datos = observaciones diarias guardadas; cierres_mensuales = histórico mensual (o media mensual si la fila es monthly-average)"}
+        if pts:
+            vs = [v for _, v in pts]
+            item.update(primero=pts[0], ultimo=pts[-1], minimo=min(pts, key=lambda x: x[1]), maximo=max(pts, key=lambda x: x[1]),
+                        cambio=round((pts[-1][1] - pts[0][1]) * (100 if r.get("unit") == "%" else 1), 2), unidad_cambio="pb" if r.get("unit") in ("%", "pb") else r.get("unit"))
+        res.append(item)
+    print(json.dumps(res, ensure_ascii=False, indent=1))
+    sys.exit(0)
+
+if MODE == "build":
+    update_changelog()
+    save_extras()
 
 # ------------------------------------------------------------------ SVG
 def nice_ticks(lo, hi, n=5):
@@ -791,18 +1098,147 @@ def status_box():
             'El €STR, el SONIA y el SOFR de un día se publican al día hábil siguiente.</p></div>'
             f'<div class="st {cls}"><b>{ok}/{n}</b> al día <span class="lg"><i class="fr ok"></i> último dato publicado · <i class="fr late"></i> pendiente</span></div>{more}<p>{csv_link()}</p></section>')
 
+def cambios_box(hours=26, n=14):
+    ch = changes_since(hours)
+    rows = []
+    for i, (de, a, by, t0, t1) in ch.items():
+        r = BY.get(i)
+        if not r or de[1] is None or a[1] is None:
+            continue
+        u = r.get("unit")
+        dv = a[1] - de[1]
+        dec = min(int(r.get("decimals") or 2), 3)
+        size = abs(dv) * (100 if u == "%" else 1) if u in ("%", "pb") else (abs(dv / de[1]) * 100 if de[1] else 0)
+        chg = bp_txt(dv * (100 if u == "%" else 1)) if u in ("%", "pb") else (("+" if dv > 0 else "−") + fnum(abs(dv), dec) if dv else "0")
+        rows.append((size, r, de, a, chg, by))
+    if not rows:
+        # Primera ejecución o sin cambios registrados: el último dato frente al anterior
+        for r in U:
+            v, pv = num(r.get("value")), num(r.get("prev_value"))
+            if v is None or pv is None or r.get("group") == "policy" or len(str(r.get("date") or "")) != 10 or days_old(r.get("date")) > 4 or v == pv:
+                continue
+            u = r.get("unit")
+            dv = v - pv
+            size = abs(dv) * (100 if u == "%" else 1) if u in ("%", "pb") else (abs(dv / pv) * 100 if pv else 0)
+            chg = bp_txt(dv * (100 if u == "%" else 1)) if u in ("%", "pb") else (("+" if dv > 0 else "−") + fnum(abs(dv), min(int(r.get("decimals") or 2), 3)))
+            rows.append((size, r, [r.get("prev_date"), pv], [r.get("date"), v], chg, None))
+    if not rows:
+        return ""
+    key = {"estr", "euribor_1w", "euribor_1m", "euribor_3m", "euribor_6m", "euribor_12m", "euribor_estr_3m", "sofr", "term_sofr_1m", "sonia",
+           "spread_es_de_10y", "spread_pt_de_10y", "spread_fr_de_10y", "spread_nl_de_10y", "y10_de", "eurusd", "brent", "ttf", "dfr_recourse_ecb", "excess_liq_ecb"}
+    rows.sort(key=lambda x: (x[1]["id"] not in key, -x[0]))
+    tr = []
+    for size, r, de, a, chg, by in rows[:n]:
+        u = r.get("unit")
+        dec = min(int(r.get("decimals") or 2), 3)
+        ut = " %" if u == "%" else (" pb" if u == "pb" else "")
+        cls = "flat" if chg.startswith("0") else ("down" if chg.startswith("+") else "up")  # mismo código de color que la tabla de mercado
+        tr.append(f'<tr><td class="l"><a href="#c-{esc(r["id"])}" data-goto="{esc(r["id"])}">{esc(r.get("name"))}</a></td><td>{fnum(de[1], dec)}{ut}<br><small>{esc(short_date(de[0]))}</small></td>'
+                  f'<td>{fnum(a[1], dec)}{ut}<br><small>{esc(short_date(a[0]))}</small></td><td class="{cls}">{esc(chg)}</td></tr>')
+    more = f'<p class="cap">Y {len(rows) - n} cambios más en <a href="#pulso/calidad">Calidad y cambios</a>.</p>' if len(rows) > n else ""
+    return ('<section id="cambios"><div class="sh"><h2>Qué ha cambiado desde ayer</h2><p>Cifras que han cambiado en las últimas 24 horas según el registro de actualizaciones: valor y fecha de antes y de ahora. Calculado con los datos, sin redacción.</p></div>'
+            '<div class="tw"><table class="rt mk"><thead><tr><th class="l">Indicador</th><th>Antes</th><th>Ahora</th><th>Cambio</th></tr></thead><tbody>' + "".join(tr) + f"</tbody></table></div>{more}</section>")
+
+def calidad_page():
+    # 1) Bloques con su hora de actualización
+    br = []
+    for name, asof in BLOCK_ASOF:
+        if not asof:
+            continue
+        st = block_stale(asof)
+        br.append(f'<tr><td class="l">{esc(name)}</td><td class="l">{esc(fdate(str(asof)[:10]))} {esc(str(asof)[11:16])}</td><td class="{"down" if st else "up"}">{"Desfasado" if st else "Al día"}</td></tr>')
+    blocks = ('<div class="box"><h3>Hora de actualización de cada bloque</h3><div class="tw"><table class="rt"><thead><tr><th class="l">Bloque</th><th class="l">Actualizado</th><th>Estado</th></tr></thead><tbody>'
+              + "".join(br) + '</tbody></table></div><p class="cap">«Desfasado»: más de un día hábil sin actualizar.</p></div>')
+    # 2) Fuentes automáticas
+    logl = AUTO_RAW.get("log") or []
+    gen = str(AUTO_RAW.get("generated") or "")
+    bad = [l for l in logl if "ERROR" in l]
+    src = (f'<div class="box"><h3>Descarga automática de fuentes oficiales</h3><p>Última descarga: {esc(gen[:16].replace("T", " "))} UTC · {len(logl) - len(bad)} fuentes bien'
+           + (f', <b class="down">{len(bad)} con error</b>' if bad else ", ninguna con error") + '.</p>'
+           + (f'<ul class="notes">{"".join(f"<li>{esc(l[:200])}</li>" for l in bad)}</ul>' if bad else "") + "</div>")
+    # 3) Avisos de validación
+    _, warns = validate()
+    val = ('<div class="box"><h3>Avisos del control de calidad</h3>' + (f'<ul class="notes">{"".join(f"<li>{esc(w)}</li>" for w in warns[:40])}</ul>' if warns else "<p>Sin avisos.</p>") + "</div>")
+    # 4) Alertas por umbral vigentes
+    al = eval_alerts()
+    alh = ('<div class="box"><h3>Alertas por umbral</h3>' + (f'<ul class="notes">{"".join(f"<li>{esc(a["texto"])}</li>" for a in al)}</ul>' if al else "<p>Ningún umbral superado con los datos actuales.</p>")
+           + '<p class="cap">Los umbrales están en instrucciones/umbrales.json del repositorio. Cada alerta se avisa una sola vez por móvil y correo.</p></div>')
+    # 5) Registro de cambios
+    lr = []
+    for x in reversed(CLOG[-80:]):
+        de, a = x.get("de") or [None, None], x.get("a") or [None, None]
+        if str(x.get("id", "")).startswith("bloque:"):
+            txt = f'{esc(fdate(str(de[0])[:10]))} {esc(str(de[0])[11:16])} → {esc(fdate(str(a[0])[:10]))} {esc(str(a[0])[11:16])}'
+        else:
+            dec = min(int((BY.get(x["id"]) or {}).get("decimals") or 2), 3)
+            txt = f'{fnum(num(de[1]), dec)} ({esc(short_date(de[0]))}) → {fnum(num(a[1]), dec)} ({esc(short_date(a[0]))})'
+        lr.append(f'<tr><td class="l">{esc(str(x.get("at"))[5:16].replace("T", " "))}</td><td class="l">{esc(x.get("by"))}</td><td class="l">{esc(x.get("name"))}</td><td class="l">{txt}</td></tr>')
+    log = ('<div class="box"><h3>Registro de cambios</h3>' + (('<div class="tw"><table class="rt"><thead><tr><th class="l">Cuándo</th><th class="l">Quién</th><th class="l">Qué</th><th class="l">De → a</th></tr></thead><tbody>'
+           + "".join(lr) + '</tbody></table></div><p class="cap">Últimos 80 cambios (se guardan 21 días).</p>') if lr else "<p>El registro empieza con esta actualización.</p>") + "</div>")
+    # 6) Histórico diario descargable (60 días)
+    import urllib.parse
+    cut = (TODAY - datetime.timedelta(days=60)).isoformat()
+    rows = ["Indicador;Id;Fecha;Valor;Unidad"]
+    for i in sorted(DD):
+        r = BY.get(i)
+        if not r:
+            continue
+        for d, v in sorted(DD[i].items()):
+            if d >= cut:
+                rows.append(f'{str(r.get("name")).replace(";", ",")};{i};{d};{str(v).replace(".", ",")};{r.get("unit") or ""}')
+    csvd = (f'<p><a class="csv" download="historico-diario-{TODAY.isoformat()}.csv" href="data:text/csv;charset=utf-8,{urllib.parse.quote(chr(0xfeff) + chr(13).join(rows))}">'
+            '⬇ Descargar el histórico diario de 60 días (CSV para Excel)</a></p>')
+    return ('<section id="calidad"><div class="sh"><h2>Calidad de los datos y registro de cambios</h2><p>Qué está al día, qué falla y qué ha cambiado en cada actualización.</p></div>'
+            + status_box() + blocks + src + alh + val + log + csvd + "</section>")
+
+def depositos_page():
+    CT = [("dep_rate_nfc_es", "España · depósito a plazo de empresas"), ("dep_rate_hh_es", "España · depósito a plazo de hogares"), ("dep_rate_pt", "Portugal · depósito a plazo"),
+          ("dep_rate_fr", "Francia · depósito a plazo"), ("dep_rate_nl", "Países Bajos · depósito a plazo"), ("loan_rate_nfc_es", "España · préstamo nuevo a empresas")]
+    rows = []
+    for i, lab in CT:
+        r = BY.get(i)
+        if not r or num(r.get("value")) is None:
+            continue
+        m = str(r.get("date"))[:7]
+        v = num(r["value"])
+        e3 = (HIST.get("euribor_3m") or {}).get(m)
+        es = (HIST.get("estr") or {}).get(m)
+        df = (HIST.get("ecb_dfr") or {}).get(m)
+        e3y = (HIST.get("euribor_3m") or {}).get(back(m, 12))
+        vy = (HIST.get(i) or {}).get(back(m, 12))
+        g = lambda a: (fnum((v - a[0]) * 100, 0) + " pb") if a else "—"
+        gy = fnum((vy[0] - e3y[0]) * 100, 0) + " pb" if vy and e3y else "—"
+        rows.append(f'<tr><td class="l"><a href="#c-{esc(i)}" data-goto="{esc(i)}">{esc(lab)}</a></td><td>{esc(fdate(m))}</td><td>{fnum(v, 2)} %</td><td>{g(e3)}</td><td>{g(es)}</td><td>{g(df)}</td><td>{gy}</td></tr>')
+    if not rows:
+        return ""
+    lt = [(t, BY.get(i)) for t, i in (("Letra 3M", "letra_es_3m"), ("Letra 6M", "letra_es_6m"), ("Letra 12M", "letra_es_12m"))]
+    dep = BY.get("dep_rate_nfc_es")
+    alt = ""
+    if dep and num(dep.get("value")) is not None:
+        li = "".join(f'<li>{esc(t)} al {fnum(num(r["value"]), 3)} % ({esc(fdate(r.get("date")))}): {fnum((num(r["value"]) - num(dep["value"])) * 100, 0)} pb frente al depósito nuevo de empresas en España ({fnum(num(dep["value"]), 2)} %, {esc(fdate(dep.get("date")))}).</li>'
+                     for t, r in lt if r and num(r.get("value")) is not None)
+        alt = f'<div class="box"><h3>Letras del Tesoro frente al depósito de empresas</h3><ul class="notes">{li}</ul></div>'
+    return ('<section id="depositos"><div class="sh"><h2>Depósitos bancarios frente al mercado</h2><p>Tipo medio de las operaciones nuevas (BCE/Banco de España, Banco de Portugal, Banque de France y DNB) frente al Euribor 3M, el €STR y el tipo de depósito del BCE del mismo mes (cierre de mes). Diferencias en pb: negativo = el banco paga menos que el mercado.</p></div>'
+            '<div class="tw"><table class="rt"><thead><tr><th class="l">Tipo</th><th>Mes</th><th>Tipo</th><th>− Euribor 3M</th><th>− €STR</th><th>− depósito BCE</th><th>− Euribor 3M hace 12 m</th></tr></thead><tbody>'
+            + "".join(rows) + "</tbody></table></div>" + alt
+            + multi(["dep_rate_nfc_es", "dep_rate_hh_es", "euribor_3m", "estr", "ecb_dfr"], "Depósito de empresas en España frente al mercado · 3 años", "% · cierre de mes.", "ch-dep-es",
+                    label=lambda r: r.get("short") or r.get("name"), pool=[x["id"] for x in U if x.get("group") in ("reg", "mm", "rate", "policy")])
+            + "</section>")
+
 SP_PULSO = [
-    ("resumen", "Resumen", seg_banner() + paises_box() + resumen_box() + status_box() + stress_box() + movers_box()),
+    ("resumen", "Resumen", seg_banner() + paises_box() + resumen_box() + cambios_box() + status_box() + stress_box() + movers_box()),
     ("tipos", "Tipos y BC", grid(["estr", "sofr", "fed_upper", "iorb", "sonia"], "Tipos overnight", "Variación frente al dato anterior. Toca un cromo para ver 3 años de histórico y la lectura de liquidez.", "tipos")
      + grid(["ecb_dfr", "fed_upper", "boe_bank_rate"], "Bancos centrales", "Tipo oficial y probabilidades de mercado para las dos próximas reuniones.", "bc", extra=probs)),
     ("bonos", "Bonos", grid(["y10_de", "y10_es", "spread_es_de_10y", "y10_pt", "spread_pt_de_10y", "y10_fr", "spread_fr_de_10y", "y10_nl", "spread_nl_de_10y", "y10_it", "spread_it_de_10y", "y10_uk", "y10_pl", "y10_us", "y10_mx", "y10_br", "y10_co", "y10_cl", "y10_pe"], "Bonos soberanos 10 años", "Rentabilidad y primas de riesgo frente a Alemania.", "bonos")),
     ("fxmp", "Divisas y materias primas", grid(["eurusd", "gbpeur", "gbpusd", "usdbrl", "usdmxn", "usdars", "usdclp"], "Divisas", "Variación diaria en %.", "fx")
      + grid(["brent", "wti", "ttf", "henry_hub", "copper", "wheat", "corn", "fao_food", "gold"], "Materias primas ligadas a la inflación", "Energía, metales y alimentos.", "commodities")),
     ("letras", "Alternativas al depósito", grid(["letra_es_3m", "letra_es_6m", "letra_es_9m", "letra_es_12m", "btf_fr_3m", "btf_fr_12m", "bubill_de_6m", "bubill_de_12m", "tbill_us_3m", "tbill_us_6m", "tbill_us_1y"], "Alternativas al depósito a corto plazo", "Letras del Tesoro y T-bills: lo que un tesorero compara con remunerar la caja en banco.", "letras")),
-    ("liquidez", "Liquidez del sistema", grid(["excess_liq_ecb", "dfr_recourse_ecb", "mro_ecb", "ltro_ecb", "eurep_ecb", "euribor_estr_3m", "srf_fed", "tga_us", "rrp_us", "reserves_us", "fed_assets", "cp_spread_us"], "Liquidez del sistema", "Exceso de liquidez y facilidades del BCE, repo de la Fed, cuenta del Tesoro de EE. UU. y reservas bancarias.", "liquidez")),
+    ("liquidez", "Liquidez del sistema", grid(["excess_liq_ecb", "dfr_recourse_ecb", "mro_ecb", "ltro_ecb", "eurep_ecb", "euribor_estr_1w", "euribor_estr_1m", "euribor_estr_3m", "euribor_estr_6m", "euribor_estr_12m", "srf_fed", "tga_us", "rrp_us", "reserves_us", "fed_assets", "cp_spread_us"], "Liquidez del sistema", "Exceso de liquidez y facilidades del BCE, repo de la Fed, cuenta del Tesoro de EE. UU. y reservas bancarias.", "liquidez")),
+    ("depositos", "Depósitos vs mercado", depositos_page()),
     ("credito", "Crédito", grid(["oas_us_ig", "oas_us_hy", "oas_eur_hy", "oas_em", "breakeven_10y_us"], "Crédito", "Diferenciales corporativos (OAS ICE BofA) e inflación implícita.", "credito")),
     ("inflacion", "Inflación", grid(["cpi_ea", "cpi_es", "cpi_pt", "cpi_fr", "cpi_nl", "cpi_de", "cpi_uk", "cpi_pl"], "Inflación en Europa", "IPC general y subyacente, tasa interanual; variación frente al mes anterior en pp.", "infl-eu")
      + grid(["cpi_us", "cpi_mx", "cpi_br", "cpi_ar", "cpi_cl", "cpi_co", "cpi_pe"], "Inflación en América", "IPC general y subyacente, tasa interanual.", "infl-am")),
+    ("calidad", "Calidad y cambios", calidad_page()),
 ]
 
 # Markets information
@@ -1752,17 +2188,17 @@ def delta_week(i):
     """Cambio a 1 semana con la serie diaria de mercado/auto.json (o None)."""
     r = BY.get(i)
     obs = AUTO_OBS.get(i) or []
-    if not r or num(r.get("value")) is None or len(str(r.get("date"))) != 10 or not obs:
+    if not r or num(r.get("value")) is None or len(str(r.get("date"))) != 10:
         return None
     try:
         d = datetime.date.fromisoformat(r["date"])
     except Exception:
         return None
     tgt = (d - datetime.timedelta(days=7)).isoformat()
-    past = [o for o in obs if o["date"] <= tgt]
-    if not past:
+    d0, v0 = dd_on_or_before(i, tgt)
+    if d0 is None or (datetime.date.fromisoformat(tgt) - datetime.date.fromisoformat(d0)).days > 4:
         return None
-    return num(r["value"]) - float(past[-1]["value"])
+    return num(r["value"]) - v0
 
 def bp(d, unit):
     if d is None:
@@ -1804,8 +2240,9 @@ def nota_html():
     if n.get("mensajes"):
         p.append('<h3>Tres mensajes</h3><ol>' + "".join(f"<li>{esc(x)}</li>" for x in n["mensajes"]) + "</ol>")
     mk = n.get("mercado") or {}
-    if mk.get("filas"):
-        tr = "".join(f'<tr><td>{esc(f.get("bloque") or "")}</td><td>{esc(f.get("indicador") or "")}</td><td style="text-align:right">{esc(f.get("valor") or "")}</td><td style="text-align:right">{esc(f.get("d1d") or "")}</td><td style="text-align:right">{esc(f.get("d1w") or "")}</td></tr>' for f in mk["filas"])
+    filas = nota_filas()  # cifras siempre calculadas con los datos de la web
+    if filas:
+        tr = "".join(f'<tr><td>{esc(f.get("bloque") or "")}</td><td>{esc(f.get("indicador") or "")}</td><td style="text-align:right">{esc(f.get("valor") or "")}</td><td style="text-align:right">{esc(f.get("d1d") or "")}</td><td style="text-align:right">{esc(f.get("d1w") or "")}</td></tr>' for f in filas)
         p.append('<h3>Market</h3><table class="nt-t"><thead><tr><th></th><th>Indicador</th><th>Nivel</th><th>Δ 1D</th><th>Δ 1W</th></tr></thead><tbody>' + tr + "</tbody></table>")
     if mk.get("lectura"):
         p.append(f'<p><b>Qué ha cambiado y qué implica para el pricing de depósitos:</b> {esc(mk["lectura"])}</p>')

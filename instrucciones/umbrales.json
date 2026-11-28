@@ -1,0 +1,18 @@
+{
+ "descripcion": "Umbrales de las alertas del Monitor de liquidez. 'movimiento': cambio entre el último dato y el anterior, en pb (para tipos en % se multiplica por 100). 'nivel': avisa solo el día en que el dato cruza el valor. Cada alerta se envía una sola vez.",
+ "reglas": [
+  {"tipo": "nivel", "ids": ["euribor_estr_3m"], "valor": 35, "sentido": "sube", "nivel": "alta"},
+  {"tipo": "nivel", "ids": ["euribor_estr_3m"], "valor": 40, "sentido": "sube", "nivel": "alta"},
+  {"tipo": "movimiento", "ids": ["euribor_estr_1w", "euribor_estr_1m", "euribor_estr_3m", "euribor_estr_6m", "euribor_estr_12m"], "pb": 3, "nivel": "media"},
+  {"tipo": "movimiento", "ids": ["spread_es_de_10y", "spread_pt_de_10y", "spread_fr_de_10y", "spread_nl_de_10y"], "pb": 3, "nivel": "alta"},
+  {"tipo": "nivel", "ids": ["spread_fr_de_10y"], "valor": 160, "sentido": "sube", "nivel": "alta"},
+  {"tipo": "nivel", "ids": ["spread_fr_de_10y"], "valor": 175, "sentido": "sube", "nivel": "alta"},
+  {"tipo": "nivel", "ids": ["spread_es_de_10y", "spread_pt_de_10y"], "valor": 80, "sentido": "sube", "nivel": "alta"},
+  {"tipo": "movimiento", "ids": ["estr", "euribor_1w", "euribor_1m", "euribor_3m", "euribor_6m", "euribor_12m"], "pb": 3, "nivel": "media"},
+  {"tipo": "movimiento", "ids": ["sofr", "sonia", "term_sofr_1m", "term_sofr_3m"], "pb": 5, "nivel": "media"},
+  {"tipo": "movimiento", "ids": ["dfr_recourse_ecb", "excess_liq_ecb"], "pb": 50, "nivel": "media"}
+ ],
+ "nota_unidades": "Para dfr_recourse_ecb y excess_liq_ecb el umbral se mide en miles de millones de euros (50 = 50.000 M€), no en pb.",
+ "atrasados_max": 5,
+ "avisar_fuentes_caidas": true
+}
